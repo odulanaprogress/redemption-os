@@ -1,0 +1,211 @@
+import { UserProfile, UserRole } from '../types';
+
+export interface MockUser {
+  uid: string;
+  email: string;
+  password: string;
+  displayName: string;
+  emailVerified: boolean;
+  photoURL?: string;
+}
+
+export const MOCK_USERS: MockUser[] = [
+  {
+    uid: 'admin-001',
+    email: 'admin@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'Admin Grace',
+    emailVerified: true,
+  },
+  {
+    uid: 'parent-001',
+    email: 'parent1@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'David Okonkwo',
+    emailVerified: true,
+  },
+  {
+    uid: 'parent-002',
+    email: 'parent2@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'Sarah Mensah',
+    emailVerified: true,
+  },
+  {
+    uid: 'security-001',
+    email: 'security1@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'Officer James Nkrumah',
+    emailVerified: true,
+  },
+  {
+    uid: 'security-002',
+    email: 'security2@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'Officer Amara Diallo',
+    emailVerified: true,
+  },
+  {
+    uid: 'vendor-001',
+    email: 'vendor1@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'Emmanuel Stores',
+    emailVerified: true,
+  },
+  {
+    uid: 'vendor-002',
+    email: 'vendor2@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'Grace Foods',
+    emailVerified: true,
+  },
+  {
+    uid: 'vendor-003',
+    email: 'vendor3@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'Holy Wares',
+    emailVerified: true,
+  },
+  {
+    uid: 'delivery-001',
+    email: 'delivery1@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'Kwame Rider',
+    emailVerified: true,
+  },
+  {
+    uid: 'attendee-001',
+    email: 'attendee@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'Faith Adeyemi',
+    emailVerified: true,
+  },
+];
+
+export const MOCK_PROFILES: Record<string, UserProfile> = {
+  'admin-001': {
+    uid: 'admin-001',
+    email: 'admin@redemptionos.com',
+    displayName: 'Admin Grace',
+    role: 'admin' as UserRole,
+    createdAt: new Date('2024-01-01'),
+    updatedAt: new Date(),
+    isActive: true,
+    metadata: { lastLogin: new Date(), loginCount: 42 },
+    preferences: { notifications: true, emailAlerts: true, smsAlerts: false, language: 'en', theme: 'dark' },
+  },
+  'parent-001': {
+    uid: 'parent-001',
+    email: 'parent1@redemptionos.com',
+    displayName: 'David Okonkwo',
+    role: 'parent' as UserRole,
+    createdAt: new Date('2024-01-15'),
+    updatedAt: new Date(),
+    isActive: true,
+    phoneNumber: '+234 800 111 2233',
+    metadata: { lastLogin: new Date(), loginCount: 8 },
+    preferences: { notifications: true, emailAlerts: false, smsAlerts: true, language: 'en', theme: 'dark' },
+    emergencyContact: { name: 'Ngozi Okonkwo', relationship: 'Spouse', phoneNumber: '+234 800 111 4455' },
+  },
+  'parent-002': {
+    uid: 'parent-002',
+    email: 'parent2@redemptionos.com',
+    displayName: 'Sarah Mensah',
+    role: 'parent' as UserRole,
+    createdAt: new Date('2024-02-01'),
+    updatedAt: new Date(),
+    isActive: true,
+    phoneNumber: '+233 200 555 6677',
+    metadata: { lastLogin: new Date(), loginCount: 5 },
+    preferences: { notifications: true, emailAlerts: true, smsAlerts: true, language: 'en', theme: 'dark' },
+  },
+  'security-001': {
+    uid: 'security-001',
+    email: 'security1@redemptionos.com',
+    displayName: 'Officer James Nkrumah',
+    role: 'security' as UserRole,
+    createdAt: new Date('2024-01-10'),
+    updatedAt: new Date(),
+    isActive: true,
+    metadata: { lastLogin: new Date(), loginCount: 30 },
+    preferences: { notifications: true, emailAlerts: false, smsAlerts: true, language: 'en', theme: 'dark' },
+  },
+  'security-002': {
+    uid: 'security-002',
+    email: 'security2@redemptionos.com',
+    displayName: 'Officer Amara Diallo',
+    role: 'security' as UserRole,
+    createdAt: new Date('2024-01-12'),
+    updatedAt: new Date(),
+    isActive: true,
+    metadata: { lastLogin: new Date(), loginCount: 25 },
+    preferences: { notifications: true, emailAlerts: false, smsAlerts: true, language: 'en', theme: 'dark' },
+  },
+  'vendor-001': {
+    uid: 'vendor-001',
+    email: 'vendor1@redemptionos.com',
+    displayName: 'Emmanuel Stores',
+    role: 'vendor' as UserRole,
+    createdAt: new Date('2024-02-15'),
+    updatedAt: new Date(),
+    isActive: true,
+    metadata: { lastLogin: new Date(), loginCount: 18 },
+    preferences: { notifications: true, emailAlerts: true, smsAlerts: false, language: 'en', theme: 'dark' },
+  },
+  'vendor-002': {
+    uid: 'vendor-002',
+    email: 'vendor2@redemptionos.com',
+    displayName: 'Grace Foods',
+    role: 'vendor' as UserRole,
+    createdAt: new Date('2024-02-20'),
+    updatedAt: new Date(),
+    isActive: true,
+    metadata: { lastLogin: new Date(), loginCount: 12 },
+    preferences: { notifications: true, emailAlerts: true, smsAlerts: false, language: 'en', theme: 'dark' },
+  },
+  'vendor-003': {
+    uid: 'vendor-003',
+    email: 'vendor3@redemptionos.com',
+    displayName: 'Holy Wares',
+    role: 'vendor' as UserRole,
+    createdAt: new Date('2024-03-01'),
+    updatedAt: new Date(),
+    isActive: true,
+    metadata: { lastLogin: new Date(), loginCount: 7 },
+    preferences: { notifications: true, emailAlerts: false, smsAlerts: false, language: 'en', theme: 'dark' },
+  },
+  'delivery-001': {
+    uid: 'delivery-001',
+    email: 'delivery1@redemptionos.com',
+    displayName: 'Kwame Rider',
+    role: 'delivery_personnel' as UserRole,
+    createdAt: new Date('2024-02-10'),
+    updatedAt: new Date(),
+    isActive: true,
+    phoneNumber: '+233 244 777 8899',
+    metadata: { lastLogin: new Date(), loginCount: 20 },
+    preferences: { notifications: true, emailAlerts: false, smsAlerts: true, language: 'en', theme: 'dark' },
+  },
+  'attendee-001': {
+    uid: 'attendee-001',
+    email: 'attendee@redemptionos.com',
+    displayName: 'Faith Adeyemi',
+    role: 'attendee' as UserRole,
+    createdAt: new Date('2024-03-15'),
+    updatedAt: new Date(),
+    isActive: true,
+    metadata: { lastLogin: new Date(), loginCount: 3 },
+    preferences: { notifications: true, emailAlerts: false, smsAlerts: false, language: 'en', theme: 'dark' },
+  },
+};
+
+export const DEMO_ACCOUNTS = [
+  { role: 'Admin', email: 'admin@redemptionos.com', password: 'demo1234', description: 'Full access' },
+  { role: 'Parent', email: 'parent1@redemptionos.com', password: 'demo1234', description: 'Family tracking' },
+  { role: 'Security', email: 'security1@redemptionos.com', password: 'demo1234', description: 'Operations center' },
+  { role: 'Vendor', email: 'vendor1@redemptionos.com', password: 'demo1234', description: 'Marketplace seller' },
+  { role: 'Delivery', email: 'delivery1@redemptionos.com', password: 'demo1234', description: 'Logistics' },
+  { role: 'Attendee', email: 'attendee@redemptionos.com', password: 'demo1234', description: 'General access' },
+];
+
+export const MOCK_SESSION_KEY = 'redemption_mock_session';
