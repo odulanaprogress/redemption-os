@@ -76,13 +76,13 @@ export function QRIdentityPage() {
         lastName: form.lastName,
         dateOfBirth: new Date(form.dateOfBirth),
         allergies: allergiesList,
-        medicalNotes: form.medicalNotes || undefined,
+        medicalNotes: form.medicalNotes || null,
         assignedZone: form.assignedZone,
         emergencyContact: {
           name: form.contactName,
           relationship: form.contactRelationship,
           phoneNumber: form.contactPhone,
-          alternatePhone: form.contactAltPhone || undefined,
+          alternatePhone: form.contactAltPhone || null,
         },
       });
 
