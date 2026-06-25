@@ -8,7 +8,8 @@ import { Globe, Lock, Mail, ArrowLeft, ChevronDown, ChevronUp, Zap } from "lucid
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "sonner";
 import { isMockMode } from "../../config/firebase.config";
-import { DEMO_ACCOUNTS } from "../../config/mock-data";
+import { DEMO_ACCOUNTS, MOCK_USERS, MOCK_PROFILES } from "../../config/mock-data";
+import { authService } from "../../services/auth.service";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -111,9 +112,6 @@ export function LoginPage() {
     toast.info("Seeding live database with demo users... please wait.");
     
     try {
-      const { MOCK_USERS, MOCK_PROFILES } = await import("../../config/mock-data");
-      const { authService } = await import("../../services/auth.service");
-      
       let successCount = 0;
       for (const user of MOCK_USERS) {
         const profile = MOCK_PROFILES[user.uid];

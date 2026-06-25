@@ -33,4 +33,37 @@ export default defineConfig({
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
+
+  build: {
+    // Raise warning threshold — large vendor libs like Firebase are expected
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Core React runtime
+          'vendor-react': ['react', 'react-dom', 'react-router'],
+          // Firebase SDKs (largest dependency)
+          'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
+          // UI component libraries
+          'vendor-ui': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-select',
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-tooltip',
+            'lucide-react',
+          ],
+          // Motion / animation
+          'vendor-motion': ['motion'],
+          // Charts
+          'vendor-charts': ['recharts'],
+          // Form utilities
+          'vendor-forms': ['react-hook-form'],
+        },
+      },
+    },
+  },
 })
+
