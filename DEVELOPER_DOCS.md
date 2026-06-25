@@ -39,25 +39,36 @@
 
 ```
 Browser
-  └── React 18 (Vite 6)
-        ├── Zustand stores (client state)
-        ├── React Router v7 (routing)
-        ├── Pages & Components
-        │     └── useAuth, useNotifications (custom hooks)
-        └── Services layer
-              ├── Firebase Firestore (real-time DB)   ← project: redemption-os
-              ├── Firebase Auth (authentication)       ← project: redemption-os
-              ├── Cloudinary (media storage)
-              └── Sentry (error monitoring)
+  ├── React 18 (Vite 6) Frontend
+  │     ├── Zustand stores (client state)
+  │     ├── React Router v7 (routing)
+  │     ├── Pages & Components (with Mapbox maps)
+  │     ├── useOfflineSync (IndexedDB local cache & sync queue)
+  │     └── Services layer
+  │           ├── Firebase Firestore & Auth (real-time DB & user auth)
+  │           ├── Cloudinary (media upload & storage)
+  │           └── Sentry (telemetry & error tracking)
+  │
+  ├── Service Worker (Workbox)
+  │     ├── Static assets cache (Stale-While-Revalidate)
+  │     └── API caching & Background Sync queue (NetworkFirst, JSON-only)
+  │
+  └── Node.js & Express Fallback Backend
+        ├── Compression (gzip) & Cors middlewares
+        ├── Delta sync engine (/api/sync)
+        ├── USSD session webhook handler (/api/ussd)
+        └── SMS dispatcher (Termii & Africa's Talking integrations)
 ```
 
 ### Key Design Decisions
 
-- **No Redux** — Zustand handles all global state (lightweight, hook-based)
-- **Live mode always on** — `VITE_USE_MOCK_DATA=false` in `.env`; the app always connects to the real `redemption-os` Firebase project
-- **Cloudinary over Firebase Storage** — media (images/videos) stored exclusively in Cloudinary; Firebase Storage is initialized but unused for user-uploaded media
-- **Real-time via `onSnapshot`** — messages, broadcasts, and notifications use Firestore real-time listeners, not polling
-- **Sentry** — all runtime errors reported to Sentry for production monitoring
+- **No Redux** — Zustand handles all global state (lightweight, hook-based).
+- **Live mode always on** — `VITE_USE_MOCK_DATA=false` in `.env`; the app always connects to the real `redemption-os` Firebase project.
+- **Cloudinary for Media** — Images/videos are stored on Cloudinary. Firebase Storage is reserved for internal configuration if needed.
+- **Mapbox GL JS** — Renders venue layouts and computes evacuation polygons.
+- **Offline-First Synchronization** — Leverages IndexedDB (`idb`) and Service Workers (`Workbox`) to cache static resources and core API responses. If an operator reports an incident while offline, it is queued and synchronized automatically on reconnection.
+- **USSD & SMS Fallbacks** — Integrated with Termii and Africa's Talking to allow low-bandwidth SMS dispatch and offline feature access via standard USSD dial codes (`*384#`).
+- **Sentry** — All frontend and backend runtime errors are reported to Sentry.
 
 ---
 

@@ -201,6 +201,31 @@ After you register, **Redemption OS** sends a confirmation email to your registe
 
 ---
 
+## System Architecture & Core Technology Responsibilities
+
+To ensure the platform remains lightweight, responsive, and operational even in challenging event environments (such as low bandwidth or total internet blackout), Redemption OS distributes its capabilities across several integrated cloud services and local mechanisms:
+
+*   **Google Firebase (Firestore & Auth)**:
+    *   *Authentication*: Manages all secure user sign-ups, password resets, and role assignments.
+    *   *Real-time Database*: Syncs live gospel feeds, community broadcasts, and responder assignments across all active dashboards in real-time.
+*   **Cloudinary**:
+    *   *Media Storage*: Manages secure hosting, resizing, and delivery of all uploaded images (e.g., child registration photographs, vendor store avatars, and product catalog listings).
+*   **Mapbox GL JS**:
+    *   *Interactive Navigation*: Renders venue floor plans, markers for restrooms, first-aid hubs, food courts, and computes active zone boundary lines.
+*   **IndexedDB (`idb`) & Service Worker (`Workbox`)**:
+    *   *Offline Local Cache*: Caches venue map GeoJSONs, zone statuses, and density parameters in the browser to maintain functionality during signal dropouts.
+    *   *Background Queue*: Intercepts and holds outgoing incident reports when offline, and automatically dispatches them to the database once a connection is detected.
+*   **Termii & Africa's Talking SMS APIs**:
+    *   *Communication Fallback*: Transmits high-priority alerts directly via standard cellular SMS to security responders' registered telephone numbers when web push notifications fail.
+*   **Africa's Talking USSD Gateway**:
+    *   *Analogue Fallback*: Hosts a dial-in portal (`*384#`) that allows attendees or staff without smartphones (or without data connections) to fetch zone statuses, request evacuation guidelines, and submit emergency incidents.
+*   **Sentry**:
+    *   *Performance Monitoring*: Collects diagnostics, client crash reports, and system telemetry in real-time.
+*   **Node.js / Express Server**:
+    *   *Fallback API Layer*: Coordinates webhook callbacks for USSD, handles compressed delta-sync requests, and serves bandwidth-optimized (properties-stripped) GeoJSON venue maps.
+
+---
+
 ## Data & Privacy
 
 Redemption OS takes your privacy seriously:
