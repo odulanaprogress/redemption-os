@@ -1,11 +1,13 @@
 import { motion, AnimatePresence } from 'motion/react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import {
   Store, Package, TrendingUp, DollarSign, Clock, CheckCircle,
   AlertCircle, Upload, Edit, Trash2, BarChart3, X, Plus,
-  ArrowLeft, Truck, RefreshCw
+  ArrowLeft, Truck, RefreshCw, Camera, Loader2, Image as ImageIcon,
 } from 'lucide-react';
+import { cloudinaryService } from '../../services/cloudinary.service';
+import { toast as sonerToast } from 'sonner';
 import { AreaChart, Area, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { mockVendors, getProductsByVendor, getOrdersByVendor, type Product, type Order } from '../data/marketplace';
 import { toast } from 'sonner';
@@ -230,7 +232,13 @@ function ProductsTab({ products, onUpload, onEdit, onDelete }: any) {
         <div className="grid grid-cols-1 gap-4">
           {products.map((product: Product) => (
             <div key={product.id} className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4">
-              <div className="text-5xl flex-shrink-0">{product.image}</div>
+              <div className="w-16 h-16 rounded-xl flex-shrink-0 overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center">
+                {product.image?.startsWith('http') ? (
+                  <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-4xl">{product.image}</span>
+                )}
+              </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold mb-1">{product.name}</h3>
                 <p className="text-sm text-white/50 mb-2 line-clamp-1">{product.description}</p>
@@ -401,32 +409,48 @@ function StatCard({ icon: Icon, label, value, change, positive, color }: any) {
 function UploadProductModal({ onClose, onSubmit }: { onClose: () => void; onSubmit: (p: Product) => void }) {
   const [form, setForm] = useState({ name: '', description: '', price: '', stock: '', category: 'Books', deliveryETA: '15 min' });
   const [submitting, setSubmitting] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageUploading, setImageUploading] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImageUploading(true);
+    const result = await cloudinaryService.uploadImage(file, 'redemption-os/products', { tags: ['product'] });
+    setImageUploading(false);
+    if (result.success && result.data) {
+      setImageUrl(result.data.secureUrl);
+      sonerToast.success('Product image uploaded!');
+    } else {
+      sonerToast.error(result.error ?? 'Image upload failed');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.price || !form.stock) return;
     setSubmitting(true);
-    setTimeout(() => {
-      const newProduct: Product = {
-        id: `p_new_${Date.now()}`,
-        vendorId: 'v1',
-        vendorName: 'Grace Bookstore',
-        name: form.name,
-        description: form.description,
-        price: parseFloat(form.price),
-        image: '📦',
-        category: form.category,
-        stock: parseInt(form.stock),
-        inStock: true,
-        deliveryETA: form.deliveryETA,
-        featured: false,
-        trending: false,
-        rating: 0,
-        reviews: 0,
-        tags: [],
-      };
-      onSubmit(newProduct);
-    }, 1000);
+    const newProduct: Product = {
+      id: `p_new_${Date.now()}`,
+      vendorId: 'v1',
+      vendorName: 'Grace Bookstore',
+      name: form.name,
+      description: form.description,
+      price: parseFloat(form.price),
+      image: imageUrl || '📦',
+      category: form.category,
+      stock: parseInt(form.stock),
+      inStock: true,
+      deliveryETA: form.deliveryETA,
+      featured: false,
+      trending: false,
+      rating: 0,
+      reviews: 0,
+      tags: [],
+    };
+    onSubmit(newProduct);
+    setSubmitting(false);
   };
 
   return (
@@ -445,6 +469,24 @@ function UploadProductModal({ onClose, onSubmit }: { onClose: () => void; onSubm
           <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Product image upload */}
+          <div>
+            <label className="block text-sm text-white/60 mb-2">Product Image</label>
+            <input ref={fileRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+            <div
+              onClick={() => fileRef.current?.click()}
+              className="w-full h-36 bg-white/5 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-emerald-500/40 hover:bg-white/10 transition-all"
+            >
+              {imageUploading ? (
+                <><Loader2 className="w-8 h-8 text-emerald-400 animate-spin" /><span className="text-sm text-white/50">Uploading...</span></>
+              ) : imageUrl ? (
+                <img src={imageUrl} alt="product" className="w-full h-full object-cover rounded-xl" />
+              ) : (
+                <><ImageIcon className="w-8 h-8 text-white/30" /><span className="text-sm text-white/40">Click to upload product image</span></>
+              )}
+            </div>
+          </div>
+
           {[
             { key: 'name', label: 'Product Name', type: 'text', placeholder: 'e.g. Study Bible Deluxe' },
             { key: 'description', label: 'Description', type: 'text', placeholder: 'Short product description' },

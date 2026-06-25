@@ -1,240 +1,589 @@
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import { Textarea } from "../components/ui/textarea";
 import {
-  ArrowLeft,
-  MessageSquare,
-  Bell,
-  Radio,
-  AlertTriangle,
-  Users,
-  MapPin,
-  Clock,
+  ArrowLeft, MessageSquare, Bell, Radio, AlertTriangle, Users, MapPin,
+  Clock, Send, Image, Video, X, Loader2, CheckCheck, Trash2, Hash,
+  Upload, Play,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
+import { toast } from "sonner";
+import { messageService, Broadcast, Message } from "../../services/message.service";
+import { cloudinaryService } from "../../services/cloudinary.service";
+import { useAuthStore } from "../../store/auth.store";
+import { formatDistanceToNow } from "date-fns";
+
+const BROADCAST_TYPE_CONFIG = {
+  operational: { label: "Operational", color: "text-[#0ea5e9]", bg: "bg-[#0ea5e9]/10", border: "border-[#0ea5e9]/30" },
+  alert: { label: "Alert", color: "text-[#f59e0b]", bg: "bg-[#f59e0b]/10", border: "border-[#f59e0b]/30" },
+  emergency: { label: "Emergency", color: "text-red-400", bg: "bg-red-400/10", border: "border-red-400/30" },
+  info: { label: "Info", color: "text-[#10b981]", bg: "bg-[#10b981]/10", border: "border-[#10b981]/30" },
+};
+
+// ─── Media Preview Helper ─────────────────────────────────────────────────────
+
+function MediaPreview({ url, type }: { url: string; type?: string }) {
+  if (!url) return null;
+  const isVideo = type?.startsWith("video") || url.includes("/video/");
+  if (isVideo) {
+    return (
+      <video
+        src={url}
+        controls
+        className="rounded-lg max-h-48 w-full object-cover mt-2 border border-white/10"
+      />
+    );
+  }
+  return (
+    <img
+      src={url}
+      alt="media"
+      className="rounded-lg max-h-48 w-full object-cover mt-2 border border-white/10"
+    />
+  );
+}
+
+// ─── Broadcast Card ───────────────────────────────────────────────────────────
+
+function BroadcastCard({
+  broadcast,
+  canDelete,
+  onDelete,
+}: {
+  broadcast: Broadcast;
+  canDelete: boolean;
+  onDelete: (id: string) => void;
+}) {
+  const cfg = BROADCAST_TYPE_CONFIG[broadcast.type] ?? BROADCAST_TYPE_CONFIG.info;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`rounded-xl border ${cfg.border} ${cfg.bg} p-4`}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-3 flex-1 min-w-0">
+          <Radio className={`h-5 w-5 mt-0.5 shrink-0 ${cfg.color}`} />
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <h3 className="text-white text-sm font-semibold">{broadcast.title}</h3>
+              <Badge className={`${cfg.bg} ${cfg.color} border ${cfg.border} text-xs`}>
+                {broadcast.zone}
+              </Badge>
+              {broadcast.pinned && (
+                <Badge className="bg-amber-400/10 text-amber-400 border-amber-400/20 text-xs">
+                  📌 Pinned
+                </Badge>
+              )}
+            </div>
+            <p className="text-sm text-white/70 leading-relaxed">{broadcast.message}</p>
+            {broadcast.mediaUrl && (
+              <MediaPreview url={broadcast.mediaUrl} />
+            )}
+            <div className="flex items-center gap-2 mt-2 text-xs text-white/40">
+              <Clock className="h-3 w-3" />
+              <span>{formatDistanceToNow(broadcast.createdAt, { addSuffix: true })}</span>
+              <span>•</span>
+              <span>{broadcast.createdByName}</span>
+            </div>
+          </div>
+        </div>
+        {canDelete && (
+          <button
+            onClick={() => onDelete(broadcast.id)}
+            className="shrink-0 p-1.5 hover:bg-red-500/20 rounded-lg text-white/30 hover:text-red-400 transition-colors"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Message Bubble ───────────────────────────────────────────────────────────
+
+function MessageBubble({
+  msg,
+  isOwn,
+  onDelete,
+}: {
+  msg: Message;
+  isOwn: boolean;
+  onDelete: (id: string) => void;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`flex gap-2 ${isOwn ? "flex-row-reverse" : "flex-row"}`}
+    >
+      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0ea5e9] to-[#10b981] flex items-center justify-center text-white text-xs font-bold shrink-0 mt-1">
+        {msg.senderName.slice(0, 1).toUpperCase()}
+      </div>
+      <div className={`max-w-[72%] ${isOwn ? "items-end" : "items-start"} flex flex-col gap-0.5`}>
+        <span className="text-xs text-white/40 px-1">
+          {isOwn ? "You" : msg.senderName}
+        </span>
+        <div
+          className={`rounded-2xl px-4 py-2.5 text-sm ${
+            isOwn
+              ? "bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white rounded-tr-sm"
+              : "bg-[#1a1f2e] border border-white/10 text-white/90 rounded-tl-sm"
+          }`}
+        >
+          {msg.text && <p className="leading-relaxed">{msg.text}</p>}
+          {msg.mediaUrl && <MediaPreview url={msg.mediaUrl} type={msg.mediaType} />}
+        </div>
+        <div className="flex items-center gap-1 px-1">
+          <span className="text-[10px] text-white/30">
+            {formatDistanceToNow(msg.createdAt, { addSuffix: true })}
+          </span>
+          {isOwn && (
+            <button
+              onClick={() => onDelete(msg.id)}
+              className="text-white/20 hover:text-red-400 transition-colors ml-1"
+            >
+              <Trash2 className="h-2.5 w-2.5" />
+            </button>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 
 export function CommunicationCenter() {
   const navigate = useNavigate();
+  const { user, userProfile } = useAuthStore();
+  const isAdmin = userProfile?.role === "admin" || userProfile?.role === "security";
 
-  const announcements = [
-    {
-      id: 1,
-      type: "operational",
-      title: "Service Starting Soon",
-      message: "Main service will begin in 10 minutes. Please find your seats.",
-      time: "2 min ago",
-      zone: "All Zones",
-      icon: Radio,
-      color: "text-[#0ea5e9]",
-      bgColor: "bg-[#0ea5e9]/10",
-    },
-    {
-      id: 2,
-      type: "alert",
-      title: "Parking Update",
-      message: "Lot B is now at capacity. Please use Lot C or D.",
-      time: "15 min ago",
-      zone: "Parking",
-      icon: AlertTriangle,
-      color: "text-[#f59e0b]",
-      bgColor: "bg-[#f59e0b]/10",
-    },
-    {
-      id: 3,
-      type: "info",
-      title: "Volunteer Coordination",
-      message: "All volunteers report to check-in stations for assignment updates.",
-      time: "25 min ago",
-      zone: "Volunteers",
-      icon: Users,
-      color: "text-[#10b981]",
-      bgColor: "bg-[#10b981]/10",
-    },
-  ];
+  const [tab, setTab] = useState<"broadcasts" | "messages" | "emergency">("broadcasts");
+  const [activeChannel, setActiveChannel] = useState("general");
+  const channels = messageService.getChannels();
 
-  const emergencyAlerts = [
-    {
-      id: 1,
-      title: "Medical Response Active",
-      location: "Main Hall, Section C",
-      status: "In Progress",
-      time: "5 min ago",
-    },
-  ];
+  // Broadcasts state
+  const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
+  const [broadcastsLoading, setBroadcastsLoading] = useState(true);
+  const [showBroadcastForm, setShowBroadcastForm] = useState(false);
+  const [bForm, setBForm] = useState({ type: "operational" as Broadcast["type"], title: "", message: "", zone: "All Zones" });
+  const [bUploading, setBUploading] = useState(false);
+  const [bMediaUrl, setBMediaUrl] = useState<string | null>(null);
+  const [bSubmitting, setBSubmitting] = useState(false);
 
-  const zoneNotifications = [
-    {
-      zone: "Main Sanctuary",
-      count: 3,
-      lastUpdate: "Just now",
-    },
-    {
-      zone: "North Wing",
-      count: 1,
-      lastUpdate: "10 min ago",
-    },
-    {
-      zone: "Parking Area",
-      count: 5,
-      lastUpdate: "5 min ago",
-    },
-  ];
+  // Messages state
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [msgText, setMsgText] = useState("");
+  const [msgSending, setMsgSending] = useState(false);
+  const [msgUploading, setMsgUploading] = useState(false);
+  const [msgMediaUrl, setMsgMediaUrl] = useState<string | null>(null);
+  const [msgMediaType, setMsgMediaType] = useState<string | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const msgFileRef = useRef<HTMLInputElement>(null);
+  const bcFileRef = useRef<HTMLInputElement>(null);
+
+  // Subscribe to broadcasts
+  useEffect(() => {
+    setBroadcastsLoading(true);
+    const unsub = messageService.subscribeToBroadcasts(
+      (data) => { setBroadcasts(data); setBroadcastsLoading(false); },
+      (err) => { console.error(err); setBroadcastsLoading(false); }
+    );
+    return unsub;
+  }, []);
+
+  // Subscribe to channel messages
+  useEffect(() => {
+    const unsub = messageService.subscribeToChannel(
+      activeChannel,
+      (data) => { setMessages(data); setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100); },
+      (err) => console.error(err)
+    );
+    return unsub;
+  }, [activeChannel]);
+
+  // ── Broadcast handlers ──────────────────────────────────────────────────────
+
+  const handleBroadcastMedia = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setBUploading(true);
+    const result = await cloudinaryService.uploadFile(file, "redemption-os/broadcasts", { tags: ["broadcast"] });
+    setBUploading(false);
+    if (result.success && result.data) {
+      setBMediaUrl(result.data.secureUrl);
+      toast.success("Media uploaded");
+    } else {
+      toast.error(result.error ?? "Upload failed");
+    }
+  };
+
+  const handleCreateBroadcast = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!bForm.title.trim() || !bForm.message.trim()) {
+      toast.error("Title and message are required");
+      return;
+    }
+    if (!user?.uid) { toast.error("Please log in"); return; }
+    setBSubmitting(true);
+    const result = await messageService.createBroadcast({
+      ...bForm,
+      createdBy: user.uid,
+      createdByName: userProfile?.displayName ?? "Admin",
+      ...(bMediaUrl ? { mediaUrl: bMediaUrl } : {}),
+    });
+    setBSubmitting(false);
+    if (result.success) {
+      toast.success("Broadcast sent!");
+      setBForm({ type: "operational", title: "", message: "", zone: "All Zones" });
+      setBMediaUrl(null);
+      setShowBroadcastForm(false);
+    } else {
+      toast.error("Failed to send broadcast");
+    }
+  };
+
+  const handleDeleteBroadcast = async (id: string) => {
+    await messageService.deleteBroadcast(id);
+    toast.success("Broadcast removed");
+  };
+
+  // ── Message handlers ────────────────────────────────────────────────────────
+
+  const handleMsgMedia = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setMsgUploading(true);
+    const isVideo = file.type.startsWith("video");
+    const result = isVideo
+      ? await cloudinaryService.uploadVideo(file, "redemption-os/messages")
+      : await cloudinaryService.uploadImage(file, "redemption-os/messages");
+    setMsgUploading(false);
+    if (result.success && result.data) {
+      setMsgMediaUrl(result.data.secureUrl);
+      setMsgMediaType(file.type);
+      toast.success("Media ready to send");
+    } else {
+      toast.error(result.error ?? "Upload failed");
+    }
+  };
+
+  const handleSendMessage = useCallback(async () => {
+    if (!msgText.trim() && !msgMediaUrl) return;
+    if (!user?.uid) { toast.error("Please log in"); return; }
+    setMsgSending(true);
+    const result = await messageService.sendMessage({
+      channelId: activeChannel,
+      senderId: user.uid,
+      senderName: userProfile?.displayName ?? "User",
+      type: msgMediaUrl ? (msgMediaType?.startsWith("video") ? "video" : "image") : "text",
+      text: msgText.trim(),
+      ...(msgMediaUrl ? { mediaUrl: msgMediaUrl, mediaType: msgMediaType ?? undefined } : {}),
+    });
+    setMsgSending(false);
+    if (result.success) {
+      setMsgText("");
+      setMsgMediaUrl(null);
+      setMsgMediaType(null);
+    } else {
+      toast.error("Failed to send message");
+    }
+  }, [msgText, msgMediaUrl, msgMediaType, user, userProfile, activeChannel]);
+
+  const handleDeleteMessage = async (id: string) => {
+    await messageService.deleteMessage(id);
+  };
+
+  const emergencyBroadcasts = broadcasts.filter((b) => b.type === "emergency");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628]">
-      <div className="bg-[#1a1f2e]/80 backdrop-blur-lg border-b border-white/10 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628] flex flex-col">
+      {/* Header */}
+      <div className="bg-[#1a1f2e]/80 backdrop-blur-lg border-b border-white/10 p-4 sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/dashboard")}
-            className="text-white/60 hover:text-white"
-          >
+          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")} className="text-white/60 hover:text-white">
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
             <h1 className="text-lg text-white">Communication Center</h1>
-            <p className="text-sm text-white/60">Real-time updates & alerts</p>
+            <p className="text-sm text-white/60">Real-time updates &amp; messaging</p>
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative text-white/60 hover:text-white"
-          >
-            <Bell className="h-5 w-5" />
-            <div className="absolute top-1 right-1 h-2 w-2 rounded-full bg-[#ef4444]" />
-          </Button>
+          <div className="flex items-center gap-1.5">
+            <div className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
+            <span className="text-xs text-[#10b981]">Live</span>
+          </div>
+        </div>
+
+        {/* Tab bar */}
+        <div className="flex gap-1 mt-3">
+          {(["broadcasts", "messages", "emergency"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-colors capitalize ${
+                tab === t
+                  ? "bg-[#0ea5e9]/20 text-[#0ea5e9] border border-[#0ea5e9]/30"
+                  : "text-white/50 hover:text-white/80"
+              }`}
+            >
+              {t === "emergency" ? `🚨 Emergency${emergencyBroadcasts.length > 0 ? ` (${emergencyBroadcasts.length})` : ""}` : t.charAt(0).toUpperCase() + t.slice(1)}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="p-4">
-        <Tabs defaultValue="all" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-[#1a1f2e]/80 backdrop-blur-lg border border-white/10">
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="emergency">Emergency</TabsTrigger>
-            <TabsTrigger value="zones">Zones</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="all" className="space-y-4">
-            {announcements.map((announcement, index) => (
-              <motion.div
-                key={announcement.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6">
-                  <div className="flex items-start gap-4">
-                    <div className={`rounded-xl ${announcement.bgColor} p-3`}>
-                      <announcement.icon className={`h-6 w-6 ${announcement.color}`} />
+      {/* ── BROADCASTS TAB ─────────────────────────────────────────────────────── */}
+      {tab === "broadcasts" && (
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {isAdmin && (
+            <div>
+              {!showBroadcastForm ? (
+                <button
+                  onClick={() => setShowBroadcastForm(true)}
+                  className="w-full bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+                >
+                  <Radio className="h-4 w-4" />
+                  Create Broadcast
+                </button>
+              ) : (
+                <Card className="bg-[#1a1f2e]/80 border-white/10 p-5">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-white font-semibold">New Broadcast</h3>
+                    <button onClick={() => { setShowBroadcastForm(false); setBMediaUrl(null); }} className="text-white/40 hover:text-white">
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <form onSubmit={handleCreateBroadcast} className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <select
+                        value={bForm.type}
+                        onChange={(e) => setBForm({ ...bForm, type: e.target.value as any })}
+                        className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#0ea5e9]/50"
+                      >
+                        {(["operational", "alert", "emergency", "info"] as const).map((t) => (
+                          <option key={t} value={t} className="bg-[#1a1f2e]">{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+                        ))}
+                      </select>
+                      <input
+                        value={bForm.zone}
+                        onChange={(e) => setBForm({ ...bForm, zone: e.target.value })}
+                        placeholder="Zone (e.g. All Zones)"
+                        className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#0ea5e9]/50"
+                      />
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 className="text-white mb-1">{announcement.title}</h3>
-                          <p className="text-sm text-white/60">{announcement.message}</p>
+                    <input
+                      required
+                      value={bForm.title}
+                      onChange={(e) => setBForm({ ...bForm, title: e.target.value })}
+                      placeholder="Broadcast title *"
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#0ea5e9]/50"
+                    />
+                    <Textarea
+                      required
+                      value={bForm.message}
+                      onChange={(e) => setBForm({ ...bForm, message: e.target.value })}
+                      placeholder="Broadcast message *"
+                      className="bg-white/5 border-white/10 text-white placeholder:text-white/30 text-sm min-h-[80px]"
+                    />
+
+                    {/* Media upload */}
+                    <div className="flex items-center gap-2">
+                      <input ref={bcFileRef} type="file" accept="image/*,video/*" onChange={handleBroadcastMedia} className="hidden" />
+                      <button
+                        type="button"
+                        onClick={() => bcFileRef.current?.click()}
+                        disabled={bUploading}
+                        className="flex items-center gap-2 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
+                      >
+                        {bUploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+                        {bUploading ? "Uploading..." : "Attach Media"}
+                      </button>
+                      {bMediaUrl && (
+                        <div className="flex items-center gap-2 text-xs text-[#10b981]">
+                          <CheckCheck className="h-3.5 w-3.5" />
+                          Media attached
+                          <button type="button" onClick={() => setBMediaUrl(null)} className="text-white/30 hover:text-red-400">
+                            <X className="h-3 w-3" />
+                          </button>
                         </div>
-                        <Badge className="bg-white/5 text-white/60 border-white/10">
-                          {announcement.zone}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-white/40">
-                        <Clock className="h-3 w-3" />
-                        <span>{announcement.time}</span>
-                      </div>
+                      )}
                     </div>
-                  </div>
-                </Card>
-              </motion.div>
-            ))}
-          </TabsContent>
+                    {bMediaUrl && <MediaPreview url={bMediaUrl} />}
 
-          <TabsContent value="emergency" className="space-y-4">
-            <Card className="bg-gradient-to-br from-[#ef4444]/20 to-[#1a1f2e] border-[#ef4444]/30 p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="h-3 w-3 rounded-full bg-[#ef4444] animate-pulse" />
-                <h2 className="text-lg text-white">Active Emergency Alerts</h2>
+                    <button
+                      type="submit"
+                      disabled={bSubmitting}
+                      className="w-full bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      {bSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                      {bSubmitting ? "Sending..." : "Send Broadcast"}
+                    </button>
+                  </form>
+                </Card>
+              )}
+            </div>
+          )}
+
+          {broadcastsLoading ? (
+            <div className="flex justify-center py-12">
+              <Loader2 className="h-7 w-7 animate-spin text-[#0ea5e9]" />
+            </div>
+          ) : broadcasts.length === 0 ? (
+            <div className="text-center py-16 text-white/40">
+              <Radio className="h-10 w-10 mx-auto mb-3 opacity-30" />
+              <p className="text-sm">No broadcasts yet</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {broadcasts.map((b) => (
+                <BroadcastCard key={b.id} broadcast={b} canDelete={isAdmin} onDelete={handleDeleteBroadcast} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── MESSAGES TAB ───────────────────────────────────────────────────────── */}
+      {tab === "messages" && (
+        <div className="flex-1 flex flex-col min-h-0">
+          {/* Channel selector */}
+          <div className="flex gap-2 px-4 py-2 overflow-x-auto bg-[#1a1f2e]/40 border-b border-white/10 scrollbar-none">
+            {channels.map((ch) => (
+              <button
+                key={ch.id}
+                onClick={() => setActiveChannel(ch.id)}
+                className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                  activeChannel === ch.id
+                    ? "bg-[#0ea5e9]/20 text-[#0ea5e9] border border-[#0ea5e9]/30"
+                    : "text-white/50 hover:text-white/80 bg-white/5"
+                }`}
+              >
+                <span>{ch.icon}</span>
+                <Hash className="h-2.5 w-2.5" />
+                {ch.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Messages list */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {messages.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full py-16 text-white/30">
+                <MessageSquare className="h-10 w-10 mb-3 opacity-30" />
+                <p className="text-sm">No messages yet. Say something!</p>
               </div>
-              {emergencyAlerts.map((alert) => (
-                <div key={alert.id} className="space-y-3">
-                  <div>
-                    <h3 className="text-white mb-2">{alert.title}</h3>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2 text-sm text-white/60">
-                        <MapPin className="h-4 w-4" />
-                        <span>{alert.location}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-white/60">
-                        <Clock className="h-4 w-4" />
-                        <span>{alert.time}</span>
-                      </div>
-                    </div>
+            ) : (
+              messages.map((m) => (
+                <MessageBubble
+                  key={m.id}
+                  msg={m}
+                  isOwn={m.senderId === user?.uid}
+                  onDelete={handleDeleteMessage}
+                />
+              ))
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Composer */}
+          <div className="p-3 bg-[#1a1f2e]/80 backdrop-blur-lg border-t border-white/10">
+            {msgMediaUrl && (
+              <div className="mb-2 relative">
+                <MediaPreview url={msgMediaUrl} type={msgMediaType ?? undefined} />
+                <button
+                  onClick={() => { setMsgMediaUrl(null); setMsgMediaType(null); }}
+                  className="absolute top-2 right-2 bg-black/60 rounded-full p-1 text-white/70 hover:text-white"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            )}
+            <div className="flex items-end gap-2">
+              <input ref={msgFileRef} type="file" accept="image/*,video/*" onChange={handleMsgMedia} className="hidden" />
+              <button
+                onClick={() => msgFileRef.current?.click()}
+                disabled={msgUploading}
+                className="p-2.5 bg-white/5 border border-white/10 rounded-xl text-white/50 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
+                title="Attach photo or video"
+              >
+                {msgUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Image className="h-4 w-4" />}
+              </button>
+              <Textarea
+                value={msgText}
+                onChange={(e) => setMsgText(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
+                placeholder={`Message #${activeChannel}...`}
+                className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-white/30 text-sm min-h-[40px] max-h-[120px] resize-none"
+                rows={1}
+              />
+              <button
+                onClick={handleSendMessage}
+                disabled={msgSending || (!msgText.trim() && !msgMediaUrl)}
+                className="p-2.5 bg-gradient-to-r from-[#0ea5e9] to-[#10b981] rounded-xl text-white disabled:opacity-40 transition-opacity"
+              >
+                {msgSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── EMERGENCY TAB ──────────────────────────────────────────────────────── */}
+      {tab === "emergency" && (
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <Card className="bg-gradient-to-br from-red-500/10 to-[#1a1f2e] border-red-500/20 p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="h-3 w-3 rounded-full bg-red-500 animate-pulse" />
+              <h2 className="text-white font-semibold">Active Emergency Alerts</h2>
+            </div>
+            {emergencyBroadcasts.length === 0 ? (
+              <p className="text-white/50 text-sm">No active emergency alerts — all clear ✅</p>
+            ) : (
+              <div className="space-y-3">
+                {emergencyBroadcasts.map((b) => (
+                  <BroadcastCard key={b.id} broadcast={b} canDelete={isAdmin} onDelete={handleDeleteBroadcast} />
+                ))}
+              </div>
+            )}
+          </Card>
+
+          {isAdmin && (
+            <Card className="bg-[#1a1f2e]/80 border-white/10 p-5">
+              <h3 className="text-white font-semibold mb-3">Send Emergency Alert</h3>
+              <button
+                onClick={() => { setBForm({ type: "emergency", title: "", message: "", zone: "All Zones" }); setTab("broadcasts"); setShowBroadcastForm(true); }}
+                className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors"
+              >
+                <AlertTriangle className="h-4 w-4" />
+                Create Emergency Broadcast
+              </button>
+            </Card>
+          )}
+
+          <Card className="bg-[#1a1f2e]/80 border-white/10 p-5">
+            <h3 className="text-white font-semibold mb-3">Zone Status</h3>
+            <div className="space-y-2">
+              {["Main Sanctuary", "North Wing", "Parking Area", "Children Zone A", "Children Zone B"].map((zone) => (
+                <div key={zone} className="flex items-center justify-between p-2 bg-white/5 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-3.5 w-3.5 text-[#0ea5e9]" />
+                    <span className="text-white/80 text-sm">{zone}</span>
                   </div>
-                  <Badge className="bg-[#f59e0b]/20 text-[#f59e0b] border-[#f59e0b]/30">
-                    {alert.status}
+                  <Badge className="bg-[#10b981]/10 text-[#10b981] border-[#10b981]/30 text-xs">
+                    Clear
                   </Badge>
                 </div>
               ))}
-            </Card>
-
-            <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6">
-              <h3 className="text-white mb-4">Recent Emergency Updates</h3>
-              <p className="text-sm text-white/60">No recent emergency updates</p>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="zones" className="space-y-4">
-            <div className="grid gap-4">
-              {zoneNotifications.map((zone, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="rounded-lg bg-[#0ea5e9]/10 p-3">
-                          <MapPin className="h-5 w-5 text-[#0ea5e9]" />
-                        </div>
-                        <div>
-                          <h3 className="text-white">{zone.zone}</h3>
-                          <p className="text-xs text-white/60">Updated {zone.lastUpdate}</p>
-                        </div>
-                      </div>
-                      <Badge className="bg-[#0ea5e9]/20 text-[#0ea5e9] border-[#0ea5e9]/30">
-                        {zone.count} updates
-                      </Badge>
-                    </div>
-                  </Card>
-                </motion.div>
-              ))}
             </div>
-          </TabsContent>
-        </Tabs>
-
-        {/* Communication Analytics */}
-        <Card className="mt-6 bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6">
-          <h3 className="text-white mb-4">Today's Statistics</h3>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center">
-              <p className="text-2xl text-white mb-1">127</p>
-              <p className="text-xs text-white/60">Announcements</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl text-white mb-1">18</p>
-              <p className="text-xs text-white/60">Zones Active</p>
-            </div>
-            <div className="text-center">
-              <p className="text-2xl text-white mb-1">2</p>
-              <p className="text-xs text-white/60">Emergencies</p>
-            </div>
-          </div>
-        </Card>
-      </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router";
 import { LandingPage } from "./pages/landing-page";
 import { LoginPage } from "./pages/login-page";
 import { RegisterPage } from "./pages/register-page";
+import { PreRegistrationPage } from "./pages/pre-registration-page";
 import { OtpVerification } from "./pages/otp-verification";
 import { RoleSelection } from "./pages/role-selection";
 import { AttendeeDashboard } from "./pages/attendee-dashboard";
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "/pre-register",
+    element: <PreRegistrationPage />,
   },
   {
     path: "/verify",

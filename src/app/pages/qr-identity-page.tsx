@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -7,27 +7,40 @@ import { Label } from "../components/ui/label";
 import { Badge } from "../components/ui/badge";
 import {
   ArrowLeft, Plus, QrCode, Download, Printer, AlertTriangle, User,
-  Phone, ShieldCheck, Loader2, Baby, CheckCircle, ChevronRight,
+  Phone, ShieldCheck, Loader2, Baby, CheckCircle, ChevronRight, Camera,
+  ScanLine, MapPin, X,
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
 import { familyService } from "../../services/family.service";
+import { cloudinaryService } from "../../services/cloudinary.service";
 import { useAuthStore } from "../../store/auth.store";
 import { FamilyMember } from "../../types";
+import { Html5QrcodeScanner } from "html5-qrcode";
 
-type Step = "list" | "register" | "card";
+type Step = "list" | "register" | "card" | "scan";
 
 export function QRIdentityPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user, userProfile } = useAuthStore();
   const printRef = useRef<HTMLDivElement>(null);
 
-  const [step, setStep] = useState<Step>("list");
+  const initialStep = searchParams.get("tab") === "scan" ? "scan" : "list";
+  const [step, setStep] = useState<Step>(initialStep);
   const [members, setMembers] = useState<FamilyMember[]>([]);
   const [selectedMember, setSelectedMember] = useState<FamilyMember | null>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  
+  // Scanner state
+  const [scanResult, setScanResult] = useState<any | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [photoUploading, setPhotoUploading] = useState(false);
+  const photoRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     firstName: "",
@@ -42,14 +55,65 @@ export function QRIdentityPage() {
     contactAltPhone: "",
   });
 
+  const isAdminOrSecurity = userProfile?.role === "admin" || userProfile?.role === "security";
+
   useEffect(() => {
-    if (!user?.uid) return;
-    setLoading(true);
-    familyService.getFamilyMembersByParent(user.uid).then((data) => {
-      setMembers(data);
-      setLoading(false);
-    });
-  }, [user?.uid]);
+    if (step === "list" && user?.uid && !isAdminOrSecurity) {
+      setLoading(true);
+      familyService.getFamilyMembersByParent(user.uid).then((data) => {
+        setMembers(data);
+        setLoading(false);
+      });
+    } else if (step === "list" && isAdminOrSecurity) {
+      // Admins/Security just see the scanner option primarily or all mock members if needed
+      setMembers(familyService.getAllMockMembers());
+    }
+  }, [user?.uid, step, isAdminOrSecurity]);
+
+  // Handle Scanner initialization
+  useEffect(() => {
+    let scanner: Html5QrcodeScanner | null = null;
+    
+    if (step === "scan") {
+      setIsScanning(true);
+      setScanResult(null);
+      
+      scanner = new Html5QrcodeScanner(
+        "reader",
+        { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
+        false
+      );
+      
+      scanner.render(
+        async (decodedText) => {
+          // On Success
+          if (scanner) {
+            scanner.clear();
+            setIsScanning(false);
+          }
+          
+          toast.info("QR Code Scanned! Fetching details...");
+          const result = await familyService.scanQRCode(decodedText);
+          
+          if (result.success && result.data) {
+            setScanResult(result.data);
+            toast.success("Child Identity Verified");
+          } else {
+            toast.error("Invalid or unrecognized QR tag.");
+          }
+        },
+        (error) => {
+          // Ignore frequent failure callbacks during scanning
+        }
+      );
+    }
+
+    return () => {
+      if (scanner) {
+        scanner.clear().catch(console.error);
+      }
+    };
+  }, [step]);
 
   const viewQR = async (member: FamilyMember) => {
     setSelectedMember(member);
@@ -60,6 +124,20 @@ export function QRIdentityPage() {
       setQrCodeUrl(tag?.qrCodeURL ?? null);
     }
     setStep("card");
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setPhotoUploading(true);
+    const result = await cloudinaryService.uploadImage(file, "redemption-os/family-members", { tags: ["family", "child"] });
+    setPhotoUploading(false);
+    if (result.success && result.data) {
+      setPhotoUrl(result.data.secureUrl);
+      toast.success("Photo uploaded!");
+    } else {
+      toast.error(result.error ?? "Photo upload failed");
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -75,6 +153,7 @@ export function QRIdentityPage() {
         firstName: form.firstName,
         lastName: form.lastName,
         dateOfBirth: new Date(form.dateOfBirth),
+        photoURL: photoUrl || undefined,
         allergies: allergiesList,
         medicalNotes: form.medicalNotes || null,
         assignedZone: form.assignedZone,
@@ -140,14 +219,25 @@ export function QRIdentityPage() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => step === "list" ? navigate(-1) : setStep(step === "card" ? "list" : "list")}
+            onClick={() => {
+              if (step === "list" || step === "scan") navigate(-1);
+              else setStep("list");
+            }}
             className="text-white/60 hover:text-white"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div>
-            <h1 className="text-lg text-white">QR Identity System</h1>
-            <p className="text-sm text-white/60">Child Safety & Family Reunification</p>
+          <div className="flex-1 flex justify-between items-center">
+            <div>
+              <h1 className="text-lg text-white">QR Identity System</h1>
+              <p className="text-sm text-white/60">Child Safety & Reunification</p>
+            </div>
+            {isAdminOrSecurity && step !== "scan" && (
+              <Button onClick={() => setStep("scan")} size="sm" className="bg-[#0ea5e9] hover:bg-[#0284c7] text-white">
+                <ScanLine className="h-4 w-4 mr-2" />
+                Scan Tag
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -158,16 +248,18 @@ export function QRIdentityPage() {
           {/* STEP: List */}
           {step === "list" && (
             <motion.div key="list" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
-              <div className="flex justify-between items-center mb-4">
-                <p className="text-white/60 text-sm">{members.length} child{members.length !== 1 ? "ren" : ""} registered</p>
-                <Button
-                  onClick={() => setStep("register")}
-                  className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Register Child
-                </Button>
-              </div>
+              {!isAdminOrSecurity && (
+                <div className="flex justify-between items-center mb-4">
+                  <p className="text-white/60 text-sm">{members.length} child{members.length !== 1 ? "ren" : ""} registered</p>
+                  <Button
+                    onClick={() => setStep("register")}
+                    className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Register Child
+                  </Button>
+                </div>
+              )}
 
               {loading ? (
                 <div className="flex justify-center py-16">
@@ -177,10 +269,14 @@ export function QRIdentityPage() {
                 <Card className="bg-[#1a1f2e]/80 border-white/10 p-10 text-center">
                   <Baby className="h-12 w-12 text-white/20 mx-auto mb-4" />
                   <p className="text-white/60 mb-2">No children registered yet</p>
-                  <p className="text-white/40 text-sm mb-6">Register your children to generate QR identity tags for safe tracking at the event.</p>
-                  <Button onClick={() => setStep("register")} className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white">
-                    <Plus className="h-4 w-4 mr-2" /> Register First Child
-                  </Button>
+                  {!isAdminOrSecurity && (
+                    <>
+                      <p className="text-white/40 text-sm mb-6">Register your children to generate QR tags for safe tracking.</p>
+                      <Button onClick={() => setStep("register")} className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white">
+                        <Plus className="h-4 w-4 mr-2" /> Register First Child
+                      </Button>
+                    </>
+                  )}
                 </Card>
               ) : (
                 <div className="space-y-3">
@@ -237,6 +333,26 @@ export function QRIdentityPage() {
               <Card className="bg-[#1a1f2e]/80 border-white/10 p-6">
                 <h2 className="text-white mb-6">Register a Child</h2>
                 <form onSubmit={handleRegister} className="space-y-5">
+                  {/* Child photo */}
+                  <div className="flex flex-col items-center gap-3">
+                    <input ref={photoRef} type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
+                    <div
+                      onClick={() => photoRef.current?.click()}
+                      className="relative w-24 h-24 rounded-full bg-white/5 border-2 border-dashed border-white/20 flex items-center justify-center cursor-pointer hover:border-[#0ea5e9]/50 transition-all overflow-hidden"
+                    >
+                      {photoUploading ? (
+                        <Loader2 className="h-6 w-6 animate-spin text-[#0ea5e9]" />
+                      ) : photoUrl ? (
+                        <img src={photoUrl} alt="child" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="flex flex-col items-center gap-1">
+                          <Camera className="h-6 w-6 text-white/30" />
+                          <span className="text-[10px] text-white/30">Add photo</span>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-xs text-white/40">Child's photo (optional but recommended)</p>
+                  </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <Label className="text-white/70 text-xs">First Name *</Label>
@@ -312,7 +428,7 @@ export function QRIdentityPage() {
             </motion.div>
           )}
 
-          {/* STEP: QR Card */}
+          {/* STEP: QR Card (For Parents) */}
           {step === "card" && selectedMember && (
             <motion.div key="card" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
               <div className="text-center mb-4">
@@ -322,7 +438,6 @@ export function QRIdentityPage() {
               </div>
 
               <Card className="bg-[#1a1f2e]/80 border-white/10 overflow-hidden">
-                {/* Printable content */}
                 <div ref={printRef}>
                   <div className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] p-4 text-center">
                     <p className="text-white/80 text-xs uppercase tracking-widest">Redemption OS — Child Safety Tag</p>
@@ -372,7 +487,6 @@ export function QRIdentityPage() {
                   </div>
                 </div>
 
-                {/* Action buttons */}
                 <div className="p-4 border-t border-white/10 grid grid-cols-2 gap-3">
                   <Button onClick={downloadQR} variant="outline" className="border-white/10 text-white hover:bg-white/10">
                     <Download className="h-4 w-4 mr-2" /> Download
@@ -388,6 +502,98 @@ export function QRIdentityPage() {
               </Button>
             </motion.div>
           )}
+
+          {/* STEP: Scanner (For Admin/Security) */}
+          {step === "scan" && (
+            <motion.div key="scan" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
+              {!scanResult ? (
+                <Card className="bg-[#1a1f2e]/80 border-white/10 overflow-hidden">
+                  <div className="p-6 text-center">
+                    <ScanLine className="h-12 w-12 text-[#0ea5e9] mx-auto mb-4" />
+                    <h2 className="text-white text-lg font-semibold mb-2">Scan Identity Tag</h2>
+                    <p className="text-white/60 text-sm mb-6">Point your camera at the child's QR code to pull up their emergency contact info.</p>
+                    
+                    <div className="rounded-xl overflow-hidden border-2 border-dashed border-[#0ea5e9]/50 p-2 relative">
+                      <div id="reader" className="w-full bg-black rounded-lg min-h-[250px]"></div>
+                      {isScanning && (
+                        <div className="absolute inset-0 border-[3px] border-[#10b981] rounded-xl opacity-50 animate-pulse pointer-events-none" />
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              ) : (
+                <Card className="bg-[#1a1f2e]/80 border-white/10 overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] p-4 flex justify-between items-start">
+                    <div>
+                      <Badge className="bg-white/20 text-white border-none mb-2">Verified Tag</Badge>
+                      <h2 className="text-white text-2xl font-bold">{scanResult.child.name}</h2>
+                      <p className="text-white/90 flex items-center gap-1 text-sm mt-1">
+                        <MapPin className="h-3.5 w-3.5" /> {scanResult.assignedZone}
+                      </p>
+                    </div>
+                    {scanResult.child.photo ? (
+                      <img src={scanResult.child.photo} alt="Child" className="w-16 h-16 rounded-full border-2 border-white object-cover" />
+                    ) : (
+                      <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
+                        <User className="h-8 w-8 text-white" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-5 space-y-4">
+                    {/* Emergency Contact */}
+                    <div className="bg-[#0ea5e9]/10 border border-[#0ea5e9]/30 rounded-xl p-4">
+                      <h3 className="text-white text-sm font-semibold flex items-center gap-2 mb-3">
+                        <Phone className="h-4 w-4 text-[#0ea5e9]" /> Emergency Contact
+                      </h3>
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-white font-medium">{scanResult.guardian.name}</p>
+                          <p className="text-[#0ea5e9] text-sm">{scanResult.guardian.phoneNumber}</p>
+                          <p className="text-white/40 text-xs capitalize">{scanResult.guardian.relationship}</p>
+                        </div>
+                        <a 
+                          href={`tel:${scanResult.guardian.phoneNumber}`}
+                          className="flex items-center gap-2 px-4 py-2 bg-[#0ea5e9] hover:bg-[#0284c7] text-white rounded-lg transition-colors font-medium text-sm"
+                        >
+                          <Phone className="h-4 w-4" /> Call
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Alerts */}
+                    {(scanResult.child.allergies?.length > 0 || scanResult.child.medicalNotes) && (
+                      <div className="grid grid-cols-1 gap-3">
+                        {scanResult.child.allergies?.length > 0 && (
+                          <div className="flex items-start gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
+                            <AlertTriangle className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
+                            <div>
+                              <p className="text-xs text-red-400/70">Allergies</p>
+                              <p className="text-red-300 text-sm font-medium">{scanResult.child.allergies.join(", ")}</p>
+                            </div>
+                          </div>
+                        )}
+                        {scanResult.child.medicalNotes && (
+                          <div className="flex items-start gap-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+                            <ShieldCheck className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
+                            <div>
+                              <p className="text-xs text-amber-400/70">Medical Notes</p>
+                              <p className="text-amber-300 text-sm">{scanResult.child.medicalNotes}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    <Button onClick={() => setScanResult(null)} variant="outline" className="w-full border-white/10 text-white hover:bg-white/10 mt-4">
+                      Scan Another Tag
+                    </Button>
+                  </div>
+                </Card>
+              )}
+            </motion.div>
+          )}
+
         </AnimatePresence>
       </div>
     </div>

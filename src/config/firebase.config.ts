@@ -13,8 +13,9 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-// Demo/mock mode activates when no real Firebase API key is present
+// Demo/mock mode activates when no real Firebase API key is present or when forced
 export const isMockMode =
+  import.meta.env.VITE_USE_MOCK_DATA === 'true' ||
   !firebaseConfig.apiKey ||
   firebaseConfig.apiKey === 'undefined' ||
   firebaseConfig.apiKey.startsWith('YOUR_');

@@ -422,8 +422,12 @@ function ProductCard({ product, onAddToCart }: { product: Product; onAddToCart: 
       onClick={() => navigate(`/marketplace/product/${product.id}`)}
       className="bg-white/5 border border-white/10 rounded-xl overflow-hidden hover:border-emerald-500/40 transition-all cursor-pointer group"
     >
-      <div className="aspect-square bg-gradient-to-br from-emerald-500/10 to-blue-500/10 flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-300">
-        {product.image}
+      <div className="aspect-square bg-gradient-to-br from-emerald-500/10 to-blue-500/10 flex items-center justify-center overflow-hidden group-hover:scale-105 transition-transform duration-300">
+        {product.image?.startsWith('http') ? (
+          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+        ) : (
+          <span className="text-6xl">{product.image}</span>
+        )}
       </div>
       <div className="p-4 space-y-3">
         <div>

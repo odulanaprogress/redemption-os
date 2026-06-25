@@ -128,14 +128,10 @@ export class AuthService {
       }
       console.log('[AUTH] ✅ Firestore profile created successfully');
 
-      // Skip email verification in development
-      if (import.meta.env.PROD) {
-        console.log('[AUTH] 📧 Sending email verification...');
-        await sendEmailVerification(user);
-        console.log('[AUTH] ✅ Email verification sent');
-      } else {
-        console.log('[AUTH] ⏭️ Skipping email verification in dev mode');
-      }
+      // Send email verification (free Firebase feature)
+      console.log('[AUTH] 📧 Sending email verification...');
+      await sendEmailVerification(user);
+      console.log('[AUTH] ✅ Email verification sent to:', user.email);
 
       console.log('[AUTH] 🎉 Registration complete for:', user.uid);
       return { success: true, user };

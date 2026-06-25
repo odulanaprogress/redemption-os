@@ -10,9 +10,10 @@ export type UserRole =
 
 export interface User {
   uid: string;
+  sessionId?: string;
   email: string;
   displayName: string;
-  photoURL?: string;
+  photoURL?: string | null;
   role: UserRole;
   phoneNumber?: string;
   createdAt: Date;
@@ -48,6 +49,7 @@ export interface UserPreferences {
 // Family Member Types
 export interface FamilyMember {
   id: string;
+  sessionId?: string;
   parentId: string;
   firstName: string;
   lastName: string;
@@ -96,6 +98,7 @@ export type IncidentPriority =
 
 export interface Incident {
   id: string;
+  sessionId?: string;
   reportedBy: string;
   type: IncidentType;
   priority: IncidentPriority;
@@ -122,6 +125,7 @@ export interface Incident {
 // Signal Types
 export interface Signal {
   id: string;
+  sessionId?: string;
   userId: string;
   type: 'concern' | 'suggestion' | 'praise' | 'emergency';
   category: string;
@@ -139,6 +143,7 @@ export type VendorStatus = 'pending' | 'approved' | 'rejected' | 'suspended';
 
 export interface Vendor {
   id: string;
+  sessionId?: string;
   userId: string;
   businessName: string;
   description: string;
@@ -162,6 +167,7 @@ export interface Vendor {
 // Product Types
 export interface Product {
   id: string;
+  sessionId?: string;
   vendorId: string;
   name: string;
   description: string;
@@ -198,6 +204,7 @@ export interface OrderItem {
 
 export interface Order {
   id: string;
+  sessionId?: string;
   userId: string;
   items: OrderItem[];
   subtotal: number;
@@ -227,6 +234,7 @@ export type DeliveryStatus =
 
 export interface Delivery {
   id: string;
+  sessionId?: string;
   orderId: string;
   deliveryPersonnelId: string;
   status: DeliveryStatus;

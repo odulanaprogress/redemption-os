@@ -15,13 +15,15 @@ export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showDemo, setShowDemo] = useState(false);
-  const { login, isAuthenticated, userProfile, isLoading } = useAuth();
+  const [resettingPassword, setResettingPassword] = useState(false);
+  const [isSeeding, setIsSeeding] = useState(false);
+  const { login, resetPassword, isAuthenticated, userProfile, isLoading } = useAuth();
 
   useEffect(() => {
-    if (isAuthenticated && userProfile && !isLoading) {
+    if (isAuthenticated && userProfile && !isLoading && !isSeeding) {
       redirectBasedOnRole();
     }
-  }, [isAuthenticated, userProfile, isLoading]);
+  }, [isAuthenticated, userProfile, isLoading, isSeeding]);
 
   const redirectBasedOnRole = () => {
     if (!userProfile) {
@@ -85,6 +87,53 @@ export function LoginPage() {
     }
   };
 
+  const handleForgotPassword = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!email) {
+      toast.error("Please enter your email address first");
+      return;
+    }
+    
+    setResettingPassword(true);
+    const result = await resetPassword(email);
+    if (result.success) {
+      toast.success("Password reset email sent! Please check your inbox.");
+    } else if (result.error) {
+      toast.error(result.error.message);
+    }
+    setResettingPassword(false);
+  };
+
+  const handleSeedDatabase = async () => {
+    if (!window.confirm("This will create all demo accounts in your LIVE Firebase database. Are you sure?")) return;
+    
+    setIsSeeding(true);
+    toast.info("Seeding live database with demo users... please wait.");
+    
+    try {
+      const { MOCK_USERS, MOCK_PROFILES } = await import("../../config/mock-data");
+      const { authService } = await import("../../services/auth.service");
+      
+      let successCount = 0;
+      for (const user of MOCK_USERS) {
+        const profile = MOCK_PROFILES[user.uid];
+        console.log(`[SEED] Creating ${user.email}...`);
+        const res = await authService.register(user.email, user.password, user.displayName, profile.role, profile);
+        if (res.success || res.error?.code === 'auth/email-already-in-use') {
+          successCount++;
+        }
+      }
+      
+      await authService.logout();
+      toast.success(`Successfully seeded ${successCount} demo users to the live database!`);
+    } catch (e) {
+      console.error("[SEED] Error:", e);
+      toast.error("An error occurred while seeding the database.");
+    } finally {
+      setIsSeeding(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.1),transparent_50%)]" />
@@ -138,9 +187,19 @@ export function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-white/80">
-                Password
-              </Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-white/80">
+                  Password
+                </Label>
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  disabled={resettingPassword}
+                  className="text-xs text-[#0ea5e9] hover:underline"
+                >
+                  {resettingPassword ? "Sending..." : "Forgot Password?"}
+                </button>
+              </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
                 <Input
@@ -180,46 +239,58 @@ export function LoginPage() {
             <p className="text-xs text-center text-white/40">
               Secure enterprise-grade authentication
             </p>
+            {!isMockMode && (
+              <div className="mt-4 text-center">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSeedDatabase}
+                  disabled={isSeeding}
+                  className="bg-transparent border-white/20 text-white/70 hover:text-white hover:bg-white/10"
+                >
+                  <Zap className="mr-2 h-3 w-3 text-amber-400" />
+                  {isSeeding ? "Seeding Database..." : "Seed Demo Accounts to Live DB"}
+                </Button>
+              </div>
+            )}
           </div>
         </Card>
 
         {/* Demo Accounts Panel */}
-        {isMockMode && (
-          <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-amber-500/20 overflow-hidden">
-            <button
-              onClick={() => setShowDemo(!showDemo)}
-              className="w-full flex items-center justify-between px-5 py-4 text-amber-400 hover:bg-white/5 transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <Zap className="h-4 w-4" />
-                <span className="text-sm font-medium">Quick Demo Login</span>
-              </div>
-              {showDemo ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-            </button>
+        <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-amber-500/20 overflow-hidden mt-6">
+          <button
+            onClick={() => setShowDemo(!showDemo)}
+            className="w-full flex items-center justify-between px-5 py-4 text-amber-400 hover:bg-white/5 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Zap className="h-4 w-4" />
+              <span className="text-sm font-medium">Quick Login (Live Database)</span>
+            </div>
+            {showDemo ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </button>
 
-            {showDemo && (
-              <div className="px-5 pb-5 grid grid-cols-1 gap-2">
-                {DEMO_ACCOUNTS.map((account) => (
-                  <button
-                    key={account.email}
-                    onClick={() => quickLogin(account.email, account.password)}
-                    disabled={isLoading}
-                    className="flex items-center justify-between w-full px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-amber-500/40 transition-all text-left group disabled:opacity-50"
-                  >
-                    <div>
-                      <p className="text-white text-sm group-hover:text-amber-300 transition-colors">{account.role}</p>
-                      <p className="text-white/40 text-xs mt-0.5">{account.description}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-white/50 text-xs">{account.email}</p>
-                    </div>
-                  </button>
-                ))}
-                <p className="text-center text-white/30 text-xs mt-2">All demo accounts use password: <span className="text-white/50 font-mono">demo1234</span></p>
-              </div>
-            )}
-          </Card>
-        )}
+          {showDemo && (
+            <div className="px-5 pb-5 grid grid-cols-1 gap-2">
+              {DEMO_ACCOUNTS.map((account) => (
+                <button
+                  key={account.email}
+                  onClick={() => quickLogin(account.email, account.password)}
+                  disabled={isLoading}
+                  className="flex items-center justify-between w-full px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-amber-500/40 transition-all text-left group disabled:opacity-50"
+                >
+                  <div>
+                    <p className="text-white text-sm group-hover:text-amber-300 transition-colors">{account.role}</p>
+                    <p className="text-white/40 text-xs mt-0.5">{account.description}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-white/50 text-xs">{account.email}</p>
+                  </div>
+                </button>
+              ))}
+              <p className="text-center text-white/30 text-xs mt-2">Make sure to 'Seed Database' first if these accounts don't exist yet.</p>
+            </div>
+          )}
+        </Card>
       </div>
     </div>
   );

@@ -12,8 +12,8 @@ export interface MockUser {
 export const MOCK_USERS: MockUser[] = [
   {
     uid: 'admin-001',
-    email: 'admin@redemptionos.com',
-    password: 'demo1234',
+    email: 'redemptionosadmin01@gmail.com',
+    password: 'Redemptionos12@',
     displayName: 'Admin Grace',
     emailVerified: true,
   },
@@ -85,7 +85,7 @@ export const MOCK_USERS: MockUser[] = [
 export const MOCK_PROFILES: Record<string, UserProfile> = {
   'admin-001': {
     uid: 'admin-001',
-    email: 'admin@redemptionos.com',
+    email: 'redemptionosadmin01@gmail.com',
     displayName: 'Admin Grace',
     role: 'admin' as UserRole,
     createdAt: new Date('2024-01-01'),
@@ -200,7 +200,7 @@ export const MOCK_PROFILES: Record<string, UserProfile> = {
 };
 
 export const DEMO_ACCOUNTS = [
-  { role: 'Admin', email: 'admin@redemptionos.com', password: 'demo1234', description: 'Full access' },
+  { role: 'Admin', email: 'redemptionosadmin01@gmail.com', password: 'Redemptionos12@', description: 'Full access' },
   { role: 'Parent', email: 'parent1@redemptionos.com', password: 'demo1234', description: 'Family tracking' },
   { role: 'Security', email: 'security1@redemptionos.com', password: 'demo1234', description: 'Operations center' },
   { role: 'Vendor', email: 'vendor1@redemptionos.com', password: 'demo1234', description: 'Marketplace seller' },

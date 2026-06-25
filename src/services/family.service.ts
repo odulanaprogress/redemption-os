@@ -10,9 +10,10 @@ import {
   where,
 } from 'firebase/firestore';
 import { db, isMockMode } from '../config/firebase.config';
-import { FamilyMember, QRTag } from '../types';
+import { QRTag } from '../types';
 import { qrService } from './qr.service';
 import { v4 as uuidv4 } from 'uuid';
+import { useSessionStore } from '../store/session.store';
 
 // In-memory mock store
 const mockMembers: FamilyMember[] = [
@@ -92,9 +93,10 @@ export class FamilyService {
 
   async createFamilyMember(
     parentId: string,
-    memberData: Omit<FamilyMember, 'id' | 'parentId' | 'createdAt' | 'updatedAt'>
+    memberData: Omit<FamilyMember, 'id' | 'parentId' | 'createdAt' | 'updatedAt' | 'sessionId'>
   ) {
     const memberId = isMockMode ? `child-${uuidv4().slice(0, 8)}` : uuidv4();
+    const sessionId = useSessionStore.getState().activeSessionId || 'DEFAULT_SESSION';
 
     try {
       const qrCodeData = await qrService.generateQRCode({
@@ -106,6 +108,7 @@ export class FamilyService {
 
       const familyMember: FamilyMember = {
         id: memberId,
+        sessionId,
         parentId,
         ...memberData,
         qrCode: qrCodeData.qrCodeURL,
@@ -152,7 +155,8 @@ export class FamilyService {
   }
 
   async getFamilyMembersByParent(parentId: string): Promise<FamilyMember[]> {
-    if (isMockMode) return mockMembers.filter((m) => m.parentId === parentId);
+    const sessionId = useSessionStore.getState().activeSessionId;
+    if (isMockMode) return mockMembers.filter((m) => m.parentId === parentId && (!sessionId || m.sessionId === sessionId || !m.sessionId));
     try {
       const q = query(collection(db!, this.collectionName), where('parentId', '==', parentId));
       const snap = await getDocs(q);
@@ -251,7 +255,8 @@ export class FamilyService {
   }
 
   getAllMockMembers() {
-    return mockMembers;
+    const sessionId = useSessionStore.getState().activeSessionId;
+    return mockMembers.filter(m => !sessionId || m.sessionId === sessionId || !m.sessionId);
   }
 }
 

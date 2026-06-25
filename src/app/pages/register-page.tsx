@@ -4,12 +4,33 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card } from "../components/ui/card";
-import { Globe, Lock, Mail, User, Phone, ArrowLeft } from "lucide-react";
+import { Globe, Lock, Mail, User, Phone, ArrowLeft, Users, Baby } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "sonner";
+import { UserRole } from "../../types";
+
+type RegisterRole = "attendee" | "parent";
+
+const ROLES: { value: RegisterRole; label: string; icon: typeof Users; description: string; color: string }[] = [
+  {
+    value: "attendee",
+    label: "Attendee",
+    icon: Users,
+    description: "I am attending the event",
+    color: "from-[#0ea5e9] to-[#0284c7]",
+  },
+  {
+    value: "parent",
+    label: "Parent / Guardian",
+    icon: Baby,
+    description: "I have children attending with me",
+    color: "from-[#10b981] to-[#059669]",
+  },
+];
 
 export function RegisterPage() {
   const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState<RegisterRole>("attendee");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,10 +38,16 @@ export function RegisterPage() {
     password: "",
     confirmPassword: "",
   });
+  const [agreed, setAgreed] = useState(false);
   const { register, isLoading } = useAuth();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!agreed) {
+      toast.error("Please agree to the Terms of Use and Privacy Policy to continue");
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match");
@@ -36,15 +63,18 @@ export function RegisterPage() {
       formData.email,
       formData.password,
       formData.name,
-      'attendee',
-      {
-        phoneNumber: formData.phone,
-      }
+      selectedRole as UserRole,
+      { phoneNumber: formData.phone }
     );
 
     if (result.success) {
-      toast.success("Account created successfully!");
-      navigate("/dashboard");
+      toast.success("Account created! Welcome to Redemption OS 🎉");
+      // Route based on role
+      if (selectedRole === "parent") {
+        navigate("/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } else if (result.error) {
       toast.error(result.error.message);
     }
@@ -76,20 +106,58 @@ export function RegisterPage() {
           <p className="text-white/60">Join the intelligent worship ecosystem</p>
         </div>
 
+        {/* Role Selection */}
+        <div className="mb-6">
+          <Label className="text-white/80 mb-3 block">I am joining as...</Label>
+          <div className="grid grid-cols-2 gap-3">
+            {ROLES.map((role) => {
+              const isSelected = selectedRole === role.value;
+              return (
+                <button
+                  key={role.value}
+                  type="button"
+                  onClick={() => setSelectedRole(role.value)}
+                  className={`relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 text-left ${
+                    isSelected
+                      ? "border-[#0ea5e9] bg-[#0ea5e9]/10 shadow-[0_0_20px_rgba(14,165,233,0.2)]"
+                      : "border-white/10 bg-white/5 hover:border-white/30 hover:bg-white/10"
+                  }`}
+                >
+                  <div
+                    className={`rounded-lg p-2.5 ${
+                      isSelected
+                        ? `bg-gradient-to-br ${role.color}`
+                        : "bg-white/10"
+                    }`}
+                  >
+                    <role.icon className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="text-center">
+                    <p className={`text-sm font-medium ${isSelected ? "text-white" : "text-white/70"}`}>
+                      {role.label}
+                    </p>
+                    <p className="text-xs text-white/40 mt-0.5 leading-tight">{role.description}</p>
+                  </div>
+                  {isSelected && (
+                    <div className="absolute top-2 right-2 h-2 w-2 rounded-full bg-[#0ea5e9]" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         <form onSubmit={handleRegister} className="space-y-4">
+          {/* Full Name */}
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-white/80">
-              Full Name
-            </Label>
+            <Label htmlFor="name" className="text-white/80">Full Name</Label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
               <Input
                 id="name"
                 type="text"
                 value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="John Doe"
                 className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40"
                 required
@@ -97,19 +165,16 @@ export function RegisterPage() {
             </div>
           </div>
 
+          {/* Email */}
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-white/80">
-              Email Address
-            </Label>
+            <Label htmlFor="email" className="text-white/80">Email Address</Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 placeholder="your.email@example.com"
                 className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40"
                 required
@@ -117,9 +182,10 @@ export function RegisterPage() {
             </div>
           </div>
 
+          {/* Phone */}
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-white/80">
-              Phone Number
+              Phone Number <span className="text-white/30 text-xs">(optional)</span>
             </Label>
             <div className="relative">
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
@@ -127,29 +193,23 @@ export function RegisterPage() {
                 id="phone"
                 type="tel"
                 value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                placeholder="+1 (555) 000-0000"
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="+234 800 000 0000"
                 className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40"
-                required
               />
             </div>
           </div>
 
+          {/* Password */}
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-white/80">
-              Password
-            </Label>
+            <Label htmlFor="password" className="text-white/80">Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
               <Input
                 id="password"
                 type="password"
                 value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 placeholder="••••••••"
                 className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40"
                 required
@@ -157,19 +217,16 @@ export function RegisterPage() {
             </div>
           </div>
 
+          {/* Confirm Password */}
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword" className="text-white/80">
-              Confirm Password
-            </Label>
+            <Label htmlFor="confirmPassword" className="text-white/80">Confirm Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
               <Input
                 id="confirmPassword"
                 type="password"
                 value={formData.confirmPassword}
-                onChange={(e) =>
-                  setFormData({ ...formData, confirmPassword: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 placeholder="••••••••"
                 className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40"
                 required
@@ -177,12 +234,34 @@ export function RegisterPage() {
             </div>
           </div>
 
+          {/* Terms Checkbox */}
+          <div className="flex items-start gap-3 pt-1">
+            <input
+              id="terms"
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/10 accent-[#0ea5e9] cursor-pointer"
+            />
+            <label htmlFor="terms" className="text-xs text-white/50 leading-relaxed cursor-pointer">
+              I agree to the{" "}
+              <span className="text-[#0ea5e9] hover:underline cursor-pointer">Terms of Use</span>
+              {" "}and{" "}
+              <span className="text-[#0ea5e9] hover:underline cursor-pointer">Privacy Policy</span>.
+              {selectedRole === "parent" && (
+                <span className="block mt-1 text-[#10b981]/80">
+                  As a Parent/Guardian, you consent to registering minor children for event safety purposes.
+                </span>
+              )}
+            </label>
+          </div>
+
           <Button
             type="submit"
-            disabled={isLoading}
-            className="w-full bg-gradient-to-r from-[#0ea5e9] to-[#10b981] hover:opacity-90 text-white shadow-[0_0_25px_rgba(14,165,233,0.5)] disabled:opacity-50"
+            disabled={isLoading || !agreed}
+            className="w-full bg-gradient-to-r from-[#0ea5e9] to-[#10b981] hover:opacity-90 text-white shadow-[0_0_25px_rgba(14,165,233,0.5)] disabled:opacity-50 mt-2"
           >
-            {isLoading ? "Creating Account..." : "Create Account"}
+            {isLoading ? "Creating Account..." : `Create ${selectedRole === "parent" ? "Parent" : "Attendee"} Account`}
           </Button>
         </form>
 

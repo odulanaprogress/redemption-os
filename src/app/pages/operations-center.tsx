@@ -15,6 +15,7 @@ import {
   TrendingUp,
   Clock,
   Zap,
+  ScanLine,
 } from "lucide-react";
 import { motion } from "motion/react";
 
@@ -304,14 +305,15 @@ export function OperationsCenter() {
         {/* Quick Action Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { icon: Radio, label: "Broadcast", color: "text-[#10b981]" },
-            { icon: Shield, label: "Emergency", color: "text-[#ef4444]" },
-            { icon: Truck, label: "Logistics", color: "text-[#06b6d4]" },
-            { icon: Users, label: "Volunteers", color: "text-[#a78bfa]" },
+            { icon: Radio, label: "Broadcast", color: "text-[#10b981]", path: "/admin?tab=broadcast" },
+            { icon: Shield, label: "Emergency", color: "text-[#ef4444]", path: "/emergency" },
+            { icon: ScanLine, label: "Scan QR Tag", color: "text-[#a78bfa]", path: "/qr-identity?tab=scan" },
+            { icon: Truck, label: "Logistics", color: "text-[#06b6d4]", path: "/logistics" },
           ].map((action, index) => (
             <Card
               key={index}
-              className="cursor-pointer bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-4 hover:border-white/30 transition-all"
+              onClick={() => navigate(action.path)}
+              className="cursor-pointer bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-4 hover:border-white/30 transition-all active:scale-95"
             >
               <div className="flex flex-col items-center gap-2">
                 <action.icon className={`h-6 w-6 ${action.color}`} />

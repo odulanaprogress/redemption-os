@@ -16,18 +16,20 @@ import {
 import { db, isMockMode } from '../config/firebase.config';
 import { MOCK_PROFILES } from '../config/mock-data';
 import { UserProfile, UserRole, PaginatedResponse } from '../types';
+import { useSessionStore } from '../store/session.store';
 
 export class UserService {
   private collectionName = 'users';
 
   async createUser(uid: string, userData: Omit<UserProfile, 'uid'>) {
+    const sessionId = useSessionStore.getState().activeSessionId || 'DEFAULT_SESSION';
     if (isMockMode) {
-      MOCK_PROFILES[uid] = { uid, ...userData } as UserProfile;
+      MOCK_PROFILES[uid] = { uid, sessionId, ...userData } as UserProfile;
       return { success: true };
     }
     try {
       const userRef = doc(db!, this.collectionName, uid);
-      await setDoc(userRef, { ...userData, uid, createdAt: userData.createdAt || new Date(), updatedAt: new Date() });
+      await setDoc(userRef, { ...userData, uid, sessionId, createdAt: userData.createdAt || new Date(), updatedAt: new Date() });
       return { success: true };
     } catch (error: any) {
       console.error('Create user error:', error);
@@ -99,8 +101,9 @@ export class UserService {
   }
 
   async getUsersByRole(role: UserRole): Promise<UserProfile[]> {
+    const sessionId = useSessionStore.getState().activeSessionId;
     if (isMockMode) {
-      return Object.values(MOCK_PROFILES).filter((p) => p.role === role && p.isActive);
+      return Object.values(MOCK_PROFILES).filter((p) => p.role === role && p.isActive && (!sessionId || p.sessionId === sessionId || !p.sessionId));
     }
     try {
       const q = query(
