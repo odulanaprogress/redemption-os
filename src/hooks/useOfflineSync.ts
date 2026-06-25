@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { openDB, IDBPDatabase } from 'idb';
 
 // Database configurations
 const DB_NAME = 'crowd-management-db';
@@ -21,10 +20,108 @@ export interface SyncResponse {
   snapshots: { id: string; timestamp: number; density: any; updatedAt: number }[];
 }
 
-// Helper to initialize the DB
+// Native Promise-based IndexedDB Wrapper to replace 'idb' package
+export interface IDBPDatabase {
+  getAll(storeName: string): Promise<any[]>;
+  get(storeName: string, key: string): Promise<any>;
+  delete(storeName: string, key: any): Promise<void>;
+  add(storeName: string, value: any): Promise<any>;
+  put(storeName: string, value: any): Promise<any>;
+  transaction(storeNames: string[], mode: 'readonly' | 'readwrite'): {
+    objectStore(name: string): {
+      put(value: any): Promise<void>;
+    };
+    done: Promise<void>;
+  };
+}
+
+class NativeDB implements IDBPDatabase {
+  private db: IDBDatabase;
+  constructor(db: IDBDatabase) {
+    this.db = db;
+  }
+
+  getAll(storeName: string): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const req = store.getAll();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  get(storeName: string, key: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(storeName, 'readonly');
+      const store = tx.objectStore(storeName);
+      const req = store.get(key);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  delete(storeName: string, key: any): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(storeName, 'readwrite');
+      const store = tx.objectStore(storeName);
+      const req = store.delete(key);
+      req.onsuccess = () => resolve();
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  add(storeName: string, value: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(storeName, 'readwrite');
+      const store = tx.objectStore(storeName);
+      const req = store.add(value);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  put(storeName: string, value: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const tx = this.db.transaction(storeName, 'readwrite');
+      const store = tx.objectStore(storeName);
+      const req = store.put(value);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+  }
+
+  transaction(storeNames: string[], mode: 'readonly' | 'readwrite') {
+    const tx = this.db.transaction(storeNames, mode);
+    return {
+      objectStore: (name: string) => {
+        const store = tx.objectStore(name);
+        return {
+          put: (value: any) => {
+            return new Promise<void>((resolve, reject) => {
+              const req = store.put(value);
+              req.onsuccess = () => resolve();
+              req.onerror = () => reject(req.error);
+            });
+          }
+        };
+      },
+      done: new Promise<void>((resolve, reject) => {
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+        tx.onabort = () => reject(new Error('Transaction aborted'));
+      })
+    };
+  }
+}
+
+// Helper to initialize the DB using native window.indexedDB
 async function initDB(): Promise<IDBPDatabase> {
-  return openDB(DB_NAME, DB_VERSION, {
-    upgrade(db) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    
+    request.onupgradeneeded = () => {
+      const db = request.result;
       if (!db.objectStoreNames.contains('venue-maps')) {
         db.createObjectStore('venue-maps', { keyPath: 'id' });
       }
@@ -40,7 +137,15 @@ async function initDB(): Promise<IDBPDatabase> {
       if (!db.objectStoreNames.contains('sync-metadata')) {
         db.createObjectStore('sync-metadata', { keyPath: 'key' });
       }
-    },
+    };
+
+    request.onsuccess = () => {
+      resolve(new NativeDB(request.result));
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
   });
 }
 
