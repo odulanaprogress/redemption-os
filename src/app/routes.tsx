@@ -15,6 +15,7 @@ import { CommunicationCenter } from "./pages/communication-center";
 import { SmartLogistics } from "./pages/smart-logistics";
 import { AdminDashboard } from "./pages/admin-dashboard";
 import { OperationsCenter } from "./pages/operations-center";
+import { CrowdManagementDashboard } from "./pages/crowd-management";
 import { SettingsProfile } from "./pages/settings-profile";
 import { MarketplacePage } from "./pages/marketplace-page";
 import { ProductDetailPage } from "./pages/product-detail-page";
@@ -126,6 +127,14 @@ export const router = createBrowserRouter([
     element: (
       <ProtectedRoute allowedRoles={['security', 'admin']}>
         <OperationsCenter />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/crowd-management",
+    element: (
+      <ProtectedRoute allowedRoles={['security', 'admin']}>
+        <CrowdManagementDashboard />
       </ProtectedRoute>
     ),
   },

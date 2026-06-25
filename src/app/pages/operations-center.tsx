@@ -308,7 +308,7 @@ export function OperationsCenter() {
             { icon: Radio, label: "Broadcast", color: "text-[#10b981]", path: "/admin?tab=broadcast" },
             { icon: Shield, label: "Emergency", color: "text-[#ef4444]", path: "/emergency" },
             { icon: ScanLine, label: "Scan QR Tag", color: "text-[#a78bfa]", path: "/qr-identity?tab=scan" },
-            { icon: Truck, label: "Logistics", color: "text-[#06b6d4]", path: "/logistics" },
+            { icon: Truck, label: "Crowd Mgmt", color: "text-[#0ea5e9]", path: "/crowd-management" },
           ].map((action, index) => (
             <Card
               key={index}
