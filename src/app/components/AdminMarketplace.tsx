@@ -60,7 +60,7 @@ export default function AdminMarketplace() {
     : products;
 
   return (
-    <div className="min-h-screen bg-black text-[#0D0D0D] p-6 md:p-8">
+    <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D] p-6 md:p-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -433,7 +433,7 @@ function ProductsTab({ products, search, onSearchChange, onRemove }: any) {
             value={search}
             onChange={e => onSearchChange(e.target.value)}
             placeholder="Search products..."
-            className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl pl-9 pr-4 py-2.5 text-sm text-[#0D0D0D] placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50"
+            className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl pl-9 pr-4 py-2.5 text-sm text-[#0D0D0D] placeholder:text-[#9CA3AF] focus:outline-none focus:border-emerald-500/50"
           />
         </div>
       </div>
@@ -470,7 +470,7 @@ function ProductsTab({ products, search, onSearchChange, onRemove }: any) {
           </div>
         ))}
         {products.length === 0 && (
-          <div className="py-16 text-center text-white/30 space-y-2">
+          <div className="py-16 text-center text-[#9CA3AF] space-y-2">
             <Package className="w-10 h-10 mx-auto opacity-30" />
             <div>No products found</div>
           </div>

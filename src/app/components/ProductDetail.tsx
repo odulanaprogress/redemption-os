@@ -27,7 +27,7 @@ export default function ProductDetail() {
 
   if (!product || !vendor) {
     return (
-      <div className="min-h-screen bg-black text-[#0D0D0D] p-8 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D] p-8 flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="text-6xl">📦</div>
           <h2 className="text-2xl font-bold">Product Not Found</h2>
@@ -44,7 +44,7 @@ export default function ProductDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-[#0D0D0D]">
+    <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D]">
       <CartDrawer />
 
       <div className="p-6 md:p-8">
@@ -115,7 +115,7 @@ export default function ProductDetail() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1.5">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`w-5 h-5 ${i < Math.round(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-white/20'}`} />
+                    <Star key={i} className={`w-5 h-5 ${i < Math.round(product.rating) ? 'fill-yellow-400 text-yellow-400' : 'text-[#D1D5DB]'}`} />
                   ))}
                   <span className="font-semibold ml-1">{product.rating}</span>
                 </div>

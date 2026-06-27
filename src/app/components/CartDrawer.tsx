@@ -34,7 +34,7 @@ export function CartDrawer() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40"
+          className="fixed inset-0 bg-[#0D0D0D]/50 backdrop-blur-sm z-40"
           onClick={closeCart}
         />
       )}
@@ -45,7 +45,7 @@ export function CartDrawer() {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-          className="fixed right-0 top-0 h-full w-full max-w-md bg-[#080808] border-l border-[#E5E7EB] z-50 flex flex-col shadow-2xl shadow-black/60"
+          className="fixed right-0 top-0 h-full w-full max-w-md bg-white border-l border-[#E5E7EB] z-50 flex flex-col shadow-2xl shadow-[#0D0D0D]/10"
         >
             {/* Header */}
             <div className="p-6 border-b border-[#E5E7EB] flex items-center justify-between">
@@ -105,11 +105,11 @@ export function CartDrawer() {
                   {items.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center space-y-4 pt-16">
                       <div className="w-20 h-20 bg-[#F8F9FF] rounded-full flex items-center justify-center">
-                        <ShoppingCart className="w-10 h-10 text-white/20" />
+                        <ShoppingCart className="w-10 h-10 text-[#9CA3AF]" />
                       </div>
                       <div>
                         <div className="font-semibold text-[#6B7280]">Your cart is empty</div>
-                        <div className="text-sm text-white/30 mt-1">Browse the marketplace to add items</div>
+                        <div className="text-sm text-[#9CA3AF] mt-1">Browse the marketplace to add items</div>
                       </div>
                       <button
                         onClick={closeCart}
@@ -138,14 +138,14 @@ export function CartDrawer() {
                             <div className="flex items-center gap-1.5">
                               <button
                                 onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                                className="w-6 h-6 bg-[#F3F4F6] hover:bg-white/20 rounded-md flex items-center justify-center transition-colors"
+                                className="w-6 h-6 bg-[#F3F4F6] hover:bg-[#E5E7EB] rounded-md flex items-center justify-center transition-colors"
                               >
                                 <Minus className="w-3 h-3" />
                               </button>
                               <span className="font-semibold w-5 text-center text-sm">{item.quantity}</span>
                               <button
                                 onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                className="w-6 h-6 bg-[#F3F4F6] hover:bg-white/20 rounded-md flex items-center justify-center transition-colors"
+                                className="w-6 h-6 bg-[#F3F4F6] hover:bg-[#E5E7EB] rounded-md flex items-center justify-center transition-colors"
                               >
                                 <Plus className="w-3 h-3" />
                               </button>
@@ -154,7 +154,7 @@ export function CartDrawer() {
                               <span className="font-bold text-emerald-400 text-sm">${(item.product.price * item.quantity).toFixed(2)}</span>
                               <button
                                 onClick={() => removeItem(item.product.id)}
-                                className="p-1 hover:bg-red-500/20 text-white/30 hover:text-red-400 rounded transition-colors"
+                                className="p-1 hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-500 rounded transition-colors"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>

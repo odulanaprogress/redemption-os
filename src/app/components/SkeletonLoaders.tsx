@@ -301,7 +301,7 @@ export function PulseDot({ color = 'emerald' }: { color?: 'emerald' | 'blue' | '
 // Full Page Loading State
 export function PageLoader({ message = 'Loading...' }: { message?: string }) {
   return (
-    <div className="min-h-screen bg-black text-[#0D0D0D] flex items-center justify-center">
+    <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D] flex items-center justify-center">
       <div className="text-center space-y-4">
         <LoadingSpinner size="lg" />
         <div className="text-lg font-medium text-[#6B7280]">{message}</div>

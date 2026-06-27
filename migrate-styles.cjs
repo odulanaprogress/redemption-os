@@ -1,11 +1,19 @@
-﻿const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 const replacements = [
   { regex: /bg-\[\#0a0e1a\]/g, replace: "bg-[#F8F9FF]" },
   { regex: /bg-\[\#0f1420\]/g, replace: "bg-[#F8F9FF]" },
   { regex: /bg-\[\#1a1f2e\](?:\/(?:80|90|95|40))?/g, replace: "bg-white" },
+  { regex: /bg-black\/70/g, replace: "bg-[#0D0D0D]/50" },
+  { regex: /bg-black\/80/g, replace: "bg-[#0D0D0D]/60" },
+  { regex: /bg-black\/50/g, replace: "bg-[#0D0D0D]/40" },
+  { regex: /bg-black/g, replace: "bg-[#F8F9FF]" },
+  { regex: /bg-\[\#080808\]/g, replace: "bg-white" },
+  { regex: /bg-\[\#0a0a0a\]/g, replace: "bg-white" },
   { regex: /border-white\/(?:10|20|30)/g, replace: "border-[#E5E7EB]" },
+  { regex: /text-white\/20/g, replace: "text-[#D1D5DB]" },
+  { regex: /text-white\/30/g, replace: "text-[#9CA3AF]" },
   { regex: /text-white\/40/g, replace: "text-[#9CA3AF]" },
   { regex: /text-white\/(?:50|60)/g, replace: "text-[#6B7280]" },
   { regex: /text-white\/(?:70|80)/g, replace: "text-[#4B5563]" },

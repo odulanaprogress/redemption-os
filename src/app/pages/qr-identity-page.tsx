@@ -267,7 +267,7 @@ export function QRIdentityPage() {
                 </div>
               ) : members.length === 0 ? (
                 <Card className="bg-white border-[#E5E7EB] p-10 text-center">
-                  <Baby className="h-12 w-12 text-white/20 mx-auto mb-4" />
+                  <Baby className="h-12 w-12 text-[#D1D5DB] mx-auto mb-4" />
                   <p className="text-[#6B7280] mb-2">No children registered yet</p>
                   {!isAdminOrSecurity && (
                     <>
@@ -307,7 +307,7 @@ export function QRIdentityPage() {
                         <Badge className="bg-emerald-50 text-[#059669] border-[#10b981]/30">
                           <QrCode className="h-3 w-3 mr-1" /> QR Active
                         </Badge>
-                        <ChevronRight className="h-4 w-4 text-white/30" />
+                        <ChevronRight className="h-4 w-4 text-[#9CA3AF]" />
                       </div>
                     </Card>
                   ))}
@@ -346,8 +346,8 @@ export function QRIdentityPage() {
                         <img src={photoUrl} alt="child" className="w-full h-full object-cover" />
                       ) : (
                         <div className="flex flex-col items-center gap-1">
-                          <Camera className="h-6 w-6 text-white/30" />
-                          <span className="text-[10px] text-white/30">Add photo</span>
+                          <Camera className="h-6 w-6 text-[#9CA3AF]" />
+                          <span className="text-[10px] text-[#9CA3AF]">Add photo</span>
                         </div>
                       )}
                     </div>
@@ -514,7 +514,7 @@ export function QRIdentityPage() {
                     <p className="text-[#6B7280] text-sm mb-6">Point your camera at the child's QR code to pull up their emergency contact info.</p>
                     
                     <div className="rounded-xl overflow-hidden border-2 border-dashed border-[#0ea5e9]/50 p-2 relative">
-                      <div id="reader" className="w-full bg-black rounded-lg min-h-[250px]"></div>
+                      <div id="reader" className="w-full bg-[#F8F9FF] rounded-lg min-h-[250px]"></div>
                       {isScanning && (
                         <div className="absolute inset-0 border-[3px] border-[#10b981] rounded-xl opacity-50 animate-pulse pointer-events-none" />
                       )}

@@ -207,9 +207,9 @@ export function LiveGospelFeed() {
                 <div className="space-y-2">
                   {TIMELINE.map((item) => (
                     <div key={item.time} className="flex items-center gap-3">
-                      <span className={`text-xs w-12 shrink-0 ${item.current ? "text-[#059669]" : item.done ? "text-[#6B7280]" : "text-white/30"}`}>{item.time}</span>
+                      <span className={`text-xs w-12 shrink-0 ${item.current ? "text-[#059669]" : item.done ? "text-[#6B7280]" : "text-[#9CA3AF]"}`}>{item.time}</span>
                       <div className={`h-1.5 w-1.5 rounded-full shrink-0 ${item.current ? "bg-[#10b981] animate-pulse" : item.done ? "bg-white/40" : "bg-white/15"}`} />
-                      <span className={`text-sm ${item.current ? "text-[#059669]" : item.done ? "text-[#4B5563]" : "text-white/30"}`}>{item.label}</span>
+                      <span className={`text-sm ${item.current ? "text-[#059669]" : item.done ? "text-[#4B5563]" : "text-[#9CA3AF]"}`}>{item.label}</span>
                       {item.current && <Badge className="ml-auto bg-emerald-50 text-[#059669] border-[#10b981]/30 text-xs">Now</Badge>}
                     </div>
                   ))}
@@ -228,9 +228,9 @@ export function LiveGospelFeed() {
                           <span className="text-sm text-[#059669]">{entry.reference}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-xs text-white/30">{entry.timestamp}</span>
+                          <span className="text-xs text-[#9CA3AF]">{entry.timestamp}</span>
                           <button onClick={() => toggleBookmark(entry)} className="p-1 hover:text-amber-400 transition-colors">
-                            <Bookmark className={`h-4 w-4 ${isBookmarked(entry.id) ? "fill-amber-400 text-amber-400" : "text-white/30"}`} />
+                            <Bookmark className={`h-4 w-4 ${isBookmarked(entry.id) ? "fill-amber-400 text-amber-400" : "text-[#9CA3AF]"}`} />
                           </button>
                         </div>
                       </div>
@@ -243,7 +243,7 @@ export function LiveGospelFeed() {
                       </div>
                       <p className="text-[#4B5563] leading-relaxed text-sm">{entry.content}</p>
                       <button onClick={() => toggleBookmark(entry)} className="absolute top-3 right-3 p-1 hover:text-amber-400 transition-colors">
-                        <Bookmark className={`h-4 w-4 ${isBookmarked(entry.id) ? "fill-amber-400 text-amber-400" : "text-white/20"}`} />
+                        <Bookmark className={`h-4 w-4 ${isBookmarked(entry.id) ? "fill-amber-400 text-amber-400" : "text-[#D1D5DB]"}`} />
                       </button>
                     </Card>
                   )}
@@ -272,7 +272,7 @@ export function LiveGospelFeed() {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="Write your notes here..."
-                  className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D] placeholder:text-white/30 min-h-[100px] text-sm"
+                  className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D] placeholder:text-[#9CA3AF] min-h-[100px] text-sm"
                 />
                 <Button onClick={saveNote} disabled={!note.trim()}
                   className="mt-3 w-full bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] text-[#0D0D0D] disabled:opacity-50">
@@ -293,7 +293,7 @@ export function LiveGospelFeed() {
                         <p className="text-xs text-[#5B4FE8] mb-1">@ {n.time}</p>
                         <p className="text-[#4B5563] text-sm whitespace-pre-wrap">{n.text}</p>
                       </div>
-                      <button onClick={() => deleteNote(n.id)} className="shrink-0 text-white/30 hover:text-red-400 transition-colors p-1">
+                      <button onClick={() => deleteNote(n.id)} className="shrink-0 text-[#9CA3AF] hover:text-red-400 transition-colors p-1">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </Card>
@@ -324,13 +324,13 @@ export function LiveGospelFeed() {
                             <span className="text-sm text-[#059669]">{bm.reference}</span>
                           </div>
                         )}
-                        <p className="text-xs text-white/30 mt-1">@ {bm.timestamp}</p>
+                        <p className="text-xs text-[#9CA3AF] mt-1">@ {bm.timestamp}</p>
                       </div>
                       <button onClick={() => {
                         const updated = bookmarks.filter((b) => b.id !== bm.id);
                         setBookmarks(updated);
                         localStorage.setItem(BOOKMARK_KEY, JSON.stringify(updated));
-                      }} className="shrink-0 text-white/30 hover:text-red-400 transition-colors p-1">
+                      }} className="shrink-0 text-[#9CA3AF] hover:text-red-400 transition-colors p-1">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>

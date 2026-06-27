@@ -137,7 +137,7 @@ export function CrowdManagementDashboard() {
         <div className="flex items-center gap-3 text-xs text-[#9CA3AF] px-1">
           <Database className="h-3.5 w-3.5" />
           <span>{cachedZones.length > 0 ? `Serving ${cachedZones.length} zones from IndexedDB cache` : 'Serving seeded fallback data — sync to load live data'}</span>
-          {lastSyncTime && (<><span className="text-white/20">·</span><Clock className="h-3.5 w-3.5" /><span>Synced {lastSyncTime.toLocaleTimeString()}</span></>)}
+          {lastSyncTime && (<><span className="text-[#D1D5DB]">·</span><Clock className="h-3.5 w-3.5" /><span>Synced {lastSyncTime.toLocaleTimeString()}</span></>)}
         </div>
 
         <div>
@@ -167,7 +167,7 @@ export function CrowdManagementDashboard() {
                       <div className="h-2 bg-[#F3F4F6] rounded-full overflow-hidden">
                         <motion.div className={`h-full rounded-full ${getDensityBarColor(density)}`} initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, delay: i * 0.08 }} />
                       </div>
-                      <div className="flex justify-between text-xs text-white/30"><span>0</span><span>{zone.capacity?.toLocaleString() ?? '—'} cap.</span></div>
+                      <div className="flex justify-between text-xs text-[#9CA3AF]"><span>0</span><span>{zone.capacity?.toLocaleString() ?? '—'} cap.</span></div>
                     </div>
                   </Card>
                 </motion.div>
@@ -227,7 +227,7 @@ export function CrowdManagementDashboard() {
       <AnimatePresence>
         {showIncidentForm && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={() => setShowIncidentForm(false)} />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-[#F8F9FF]/60 backdrop-blur-sm z-40" onClick={() => setShowIncidentForm(false)} />
             <motion.div initial={{ y: '100%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '100%', opacity: 0 }} transition={{ type: 'spring', damping: 28, stiffness: 300 }} className="fixed bottom-0 left-0 right-0 z-50 bg-[#0d1219] border-t border-[#E5E7EB] rounded-t-2xl p-5 max-h-[85vh] overflow-y-auto">
               <div className="w-10 h-1 bg-white/20 rounded-full mx-auto mb-4" />
               <div className="flex items-center justify-between mb-4">

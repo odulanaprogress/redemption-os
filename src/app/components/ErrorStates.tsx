@@ -249,7 +249,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       }
 
       return (
-        <div className="min-h-screen bg-black text-[#0D0D0D] p-8">
+        <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D] p-8">
           <GenericError
             message={this.state.error?.message}
             onRetry={() => this.setState({ hasError: false, error: null })}
@@ -305,7 +305,7 @@ export function ErrorToast({ message, onDismiss }: { message: string; onDismiss:
 // Loading Error State (for failed lazy loads)
 export function LoadError({ onRetry }: { onRetry: () => void }) {
   return (
-    <div className="min-h-screen bg-black text-[#0D0D0D] flex items-center justify-center p-8">
+    <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D] flex items-center justify-center p-8">
       <div className="text-center max-w-md space-y-6">
         <div className="inline-flex items-center justify-center w-20 h-20 bg-red-500/10 border border-red-500/30 rounded-full">
           <AlertCircle className="w-10 h-10 text-red-400" />

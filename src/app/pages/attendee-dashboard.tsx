@@ -180,7 +180,7 @@ export function AttendeeDashboard() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-[#0D0D0D]">{notif.title}</p>
                       <p className="text-xs text-[#6B7280] mt-0.5 line-clamp-1">{notif.message}</p>
-                      <p className="text-xs text-white/30 mt-1">{formatDistanceToNow(notif.createdAt, { addSuffix: true })}</p>
+                      <p className="text-xs text-[#9CA3AF] mt-1">{formatDistanceToNow(notif.createdAt, { addSuffix: true })}</p>
                     </div>
                   </div>
                 </Card>

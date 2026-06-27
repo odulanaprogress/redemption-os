@@ -32,14 +32,14 @@ function NotifItem({ notif, onRead, onDelete }: {
       <div className="flex-1 min-w-0">
         <p className={`text-sm ${notif.read ? 'text-[#6B7280]' : 'text-[#0D0D0D]'} leading-tight`}>{notif.title}</p>
         <p className="text-xs text-[#9CA3AF] mt-0.5 line-clamp-2">{notif.message}</p>
-        <p className="text-xs text-white/30 mt-1">
+        <p className="text-xs text-[#9CA3AF] mt-1">
           {formatDistanceToNow(notif.createdAt, { addSuffix: true })}
         </p>
       </div>
       {!notif.read && <div className="shrink-0 w-2 h-2 rounded-full bg-[#0ea5e9] mt-1.5" />}
       <button
         onClick={(e) => { e.stopPropagation(); onDelete(notif.id); }}
-        className="shrink-0 opacity-0 group-hover:opacity-100 hover:text-red-400 text-white/30 transition-all p-1"
+        className="shrink-0 opacity-0 group-hover:opacity-100 hover:text-red-400 text-[#9CA3AF] transition-all p-1"
       >
         <Trash2 className="h-3 w-3" />
       </button>

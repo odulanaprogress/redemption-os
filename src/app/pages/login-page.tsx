@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -70,7 +70,17 @@ export function LoginPage() {
       for (const user of MOCK_USERS) {
         const profile = MOCK_PROFILES[user.uid];
         const res = await authService.register(user.email, user.password, user.displayName, profile.role, profile);
-        if (res.success || res.error?.code === "auth/email-already-in-use") { successCount++; }
+        if (res.success) {
+          successCount++;
+        } else if (res.error?.code === "auth/email-already-in-use") {
+          // If user exists in Auth, log in to get their UID and forcefully overwrite their Firestore profile
+          const loginRes = await authService.login(user.email, user.password);
+          if (loginRes.success && loginRes.user) {
+            const { userService } = await import("../../services/user.service");
+            await userService.createUser(loginRes.user.uid, profile);
+            successCount++;
+          }
+        }
       }
       await authService.logout();
       toast.success(`Successfully seeded ${successCount} demo users!`);

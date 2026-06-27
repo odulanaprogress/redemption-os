@@ -28,9 +28,9 @@ export default function App() {
                 position="bottom-right"
                 toastOptions={{
                   style: {
-                    background: '#0f0f0f',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    color: '#fff',
+                    background: '#ffffff',
+                    border: '1px solid #E5E7EB',
+                    color: '#0D0D0D',
                   },
                 }}
               />

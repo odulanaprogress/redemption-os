@@ -48,7 +48,7 @@ export function OfflineDetector() {
 
         {/* Sync Progress Indicator */}
         {isSyncing && (
-          <div className="flex items-center gap-2 bg-black/10 px-3 py-1 rounded-full text-xs font-mono">
+          <div className="flex items-center gap-2 bg-[#F8F9FF]/10 px-3 py-1 rounded-full text-xs font-mono">
             <RefreshCw className="h-3 w-3 animate-spin" />
             <span>Syncing database ({syncProgress}%)</span>
             <div className="w-16 bg-white/20 h-1.5 rounded-full overflow-hidden">
@@ -65,7 +65,7 @@ export function OfflineDetector() {
             size="sm"
             variant="ghost"
             onClick={triggerSync}
-            className="text-slate-950 hover:bg-black/10 h-8 font-semibold text-xs border border-slate-950/20"
+            className="text-slate-950 hover:bg-[#F8F9FF]/10 h-8 font-semibold text-xs border border-slate-950/20"
           >
             <RefreshCw className="h-3 w-3 mr-1.5" />
             Sync Now

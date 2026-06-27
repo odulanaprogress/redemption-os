@@ -75,14 +75,14 @@ export default function MarketplaceHome() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-black text-[#0D0D0D] p-6 md:p-8">
+      <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D] p-6 md:p-8">
         <MarketplaceSkeleton />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-[#0D0D0D]">
+    <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D]">
       <CartDrawer />
 
       <div className="p-6 md:p-8">
@@ -277,7 +277,7 @@ export default function MarketplaceHome() {
                 <span className="text-sm text-[#9CA3AF]">{filteredProducts.length} products</span>
               </div>
               {filteredProducts.length === 0 ? (
-                <div className="py-20 text-center text-white/30 space-y-3">
+                <div className="py-20 text-center text-[#9CA3AF] space-y-3">
                   <ShoppingBag className="w-12 h-12 mx-auto opacity-30" />
                   <div className="font-medium">No products found</div>
                   <button onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }} className="text-emerald-400 hover:text-emerald-300 text-sm underline">
@@ -443,7 +443,7 @@ function ProductCard({ product, onAddToCart }: { product: Product; onAddToCart: 
           <div className="flex items-center gap-1 text-xs text-[#6B7280]">
             <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
             <span>{product.rating}</span>
-            <span className="text-white/30">({product.reviews})</span>
+            <span className="text-[#9CA3AF]">({product.reviews})</span>
           </div>
         </div>
 

@@ -48,7 +48,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        <div className="min-h-screen bg-[#F8F9FF] flex items-center justify-center p-6">
           <div className="max-w-lg w-full bg-zinc-900 border border-red-500/20 rounded-lg p-8">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-12 bg-red-500/10 rounded-full flex items-center justify-center">
@@ -63,7 +63,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
 
             {this.state.error && (
-              <div className="mb-6 p-4 bg-black/40 rounded border border-white/5">
+              <div className="mb-6 p-4 bg-[#F8F9FF]/40 rounded border border-white/5">
                 <p className="text-red-400 text-sm font-mono">
                   {this.state.error.toString()}
                 </p>

@@ -94,7 +94,7 @@ function BroadcastCard({
         {canDelete && (
           <button
             onClick={() => onDelete(broadcast.id)}
-            className="shrink-0 p-1.5 hover:bg-red-500/20 rounded-lg text-white/30 hover:text-red-400 transition-colors"
+            className="shrink-0 p-1.5 hover:bg-red-500/20 rounded-lg text-[#9CA3AF] hover:text-red-400 transition-colors"
           >
             <Trash2 className="h-3.5 w-3.5" />
           </button>
@@ -139,13 +139,13 @@ function MessageBubble({
           {msg.mediaUrl && <MediaPreview url={msg.mediaUrl} type={msg.mediaType} />}
         </div>
         <div className="flex items-center gap-1 px-1">
-          <span className="text-[10px] text-white/30">
+          <span className="text-[10px] text-[#9CA3AF]">
             {formatDistanceToNow(msg.createdAt, { addSuffix: true })}
           </span>
           {isOwn && (
             <button
               onClick={() => onDelete(msg.id)}
-              className="text-white/20 hover:text-red-400 transition-colors ml-1"
+              className="text-[#D1D5DB] hover:text-red-400 transition-colors ml-1"
             >
               <Trash2 className="h-2.5 w-2.5" />
             </button>
@@ -374,7 +374,7 @@ export function CommunicationCenter() {
                         value={bForm.zone}
                         onChange={(e) => setBForm({ ...bForm, zone: e.target.value })}
                         placeholder="Zone (e.g. All Zones)"
-                        className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#0D0D0D] text-sm placeholder:text-white/30 focus:outline-none focus:border-[#0ea5e9]/50"
+                        className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#0D0D0D] text-sm placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#0ea5e9]/50"
                       />
                     </div>
                     <input
@@ -382,14 +382,14 @@ export function CommunicationCenter() {
                       value={bForm.title}
                       onChange={(e) => setBForm({ ...bForm, title: e.target.value })}
                       placeholder="Broadcast title *"
-                      className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#0D0D0D] text-sm placeholder:text-white/30 focus:outline-none focus:border-[#0ea5e9]/50"
+                      className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#0D0D0D] text-sm placeholder:text-[#9CA3AF] focus:outline-none focus:border-[#0ea5e9]/50"
                     />
                     <Textarea
                       required
                       value={bForm.message}
                       onChange={(e) => setBForm({ ...bForm, message: e.target.value })}
                       placeholder="Broadcast message *"
-                      className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D] placeholder:text-white/30 text-sm min-h-[80px]"
+                      className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D] placeholder:text-[#9CA3AF] text-sm min-h-[80px]"
                     />
 
                     {/* Media upload */}
@@ -408,7 +408,7 @@ export function CommunicationCenter() {
                         <div className="flex items-center gap-2 text-xs text-[#059669]">
                           <CheckCheck className="h-3.5 w-3.5" />
                           Media attached
-                          <button type="button" onClick={() => setBMediaUrl(null)} className="text-white/30 hover:text-red-400">
+                          <button type="button" onClick={() => setBMediaUrl(null)} className="text-[#9CA3AF] hover:text-red-400">
                             <X className="h-3 w-3" />
                           </button>
                         </div>
@@ -474,7 +474,7 @@ export function CommunicationCenter() {
           {/* Messages list */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full py-16 text-white/30">
+              <div className="flex flex-col items-center justify-center h-full py-16 text-[#9CA3AF]">
                 <MessageSquare className="h-10 w-10 mb-3 opacity-30" />
                 <p className="text-sm">No messages yet. Say something!</p>
               </div>
@@ -498,7 +498,7 @@ export function CommunicationCenter() {
                 <MediaPreview url={msgMediaUrl} type={msgMediaType ?? undefined} />
                 <button
                   onClick={() => { setMsgMediaUrl(null); setMsgMediaType(null); }}
-                  className="absolute top-2 right-2 bg-black/60 rounded-full p-1 text-[#4B5563] hover:text-[#0D0D0D]"
+                  className="absolute top-2 right-2 bg-[#F8F9FF]/60 rounded-full p-1 text-[#4B5563] hover:text-[#0D0D0D]"
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -519,7 +519,7 @@ export function CommunicationCenter() {
                 onChange={(e) => setMsgText(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                 placeholder={`Message #${activeChannel}...`}
-                className="flex-1 bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D] placeholder:text-white/30 text-sm min-h-[40px] max-h-[120px] resize-none"
+                className="flex-1 bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D] placeholder:text-[#9CA3AF] text-sm min-h-[40px] max-h-[120px] resize-none"
                 rows={1}
               />
               <button

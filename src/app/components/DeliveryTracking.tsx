@@ -42,7 +42,7 @@ export default function DeliveryTracking() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-black text-[#0D0D0D] p-8 flex items-center justify-center">
+      <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D] p-8 flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="text-6xl">📦</div>
           <h2 className="text-2xl font-bold">Order Not Found</h2>
@@ -66,7 +66,7 @@ export default function DeliveryTracking() {
   const currentIdx = statusOrder.indexOf(order.status);
 
   return (
-    <div className="min-h-screen bg-black text-[#0D0D0D] p-6 md:p-8">
+    <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D] p-6 md:p-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -133,7 +133,7 @@ export default function DeliveryTracking() {
                 <div className="bg-blue-500 w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/40 border-2 border-[#E5E7EB]">
                   <MapPin className="w-5 h-5 text-[#0D0D0D]" />
                 </div>
-                <div className="mt-1 text-xs font-semibold bg-black/80 px-2 py-0.5 rounded whitespace-nowrap text-center">
+                <div className="mt-1 text-xs font-semibold bg-[#0D0D0D]/60 px-2 py-0.5 rounded whitespace-nowrap text-center">
                   {order.vendorName}
                 </div>
               </motion.div>
@@ -153,7 +153,7 @@ export default function DeliveryTracking() {
                 >
                   <MapPin className="w-5 h-5 text-[#0D0D0D]" />
                 </motion.div>
-                <div className="mt-1 text-xs font-semibold bg-black/80 px-2 py-0.5 rounded whitespace-nowrap text-center">
+                <div className="mt-1 text-xs font-semibold bg-[#0D0D0D]/60 px-2 py-0.5 rounded whitespace-nowrap text-center">
                   Your Location
                 </div>
               </motion.div>
@@ -186,7 +186,7 @@ export default function DeliveryTracking() {
 
               {/* Live badge */}
               {order.status === 'in_transit' && (
-                <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-[#E5E7EB]">
+                <div className="absolute top-4 left-4 flex items-center gap-2 bg-[#0D0D0D]/50 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-[#E5E7EB]">
                   <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
                   <span className="text-xs font-semibold">LIVE</span>
                 </div>
@@ -284,7 +284,7 @@ export default function DeliveryTracking() {
                               : 'bg-[#F3F4F6]'
                           } ${isActive ? 'ring-2 ring-emerald-500/50' : ''}`}
                         >
-                          <Icon className={`w-5 h-5 ${isCompleted ? 'text-[#0D0D0D]' : 'text-white/30'}`} />
+                          <Icon className={`w-5 h-5 ${isCompleted ? 'text-[#0D0D0D]' : 'text-[#9CA3AF]'}`} />
                         </motion.div>
                         {index < statusSteps.length - 1 && (
                           <div className="absolute left-5 top-11 w-0.5 h-8">

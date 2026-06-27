@@ -57,7 +57,7 @@ export default function VendorDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-[#0D0D0D] p-6 md:p-8">
+    <div className="min-h-screen bg-[#F8F9FF] text-[#0D0D0D] p-6 md:p-8">
       {showUploadModal && (
         <UploadProductModal onClose={() => setShowUploadModal(false)} onSubmit={(newProduct) => {
           setProducts(prev => [...prev, newProduct]);
@@ -224,7 +224,7 @@ function ProductsTab({ products, onUpload, onEdit, onDelete }: any) {
       </button>
 
       {products.length === 0 ? (
-        <div className="py-20 text-center text-white/30 space-y-3">
+        <div className="py-20 text-center text-[#9CA3AF] space-y-3">
           <Package className="w-12 h-12 mx-auto opacity-30" />
           <div>No products yet. Upload your first product!</div>
         </div>
@@ -315,7 +315,7 @@ function OrdersTab({ orders, onAdvance }: { orders: Order[]; onAdvance: (id: str
               </div>
               <div className="flex justify-between mt-1">
                 {ORDER_STATUSES.map((s, i) => (
-                  <div key={s} className={`text-xs ${i <= statusIdx ? 'text-emerald-400' : 'text-white/30'} capitalize`}>
+                  <div key={s} className={`text-xs ${i <= statusIdx ? 'text-emerald-400' : 'text-[#9CA3AF]'} capitalize`}>
                     {s.replace('_', ' ')}
                   </div>
                 ))}
@@ -455,11 +455,11 @@ function UploadProductModal({ onClose, onSubmit }: { onClose: () => void; onSubm
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-[#0D0D0D]/50 backdrop-blur-sm" onClick={onClose} />
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="relative bg-[#0a0a0a] border border-[#E5E7EB] rounded-2xl p-6 w-full max-w-lg shadow-2xl"
+        className="relative bg-white border border-[#E5E7EB] rounded-2xl p-6 w-full max-w-lg shadow-2xl"
       >
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
@@ -482,7 +482,7 @@ function UploadProductModal({ onClose, onSubmit }: { onClose: () => void; onSubm
               ) : imageUrl ? (
                 <img src={imageUrl} alt="product" className="w-full h-full object-cover rounded-xl" />
               ) : (
-                <><ImageIcon className="w-8 h-8 text-white/30" /><span className="text-sm text-[#9CA3AF]">Click to upload product image</span></>
+                <><ImageIcon className="w-8 h-8 text-[#9CA3AF]" /><span className="text-sm text-[#9CA3AF]">Click to upload product image</span></>
               )}
             </div>
           </div>
@@ -500,7 +500,7 @@ function UploadProductModal({ onClose, onSubmit }: { onClose: () => void; onSubm
                 placeholder={f.placeholder}
                 value={(form as any)[f.key]}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl px-4 py-2.5 text-[#0D0D0D] placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50"
+                className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl px-4 py-2.5 text-[#0D0D0D] placeholder:text-[#9CA3AF] focus:outline-none focus:border-emerald-500/50"
               />
             </div>
           ))}
@@ -534,11 +534,11 @@ function EditProductModal({ product, onClose, onSave }: { product: Product; onCl
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-[#0D0D0D]/50 backdrop-blur-sm" onClick={onClose} />
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative bg-[#0a0a0a] border border-[#E5E7EB] rounded-2xl p-6 w-full max-w-md shadow-2xl"
+        className="relative bg-white border border-[#E5E7EB] rounded-2xl p-6 w-full max-w-md shadow-2xl"
       >
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
