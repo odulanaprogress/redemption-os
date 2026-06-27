@@ -21,7 +21,7 @@ export function DashboardSkeleton() {
       {/* Stats Grid Skeleton */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-3">
+          <div key={i} className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6 space-y-3">
             <Skeleton className="h-4 w-20" />
             <Skeleton className="h-8 w-24" />
             <Skeleton className="h-3 w-16" />
@@ -30,7 +30,7 @@ export function DashboardSkeleton() {
       </div>
 
       {/* Chart Skeleton */}
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-4">
+      <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6 space-y-4">
         <Skeleton className="h-6 w-48" />
         <Skeleton className="h-64 w-full" />
       </div>
@@ -40,7 +40,7 @@ export function DashboardSkeleton() {
 
 export function CardSkeleton() {
   return (
-    <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+    <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl overflow-hidden">
       <Skeleton className="aspect-square w-full" />
       <div className="p-4 space-y-3">
         <Skeleton className="h-5 w-3/4" />
@@ -59,7 +59,7 @@ export function ListSkeleton({ rows = 5 }: { rows?: number }) {
   return (
     <div className="space-y-3">
       {[...Array(rows)].map((_, i) => (
-        <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4">
+        <div key={i} className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-4 flex items-center gap-4">
           <Skeleton className="w-16 h-16 rounded-lg" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-5 w-3/4" />
@@ -74,7 +74,7 @@ export function ListSkeleton({ rows = 5 }: { rows?: number }) {
 
 export function MapSkeleton() {
   return (
-    <div className="aspect-square bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-white/10 rounded-2xl relative overflow-hidden">
+    <div className="aspect-square bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-[#E5E7EB] rounded-2xl relative overflow-hidden">
       <motion.div
         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
         animate={shimmerAnimation}
@@ -83,8 +83,8 @@ export function MapSkeleton() {
         }}
       />
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="text-white/40 text-center space-y-2">
-          <div className="w-16 h-16 border-4 border-white/10 border-t-emerald-500 rounded-full animate-spin mx-auto" />
+        <div className="text-[#9CA3AF] text-center space-y-2">
+          <div className="w-16 h-16 border-4 border-[#E5E7EB] border-t-emerald-500 rounded-full animate-spin mx-auto" />
           <div className="text-sm">Loading map...</div>
         </div>
       </div>
@@ -96,7 +96,7 @@ export function FeedSkeleton({ items = 5 }: { items?: number }) {
   return (
     <div className="space-y-4">
       {[...Array(items)].map((_, i) => (
-        <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-3">
+        <div key={i} className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6 space-y-3">
           <div className="flex items-center gap-3">
             <Skeleton className="w-10 h-10 rounded-full" />
             <div className="flex-1 space-y-2">
@@ -128,7 +128,7 @@ export function MarketplaceSkeleton() {
       {/* Categories Skeleton */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
         {[...Array(7)].map((_, i) => (
-          <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
+          <div key={i} className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-4 space-y-2">
             <Skeleton className="h-12 w-12 mx-auto" />
             <Skeleton className="h-4 w-16 mx-auto" />
           </div>
@@ -152,7 +152,7 @@ export function SermonSkeleton() {
   return (
     <div className="space-y-6">
       {/* Video Player Skeleton */}
-      <div className="aspect-video bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-white/10 rounded-2xl relative overflow-hidden">
+      <div className="aspect-video bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-[#E5E7EB] rounded-2xl relative overflow-hidden">
         <motion.div
           className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
           animate={shimmerAnimation}
@@ -161,7 +161,7 @@ export function SermonSkeleton() {
           }}
         />
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-16 h-16 border-4 border-white/10 border-t-emerald-500 rounded-full animate-spin" />
+          <div className="w-16 h-16 border-4 border-[#E5E7EB] border-t-emerald-500 rounded-full animate-spin" />
         </div>
       </div>
 
@@ -176,7 +176,7 @@ export function SermonSkeleton() {
       </div>
 
       {/* Transcript Skeleton */}
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6 space-y-3">
+      <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6 space-y-3">
         <Skeleton className="h-6 w-32" />
         {[...Array(6)].map((_, i) => (
           <Skeleton key={i} className="h-4 w-full" />
@@ -188,9 +188,9 @@ export function SermonSkeleton() {
 
 export function TableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+    <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl overflow-hidden">
       {/* Header */}
-      <div className="border-b border-white/10 p-4 flex gap-4">
+      <div className="border-b border-[#E5E7EB] p-4 flex gap-4">
         <Skeleton className="h-4 w-32" />
         <Skeleton className="h-4 w-24" />
         <Skeleton className="h-4 w-28" />
@@ -198,7 +198,7 @@ export function TableSkeleton({ rows = 5 }: { rows?: number }) {
       </div>
       {/* Rows */}
       {[...Array(rows)].map((_, i) => (
-        <div key={i} className="border-b border-white/10 last:border-0 p-4 flex items-center gap-4">
+        <div key={i} className="border-b border-[#E5E7EB] last:border-0 p-4 flex items-center gap-4">
           <Skeleton className="h-4 w-32" />
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-4 w-28" />
@@ -241,7 +241,7 @@ export function ProfileSkeleton() {
       {/* Info Cards */}
       <div className="grid grid-cols-2 gap-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
+          <div key={i} className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-4 space-y-2">
             <Skeleton className="h-4 w-20" />
             <Skeleton className="h-6 w-24" />
           </div>
@@ -273,9 +273,9 @@ export function LoadingSpinner({ size = 'md', color = 'emerald' }: { size?: 'sm'
   };
 
   const colorClasses = {
-    emerald: 'border-white/10 border-t-emerald-500',
-    blue: 'border-white/10 border-t-blue-500',
-    purple: 'border-white/10 border-t-purple-500'
+    emerald: 'border-[#E5E7EB] border-t-emerald-500',
+    blue: 'border-[#E5E7EB] border-t-blue-500',
+    purple: 'border-[#E5E7EB] border-t-purple-500'
   };
 
   return (
@@ -301,10 +301,10 @@ export function PulseDot({ color = 'emerald' }: { color?: 'emerald' | 'blue' | '
 // Full Page Loading State
 export function PageLoader({ message = 'Loading...' }: { message?: string }) {
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+    <div className="min-h-screen bg-black text-[#0D0D0D] flex items-center justify-center">
       <div className="text-center space-y-4">
         <LoadingSpinner size="lg" />
-        <div className="text-lg font-medium text-white/60">{message}</div>
+        <div className="text-lg font-medium text-[#6B7280]">{message}</div>
       </div>
     </div>
   );

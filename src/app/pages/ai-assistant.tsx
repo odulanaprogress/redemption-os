@@ -67,22 +67,22 @@ export function AIAssistant() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628] flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8F9FF] to-white flex flex-col">
       {/* Header */}
-      <div className="bg-[#1a1f2e]/80 backdrop-blur-lg border-b border-white/10 p-4">
+      <div className="bg-white backdrop-blur-lg border-b border-[#E5E7EB] p-4">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")} className="text-white/60 hover:text-white">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")} className="text-[#6B7280] hover:text-[#0D0D0D]">
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1 flex items-center gap-3">
-            <div className="rounded-lg bg-[#0ea5e9]/10 p-2">
-              <Brain className="h-5 w-5 text-[#0ea5e9]" />
+            <div className="rounded-lg bg-[#EDE9FE] p-2">
+              <Brain className="h-5 w-5 text-[#5B4FE8]" />
             </div>
             <div>
-              <h1 className="text-lg text-white">AI Assistant</h1>
+              <h1 className="text-lg text-[#0D0D0D]">AI Assistant</h1>
               <div className="flex items-center gap-2">
                 <div className={`h-2 w-2 rounded-full ${aiService.apiAvailable ? 'bg-[#10b981]' : 'bg-amber-400'} animate-pulse`} />
-                <span className="text-xs text-white/60">
+                <span className="text-xs text-[#6B7280]">
                   {aiService.apiAvailable ? 'OpenAI Connected' : isMockMode ? 'Smart Fallback Mode' : 'Online'}
                 </span>
               </div>
@@ -98,10 +98,10 @@ export function AIAssistant() {
             <button
               key={label}
               onClick={() => sendMessage(query)}
-              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-[#1a1f2e]/80 border border-white/10 hover:border-[#0ea5e9]/40 hover:bg-[#0ea5e9]/5 transition-all"
+              className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-white border border-[#E5E7EB] hover:border-[#0ea5e9]/40 hover:bg-[#0ea5e9]/5 transition-all"
             >
-              <Icon className="h-4 w-4 text-[#0ea5e9]" />
-              <span className="text-xs text-white/70">{label}</span>
+              <Icon className="h-4 w-4 text-[#5B4FE8]" />
+              <span className="text-xs text-[#4B5563]">{label}</span>
             </button>
           ))}
         </div>
@@ -121,19 +121,19 @@ export function AIAssistant() {
               <div className={`max-w-[82%] ${message.role === "user" ? "order-2" : "order-1"}`}>
                 {message.role === "assistant" && (
                   <div className="mb-1.5 flex items-center gap-2">
-                    <div className="rounded-full bg-[#0ea5e9]/10 p-1">
-                      <Brain className="h-3 w-3 text-[#0ea5e9]" />
+                    <div className="rounded-full bg-[#EDE9FE] p-1">
+                      <Brain className="h-3 w-3 text-[#5B4FE8]" />
                     </div>
-                    <span className="text-xs text-white/50">AI Assistant</span>
+                    <span className="text-xs text-[#6B7280]">AI Assistant</span>
                   </div>
                 )}
 
                 <Card className={`p-4 ${
                   message.role === "user"
-                    ? "bg-gradient-to-br from-[#0ea5e9] to-[#10b981] border-none"
-                    : "bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10"
+                    ? "bg-gradient-to-br from-[#5B4FE8] to-[#8B82F0] border-none"
+                    : "bg-white backdrop-blur-lg border-[#E5E7EB]"
                 }`}>
-                  <p className="text-sm text-white leading-relaxed">{message.content}</p>
+                  <p className="text-sm text-[#0D0D0D] leading-relaxed">{message.content}</p>
                 </Card>
 
                 {message.suggestions && message.suggestions.length > 0 && (
@@ -142,7 +142,7 @@ export function AIAssistant() {
                       <Badge
                         key={i}
                         onClick={() => sendMessage(s)}
-                        className="cursor-pointer bg-[#0ea5e9]/10 text-[#0ea5e9] border-[#0ea5e9]/30 hover:bg-[#0ea5e9]/20 transition-colors"
+                        className="cursor-pointer bg-[#EDE9FE] text-[#5B4FE8] border-[#5B4FE8]/30 hover:bg-[#0ea5e9]/20 transition-colors"
                       >
                         {s}
                       </Badge>
@@ -156,7 +156,7 @@ export function AIAssistant() {
 
         {isTyping && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-            <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-4">
+            <Card className="bg-white backdrop-blur-lg border-[#E5E7EB] p-4">
               <div className="flex gap-1 items-center">
                 <div className="h-2 w-2 rounded-full bg-[#0ea5e9] animate-bounce" />
                 <div className="h-2 w-2 rounded-full bg-[#0ea5e9] animate-bounce" style={{ animationDelay: "0.2s" }} />
@@ -169,9 +169,9 @@ export function AIAssistant() {
       </div>
 
       {/* Input */}
-      <div className="bg-[#1a1f2e]/95 backdrop-blur-lg border-t border-white/10 p-4">
+      <div className="bg-white backdrop-blur-lg border-t border-[#E5E7EB] p-4">
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="text-white/40 hover:text-white/70 shrink-0">
+          <Button variant="ghost" size="icon" className="text-[#9CA3AF] hover:text-[#4B5563] shrink-0">
             <Mic className="h-5 w-5" />
           </Button>
           <Input
@@ -179,13 +179,13 @@ export function AIAssistant() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage(input)}
             placeholder="Ask me anything..."
-            className="bg-white/5 border-white/10 text-white placeholder:text-white/40 flex-1"
+            className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D] placeholder:text-[#9CA3AF] flex-1"
             disabled={isTyping}
           />
           <Button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || isTyping}
-            className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] hover:opacity-90 text-white shrink-0"
+            className="bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] hover:opacity-90 text-[#0D0D0D] shrink-0"
           >
             <Send className="h-5 w-5" />
           </Button>

@@ -40,11 +40,11 @@ export const ProtectedRoute = ({
   if (isLoading && !loadingTimeout) {
     console.log('[ProtectedRoute] ⏳ Loading auth state...');
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628]">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F8F9FF] to-white">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-[#0ea5e9] border-t-transparent rounded-full animate-spin" />
-          <p className="text-white/60">Loading...</p>
-          <p className="text-white/40 text-sm">Checking authentication</p>
+          <p className="text-[#6B7280]">Loading...</p>
+          <p className="text-[#9CA3AF] text-sm">Checking authentication</p>
         </div>
       </div>
     );

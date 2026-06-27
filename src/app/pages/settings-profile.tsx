@@ -104,31 +104,31 @@ export function SettingsProfile() {
   const initials = (displayName || userProfile?.email || "U").slice(0, 1).toUpperCase();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628]">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8F9FF] to-white">
       {/* Header */}
-      <div className="bg-[#1a1f2e]/80 backdrop-blur-lg border-b border-white/10 p-4">
+      <div className="bg-white backdrop-blur-lg border-b border-[#E5E7EB] p-4">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")} className="text-white/60 hover:text-white">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")} className="text-[#6B7280] hover:text-[#0D0D0D]">
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-lg text-white">Settings &amp; Profile</h1>
-            <p className="text-sm text-white/60">Manage your preferences</p>
+            <h1 className="text-lg text-[#0D0D0D]">Settings &amp; Profile</h1>
+            <p className="text-sm text-[#6B7280]">Manage your preferences</p>
           </div>
         </div>
       </div>
 
       <div className="p-4 space-y-6 max-w-2xl mx-auto">
         {/* ── Profile Section ─────────────────────────────────────────────────── */}
-        <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6">
+        <Card className="bg-white backdrop-blur-lg border-[#E5E7EB] p-6">
           {/* Avatar */}
           <div className="flex items-center gap-5 mb-6">
             <div className="relative">
-              <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#0ea5e9] to-[#10b981] flex items-center justify-center overflow-hidden">
+              <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#5B4FE8] to-[#8B82F0] flex items-center justify-center overflow-hidden">
                 {avatarUrl ? (
                   <img src={avatarUrl} alt="avatar" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-2xl text-white font-bold">{initials}</span>
+                  <span className="text-2xl text-[#0D0D0D] font-bold">{initials}</span>
                 )}
               </div>
               <button
@@ -138,17 +138,17 @@ export function SettingsProfile() {
                 title="Upload photo"
               >
                 {avatarUploading ? (
-                  <Loader2 className="h-3.5 w-3.5 text-white animate-spin" />
+                  <Loader2 className="h-3.5 w-3.5 text-[#0D0D0D] animate-spin" />
                 ) : (
-                  <Camera className="h-3.5 w-3.5 text-white" />
+                  <Camera className="h-3.5 w-3.5 text-[#0D0D0D]" />
                 )}
               </button>
               <input ref={avatarRef} type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
             </div>
             <div>
-              <h2 className="text-lg text-white">{displayName || userProfile?.displayName || "Your Name"}</h2>
-              <p className="text-sm text-white/60">{userProfile?.email}</p>
-              <p className="text-xs text-[#10b981] mt-0.5 capitalize">
+              <h2 className="text-lg text-[#0D0D0D]">{displayName || userProfile?.displayName || "Your Name"}</h2>
+              <p className="text-sm text-[#6B7280]">{userProfile?.email}</p>
+              <p className="text-xs text-[#059669] mt-0.5 capitalize">
                 {userProfile?.role ?? "attendee"}
               </p>
             </div>
@@ -157,46 +157,46 @@ export function SettingsProfile() {
           {/* Form fields */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="displayName" className="text-white/80">Full Name</Label>
+              <Label htmlFor="displayName" className="text-[#4B5563]">Full Name</Label>
               <Input
                 id="displayName"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="bg-white/5 border-white/10 text-white"
+                className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D]"
                 placeholder="Your full name"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-white/80">Email</Label>
+              <Label htmlFor="email" className="text-[#4B5563]">Email</Label>
               <Input
                 id="email"
                 type="email"
                 value={userProfile?.email ?? ""}
                 disabled
-                className="bg-white/5 border-white/10 text-white/50 cursor-not-allowed"
+                className="bg-[#F8F9FF] border-[#E5E7EB] text-[#6B7280] cursor-not-allowed"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-white/80">Phone Number</Label>
+              <Label htmlFor="phone" className="text-[#4B5563]">Phone Number</Label>
               <Input
                 id="phone"
                 type="tel"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
-                className="bg-white/5 border-white/10 text-white"
+                className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D]"
                 placeholder="+234 800 000 0000"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address" className="text-white/80">Address / Seat Location</Label>
+              <Label htmlFor="address" className="text-[#4B5563]">Address / Seat Location</Label>
               <Input
                 id="address"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
-                className="bg-white/5 border-white/10 text-white"
+                className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D]"
                 placeholder="Building A, Row 5, Seat 12"
               />
             </div>
@@ -204,7 +204,7 @@ export function SettingsProfile() {
             <Button
               onClick={handleSaveProfile}
               disabled={saving}
-              className="w-full bg-gradient-to-r from-[#0ea5e9] to-[#10b981] hover:opacity-90 text-white"
+              className="w-full bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] hover:opacity-90 text-[#0D0D0D]"
             >
               {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <CheckCircle className="h-4 w-4 mr-2" />}
               {saving ? "Saving..." : "Save Profile"}
@@ -213,25 +213,25 @@ export function SettingsProfile() {
         </Card>
 
         {/* ── Appearance ─────────────────────────────────────────────────────── */}
-        <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6">
-          <h3 className="text-white mb-4 flex items-center gap-2">
+        <Card className="bg-white backdrop-blur-lg border-[#E5E7EB] p-6">
+          <h3 className="text-[#0D0D0D] mb-4 flex items-center gap-2">
             {theme === "dark" ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
             Appearance
           </h3>
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label htmlFor="theme" className="text-white/80">Dark Mode</Label>
+              <Label htmlFor="theme" className="text-[#4B5563]">Dark Mode</Label>
               <Switch
                 id="theme"
                 checked={theme === "dark"}
                 onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
               />
             </div>
-            <Separator className="bg-white/10" />
+            <Separator className="bg-[#F3F4F6]" />
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Wifi className="h-4 w-4 text-[#0ea5e9]" />
-                <Label htmlFor="lowdata" className="text-white/80">Low Data Mode</Label>
+                <Wifi className="h-4 w-4 text-[#5B4FE8]" />
+                <Label htmlFor="lowdata" className="text-[#4B5563]">Low Data Mode</Label>
               </div>
               <Switch id="lowdata" checked={lowDataMode} onCheckedChange={setLowDataMode} />
             </div>
@@ -239,8 +239,8 @@ export function SettingsProfile() {
         </Card>
 
         {/* ── Notifications ───────────────────────────────────────────────────── */}
-        <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6">
-          <h3 className="text-white mb-4 flex items-center gap-2">
+        <Card className="bg-white backdrop-blur-lg border-[#E5E7EB] p-6">
+          <h3 className="text-[#0D0D0D] mb-4 flex items-center gap-2">
             <Bell className="h-5 w-5" /> Notification Preferences
           </h3>
           <div className="space-y-4">
@@ -251,9 +251,9 @@ export function SettingsProfile() {
               { id: "eventReminders", label: "Event Reminders", key: "eventReminders" },
             ].map((item, i) => (
               <div key={item.id}>
-                {i > 0 && <Separator className="bg-white/10" />}
+                {i > 0 && <Separator className="bg-[#F3F4F6]" />}
                 <div className={`flex items-center justify-between ${i > 0 ? "pt-4" : ""}`}>
-                  <Label htmlFor={item.id} className="text-white/80">{item.label}</Label>
+                  <Label htmlFor={item.id} className="text-[#4B5563]">{item.label}</Label>
                   <Switch
                     id={item.id}
                     checked={notifications[item.key as keyof typeof notifications]}
@@ -268,13 +268,13 @@ export function SettingsProfile() {
         </Card>
 
         {/* ── Language ────────────────────────────────────────────────────────── */}
-        <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6">
-          <h3 className="text-white mb-4 flex items-center gap-2">
+        <Card className="bg-white backdrop-blur-lg border-[#E5E7EB] p-6">
+          <h3 className="text-[#0D0D0D] mb-4 flex items-center gap-2">
             <Globe className="h-5 w-5" /> Language Settings
           </h3>
           <div className="space-y-2">
-            <Label htmlFor="language" className="text-white/80">Preferred Language</Label>
-            <select id="language" className="w-full rounded-lg bg-white/5 border border-white/10 text-white p-3">
+            <Label htmlFor="language" className="text-[#4B5563]">Preferred Language</Label>
+            <select id="language" className="w-full rounded-lg bg-[#F8F9FF] border border-[#E5E7EB] text-[#0D0D0D] p-3">
               <option value="en">English</option>
               <option value="es">Español</option>
               <option value="fr">Français</option>
@@ -287,44 +287,44 @@ export function SettingsProfile() {
         </Card>
 
         {/* ── Emergency Contacts ──────────────────────────────────────────────── */}
-        <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6">
-          <h3 className="text-white mb-4 flex items-center gap-2">
+        <Card className="bg-white backdrop-blur-lg border-[#E5E7EB] p-6">
+          <h3 className="text-[#0D0D0D] mb-4 flex items-center gap-2">
             <Shield className="h-5 w-5" /> Emergency Contacts
           </h3>
           {userProfile?.emergencyContact ? (
-            <div className="p-4 bg-white/5 rounded-lg mb-3">
+            <div className="p-4 bg-[#F8F9FF] rounded-lg mb-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="rounded-full bg-[#0ea5e9]/10 p-2">
-                    <Phone className="h-4 w-4 text-[#0ea5e9]" />
+                  <div className="rounded-full bg-[#EDE9FE] p-2">
+                    <Phone className="h-4 w-4 text-[#5B4FE8]" />
                   </div>
                   <div>
-                    <p className="text-sm text-white">{userProfile.emergencyContact.name}</p>
-                    <p className="text-xs text-white/60">{userProfile.emergencyContact.relationship}</p>
+                    <p className="text-sm text-[#0D0D0D]">{userProfile.emergencyContact.name}</p>
+                    <p className="text-xs text-[#6B7280]">{userProfile.emergencyContact.relationship}</p>
                   </div>
                 </div>
-                <p className="text-xs text-white/60">{userProfile.emergencyContact.phoneNumber}</p>
+                <p className="text-xs text-[#6B7280]">{userProfile.emergencyContact.phoneNumber}</p>
               </div>
             </div>
           ) : (
-            <p className="text-sm text-white/40 mb-3">No emergency contact set.</p>
+            <p className="text-sm text-[#9CA3AF] mb-3">No emergency contact set.</p>
           )}
-          <Button variant="outline" className="w-full border-white/10 text-white hover:bg-white/10">
+          <Button variant="outline" className="w-full border-[#E5E7EB] text-[#0D0D0D] hover:bg-[#F3F4F6]">
             <Phone className="h-4 w-4 mr-2" />
             {userProfile?.emergencyContact ? "Update Contact" : "Add Emergency Contact"}
           </Button>
         </Card>
 
         {/* ── Account Security ────────────────────────────────────────────────── */}
-        <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6">
-          <h3 className="text-white mb-4 flex items-center gap-2">
+        <Card className="bg-white backdrop-blur-lg border-[#E5E7EB] p-6">
+          <h3 className="text-[#0D0D0D] mb-4 flex items-center gap-2">
             <KeyRound className="h-5 w-5" /> Account Security
           </h3>
           <div className="space-y-3">
-            <Button variant="outline" className="w-full justify-start border-white/10 text-white hover:bg-white/10">
+            <Button variant="outline" className="w-full justify-start border-[#E5E7EB] text-[#0D0D0D] hover:bg-[#F3F4F6]">
               Change Password
             </Button>
-            <Button variant="outline" className="w-full justify-start border-white/10 text-white hover:bg-white/10">
+            <Button variant="outline" className="w-full justify-start border-[#E5E7EB] text-[#0D0D0D] hover:bg-[#F3F4F6]">
               Two-Factor Authentication
             </Button>
           </div>
@@ -340,7 +340,7 @@ export function SettingsProfile() {
           Sign Out
         </Button>
 
-        <div className="text-center text-xs text-white/40 py-6">
+        <div className="text-center text-xs text-[#9CA3AF] py-6">
           Redemption OS v1.0.0 — © 2026
         </div>
       </div>

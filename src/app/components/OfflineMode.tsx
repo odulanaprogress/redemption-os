@@ -221,7 +221,7 @@ export function ConnectionStatus() {
       {isOnline ? (
         <>
           <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-          <span className="text-sm text-white/60">
+          <span className="text-sm text-[#6B7280]">
             {lastSyncTime
               ? `Synced ${new Date(lastSyncTime).toLocaleTimeString()}`
               : 'Connected'}
@@ -230,7 +230,7 @@ export function ConnectionStatus() {
       ) : (
         <>
           <div className="w-2 h-2 bg-red-400 rounded-full" />
-          <span className="text-sm text-white/60">Offline</span>
+          <span className="text-sm text-[#6B7280]">Offline</span>
         </>
       )}
     </div>

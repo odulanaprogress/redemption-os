@@ -17,10 +17,10 @@ import { useAuthStore } from "../../store/auth.store";
 import { formatDistanceToNow } from "date-fns";
 
 const BROADCAST_TYPE_CONFIG = {
-  operational: { label: "Operational", color: "text-[#0ea5e9]", bg: "bg-[#0ea5e9]/10", border: "border-[#0ea5e9]/30" },
+  operational: { label: "Operational", color: "text-[#5B4FE8]", bg: "bg-[#EDE9FE]", border: "border-[#5B4FE8]/30" },
   alert: { label: "Alert", color: "text-[#f59e0b]", bg: "bg-[#f59e0b]/10", border: "border-[#f59e0b]/30" },
   emergency: { label: "Emergency", color: "text-red-400", bg: "bg-red-400/10", border: "border-red-400/30" },
-  info: { label: "Info", color: "text-[#10b981]", bg: "bg-[#10b981]/10", border: "border-[#10b981]/30" },
+  info: { label: "Info", color: "text-[#059669]", bg: "bg-emerald-50", border: "border-[#10b981]/30" },
 };
 
 // ─── Media Preview Helper ─────────────────────────────────────────────────────
@@ -33,7 +33,7 @@ function MediaPreview({ url, type }: { url: string; type?: string }) {
       <video
         src={url}
         controls
-        className="rounded-lg max-h-48 w-full object-cover mt-2 border border-white/10"
+        className="rounded-lg max-h-48 w-full object-cover mt-2 border border-[#E5E7EB]"
       />
     );
   }
@@ -41,7 +41,7 @@ function MediaPreview({ url, type }: { url: string; type?: string }) {
     <img
       src={url}
       alt="media"
-      className="rounded-lg max-h-48 w-full object-cover mt-2 border border-white/10"
+      className="rounded-lg max-h-48 w-full object-cover mt-2 border border-[#E5E7EB]"
     />
   );
 }
@@ -69,7 +69,7 @@ function BroadcastCard({
           <Radio className={`h-5 w-5 mt-0.5 shrink-0 ${cfg.color}`} />
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
-              <h3 className="text-white text-sm font-semibold">{broadcast.title}</h3>
+              <h3 className="text-[#0D0D0D] text-sm font-semibold">{broadcast.title}</h3>
               <Badge className={`${cfg.bg} ${cfg.color} border ${cfg.border} text-xs`}>
                 {broadcast.zone}
               </Badge>
@@ -79,11 +79,11 @@ function BroadcastCard({
                 </Badge>
               )}
             </div>
-            <p className="text-sm text-white/70 leading-relaxed">{broadcast.message}</p>
+            <p className="text-sm text-[#4B5563] leading-relaxed">{broadcast.message}</p>
             {broadcast.mediaUrl && (
               <MediaPreview url={broadcast.mediaUrl} />
             )}
-            <div className="flex items-center gap-2 mt-2 text-xs text-white/40">
+            <div className="flex items-center gap-2 mt-2 text-xs text-[#9CA3AF]">
               <Clock className="h-3 w-3" />
               <span>{formatDistanceToNow(broadcast.createdAt, { addSuffix: true })}</span>
               <span>•</span>
@@ -121,18 +121,18 @@ function MessageBubble({
       animate={{ opacity: 1, y: 0 }}
       className={`flex gap-2 ${isOwn ? "flex-row-reverse" : "flex-row"}`}
     >
-      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#0ea5e9] to-[#10b981] flex items-center justify-center text-white text-xs font-bold shrink-0 mt-1">
+      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#5B4FE8] to-[#8B82F0] flex items-center justify-center text-[#0D0D0D] text-xs font-bold shrink-0 mt-1">
         {msg.senderName.slice(0, 1).toUpperCase()}
       </div>
       <div className={`max-w-[72%] ${isOwn ? "items-end" : "items-start"} flex flex-col gap-0.5`}>
-        <span className="text-xs text-white/40 px-1">
+        <span className="text-xs text-[#9CA3AF] px-1">
           {isOwn ? "You" : msg.senderName}
         </span>
         <div
           className={`rounded-2xl px-4 py-2.5 text-sm ${
             isOwn
-              ? "bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white rounded-tr-sm"
-              : "bg-[#1a1f2e] border border-white/10 text-white/90 rounded-tl-sm"
+              ? "bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] text-[#0D0D0D] rounded-tr-sm"
+              : "bg-white border border-[#E5E7EB] text-[#111827] rounded-tl-sm"
           }`}
         >
           {msg.text && <p className="leading-relaxed">{msg.text}</p>}
@@ -303,20 +303,20 @@ export function CommunicationCenter() {
   const emergencyBroadcasts = broadcasts.filter((b) => b.type === "emergency");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628] flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8F9FF] to-white flex flex-col">
       {/* Header */}
-      <div className="bg-[#1a1f2e]/80 backdrop-blur-lg border-b border-white/10 p-4 sticky top-0 z-10">
+      <div className="bg-white backdrop-blur-lg border-b border-[#E5E7EB] p-4 sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")} className="text-white/60 hover:text-white">
+          <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard")} className="text-[#6B7280] hover:text-[#0D0D0D]">
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1">
-            <h1 className="text-lg text-white">Communication Center</h1>
-            <p className="text-sm text-white/60">Real-time updates &amp; messaging</p>
+            <h1 className="text-lg text-[#0D0D0D]">Communication Center</h1>
+            <p className="text-sm text-[#6B7280]">Real-time updates &amp; messaging</p>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-            <span className="text-xs text-[#10b981]">Live</span>
+            <span className="text-xs text-[#059669]">Live</span>
           </div>
         </div>
 
@@ -328,8 +328,8 @@ export function CommunicationCenter() {
               onClick={() => setTab(t)}
               className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-colors capitalize ${
                 tab === t
-                  ? "bg-[#0ea5e9]/20 text-[#0ea5e9] border border-[#0ea5e9]/30"
-                  : "text-white/50 hover:text-white/80"
+                  ? "bg-[#0ea5e9]/20 text-[#5B4FE8] border border-[#5B4FE8]/30"
+                  : "text-[#6B7280] hover:text-[#4B5563]"
               }`}
             >
               {t === "emergency" ? `🚨 Emergency${emergencyBroadcasts.length > 0 ? ` (${emergencyBroadcasts.length})` : ""}` : t.charAt(0).toUpperCase() + t.slice(1)}
@@ -346,16 +346,16 @@ export function CommunicationCenter() {
               {!showBroadcastForm ? (
                 <button
                   onClick={() => setShowBroadcastForm(true)}
-                  className="w-full bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+                  className="w-full bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] text-[#0D0D0D] py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
                 >
                   <Radio className="h-4 w-4" />
                   Create Broadcast
                 </button>
               ) : (
-                <Card className="bg-[#1a1f2e]/80 border-white/10 p-5">
+                <Card className="bg-white border-[#E5E7EB] p-5">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-white font-semibold">New Broadcast</h3>
-                    <button onClick={() => { setShowBroadcastForm(false); setBMediaUrl(null); }} className="text-white/40 hover:text-white">
+                    <h3 className="text-[#0D0D0D] font-semibold">New Broadcast</h3>
+                    <button onClick={() => { setShowBroadcastForm(false); setBMediaUrl(null); }} className="text-[#9CA3AF] hover:text-[#0D0D0D]">
                       <X className="h-4 w-4" />
                     </button>
                   </div>
@@ -364,17 +364,17 @@ export function CommunicationCenter() {
                       <select
                         value={bForm.type}
                         onChange={(e) => setBForm({ ...bForm, type: e.target.value as any })}
-                        className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-[#0ea5e9]/50"
+                        className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#0D0D0D] text-sm focus:outline-none focus:border-[#0ea5e9]/50"
                       >
                         {(["operational", "alert", "emergency", "info"] as const).map((t) => (
-                          <option key={t} value={t} className="bg-[#1a1f2e]">{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+                          <option key={t} value={t} className="bg-white">{t.charAt(0).toUpperCase() + t.slice(1)}</option>
                         ))}
                       </select>
                       <input
                         value={bForm.zone}
                         onChange={(e) => setBForm({ ...bForm, zone: e.target.value })}
                         placeholder="Zone (e.g. All Zones)"
-                        className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#0ea5e9]/50"
+                        className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#0D0D0D] text-sm placeholder:text-white/30 focus:outline-none focus:border-[#0ea5e9]/50"
                       />
                     </div>
                     <input
@@ -382,14 +382,14 @@ export function CommunicationCenter() {
                       value={bForm.title}
                       onChange={(e) => setBForm({ ...bForm, title: e.target.value })}
                       placeholder="Broadcast title *"
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-[#0ea5e9]/50"
+                      className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2 text-[#0D0D0D] text-sm placeholder:text-white/30 focus:outline-none focus:border-[#0ea5e9]/50"
                     />
                     <Textarea
                       required
                       value={bForm.message}
                       onChange={(e) => setBForm({ ...bForm, message: e.target.value })}
                       placeholder="Broadcast message *"
-                      className="bg-white/5 border-white/10 text-white placeholder:text-white/30 text-sm min-h-[80px]"
+                      className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D] placeholder:text-white/30 text-sm min-h-[80px]"
                     />
 
                     {/* Media upload */}
@@ -399,13 +399,13 @@ export function CommunicationCenter() {
                         type="button"
                         onClick={() => bcFileRef.current?.click()}
                         disabled={bUploading}
-                        className="flex items-center gap-2 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
+                        className="flex items-center gap-2 px-3 py-2 bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg text-sm text-[#6B7280] hover:text-[#0D0D0D] hover:bg-[#F3F4F6] transition-colors disabled:opacity-50"
                       >
                         {bUploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
                         {bUploading ? "Uploading..." : "Attach Media"}
                       </button>
                       {bMediaUrl && (
-                        <div className="flex items-center gap-2 text-xs text-[#10b981]">
+                        <div className="flex items-center gap-2 text-xs text-[#059669]">
                           <CheckCheck className="h-3.5 w-3.5" />
                           Media attached
                           <button type="button" onClick={() => setBMediaUrl(null)} className="text-white/30 hover:text-red-400">
@@ -419,7 +419,7 @@ export function CommunicationCenter() {
                     <button
                       type="submit"
                       disabled={bSubmitting}
-                      className="w-full bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="w-full bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] text-[#0D0D0D] py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                       {bSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                       {bSubmitting ? "Sending..." : "Send Broadcast"}
@@ -432,10 +432,10 @@ export function CommunicationCenter() {
 
           {broadcastsLoading ? (
             <div className="flex justify-center py-12">
-              <Loader2 className="h-7 w-7 animate-spin text-[#0ea5e9]" />
+              <Loader2 className="h-7 w-7 animate-spin text-[#5B4FE8]" />
             </div>
           ) : broadcasts.length === 0 ? (
-            <div className="text-center py-16 text-white/40">
+            <div className="text-center py-16 text-[#9CA3AF]">
               <Radio className="h-10 w-10 mx-auto mb-3 opacity-30" />
               <p className="text-sm">No broadcasts yet</p>
             </div>
@@ -453,15 +453,15 @@ export function CommunicationCenter() {
       {tab === "messages" && (
         <div className="flex-1 flex flex-col min-h-0">
           {/* Channel selector */}
-          <div className="flex gap-2 px-4 py-2 overflow-x-auto bg-[#1a1f2e]/40 border-b border-white/10 scrollbar-none">
+          <div className="flex gap-2 px-4 py-2 overflow-x-auto bg-white border-b border-[#E5E7EB] scrollbar-none">
             {channels.map((ch) => (
               <button
                 key={ch.id}
                 onClick={() => setActiveChannel(ch.id)}
                 className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                   activeChannel === ch.id
-                    ? "bg-[#0ea5e9]/20 text-[#0ea5e9] border border-[#0ea5e9]/30"
-                    : "text-white/50 hover:text-white/80 bg-white/5"
+                    ? "bg-[#0ea5e9]/20 text-[#5B4FE8] border border-[#5B4FE8]/30"
+                    : "text-[#6B7280] hover:text-[#4B5563] bg-[#F8F9FF]"
                 }`}
               >
                 <span>{ch.icon}</span>
@@ -492,13 +492,13 @@ export function CommunicationCenter() {
           </div>
 
           {/* Composer */}
-          <div className="p-3 bg-[#1a1f2e]/80 backdrop-blur-lg border-t border-white/10">
+          <div className="p-3 bg-white backdrop-blur-lg border-t border-[#E5E7EB]">
             {msgMediaUrl && (
               <div className="mb-2 relative">
                 <MediaPreview url={msgMediaUrl} type={msgMediaType ?? undefined} />
                 <button
                   onClick={() => { setMsgMediaUrl(null); setMsgMediaType(null); }}
-                  className="absolute top-2 right-2 bg-black/60 rounded-full p-1 text-white/70 hover:text-white"
+                  className="absolute top-2 right-2 bg-black/60 rounded-full p-1 text-[#4B5563] hover:text-[#0D0D0D]"
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -509,7 +509,7 @@ export function CommunicationCenter() {
               <button
                 onClick={() => msgFileRef.current?.click()}
                 disabled={msgUploading}
-                className="p-2.5 bg-white/5 border border-white/10 rounded-xl text-white/50 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-50"
+                className="p-2.5 bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl text-[#6B7280] hover:text-[#0D0D0D] hover:bg-[#F3F4F6] transition-colors disabled:opacity-50"
                 title="Attach photo or video"
               >
                 {msgUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Image className="h-4 w-4" />}
@@ -519,13 +519,13 @@ export function CommunicationCenter() {
                 onChange={(e) => setMsgText(e.target.value)}
                 onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }}
                 placeholder={`Message #${activeChannel}...`}
-                className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-white/30 text-sm min-h-[40px] max-h-[120px] resize-none"
+                className="flex-1 bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D] placeholder:text-white/30 text-sm min-h-[40px] max-h-[120px] resize-none"
                 rows={1}
               />
               <button
                 onClick={handleSendMessage}
                 disabled={msgSending || (!msgText.trim() && !msgMediaUrl)}
-                className="p-2.5 bg-gradient-to-r from-[#0ea5e9] to-[#10b981] rounded-xl text-white disabled:opacity-40 transition-opacity"
+                className="p-2.5 bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] rounded-xl text-[#0D0D0D] disabled:opacity-40 transition-opacity"
               >
                 {msgSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </button>
@@ -540,10 +540,10 @@ export function CommunicationCenter() {
           <Card className="bg-gradient-to-br from-red-500/10 to-[#1a1f2e] border-red-500/20 p-5">
             <div className="flex items-center gap-2 mb-3">
               <div className="h-3 w-3 rounded-full bg-red-500 animate-pulse" />
-              <h2 className="text-white font-semibold">Active Emergency Alerts</h2>
+              <h2 className="text-[#0D0D0D] font-semibold">Active Emergency Alerts</h2>
             </div>
             {emergencyBroadcasts.length === 0 ? (
-              <p className="text-white/50 text-sm">No active emergency alerts — all clear ✅</p>
+              <p className="text-[#6B7280] text-sm">No active emergency alerts — all clear ✅</p>
             ) : (
               <div className="space-y-3">
                 {emergencyBroadcasts.map((b) => (
@@ -554,11 +554,11 @@ export function CommunicationCenter() {
           </Card>
 
           {isAdmin && (
-            <Card className="bg-[#1a1f2e]/80 border-white/10 p-5">
-              <h3 className="text-white font-semibold mb-3">Send Emergency Alert</h3>
+            <Card className="bg-white border-[#E5E7EB] p-5">
+              <h3 className="text-[#0D0D0D] font-semibold mb-3">Send Emergency Alert</h3>
               <button
                 onClick={() => { setBForm({ type: "emergency", title: "", message: "", zone: "All Zones" }); setTab("broadcasts"); setShowBroadcastForm(true); }}
-                className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors"
+                className="w-full bg-red-500 hover:bg-red-600 text-[#0D0D0D] py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors"
               >
                 <AlertTriangle className="h-4 w-4" />
                 Create Emergency Broadcast
@@ -566,16 +566,16 @@ export function CommunicationCenter() {
             </Card>
           )}
 
-          <Card className="bg-[#1a1f2e]/80 border-white/10 p-5">
-            <h3 className="text-white font-semibold mb-3">Zone Status</h3>
+          <Card className="bg-white border-[#E5E7EB] p-5">
+            <h3 className="text-[#0D0D0D] font-semibold mb-3">Zone Status</h3>
             <div className="space-y-2">
               {["Main Sanctuary", "North Wing", "Parking Area", "Children Zone A", "Children Zone B"].map((zone) => (
-                <div key={zone} className="flex items-center justify-between p-2 bg-white/5 rounded-lg">
+                <div key={zone} className="flex items-center justify-between p-2 bg-[#F8F9FF] rounded-lg">
                   <div className="flex items-center gap-2">
-                    <MapPin className="h-3.5 w-3.5 text-[#0ea5e9]" />
-                    <span className="text-white/80 text-sm">{zone}</span>
+                    <MapPin className="h-3.5 w-3.5 text-[#5B4FE8]" />
+                    <span className="text-[#4B5563] text-sm">{zone}</span>
                   </div>
-                  <Badge className="bg-[#10b981]/10 text-[#10b981] border-[#10b981]/30 text-xs">
+                  <Badge className="bg-emerald-50 text-[#059669] border-[#10b981]/30 text-xs">
                     Clear
                   </Badge>
                 </div>

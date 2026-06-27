@@ -80,20 +80,20 @@ export function CrowdManagementDashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#06080f] via-[#0a0e1a] to-[#060d1a]">
-      <div className="sticky top-0 z-30 bg-[#0a0e1a]/90 backdrop-blur-xl border-b border-white/10">
+      <div className="sticky top-0 z-30 bg-[#F8F9FF]/90 backdrop-blur-xl border-b border-[#E5E7EB]">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate('/admin')} className="text-white/60 hover:text-white">
+            <Button variant="ghost" size="icon" onClick={() => navigate('/admin')} className="text-[#6B7280] hover:text-[#0D0D0D]">
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold text-white">Crowd Management</h1>
+                <h1 className="text-lg font-bold text-[#0D0D0D]">Crowd Management</h1>
                 <Badge className="bg-sky-500/20 text-sky-300 border-sky-500/30 text-xs">
                   <Activity className="h-3 w-3 mr-1 animate-pulse" />Live
                 </Badge>
               </div>
-              <p className="text-xs text-white/50">Offline-first crowd density monitoring</p>
+              <p className="text-xs text-[#6B7280]">Offline-first crowd density monitoring</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -101,7 +101,7 @@ export function CrowdManagementDashboard() {
               {isOnline ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3 animate-pulse" />}
               {isOnline ? 'Online' : 'Offline'}
             </div>
-            <Button size="sm" variant="ghost" onClick={triggerSync} disabled={isSyncing || !isOnline} className="text-white/60 hover:text-white h-8 w-8 p-0">
+            <Button size="sm" variant="ghost" onClick={triggerSync} disabled={isSyncing || !isOnline} className="text-[#6B7280] hover:text-[#0D0D0D] h-8 w-8 p-0">
               <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
             </Button>
           </div>
@@ -112,7 +112,7 @@ export function CrowdManagementDashboard() {
               <div className="flex items-center gap-2 text-xs text-sky-300 mb-1">
                 <Loader2 className="h-3 w-3 animate-spin" />Syncing data from server... {syncProgress}%
               </div>
-              <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+              <div className="h-1 bg-[#F3F4F6] rounded-full overflow-hidden">
                 <motion.div className="h-full bg-gradient-to-r from-sky-500 to-indigo-500 rounded-full" animate={{ width: `${syncProgress}%` }} transition={{ duration: 0.3 }} />
               </div>
             </motion.div>
@@ -134,7 +134,7 @@ export function CrowdManagementDashboard() {
           )}
         </AnimatePresence>
 
-        <div className="flex items-center gap-3 text-xs text-white/40 px-1">
+        <div className="flex items-center gap-3 text-xs text-[#9CA3AF] px-1">
           <Database className="h-3.5 w-3.5" />
           <span>{cachedZones.length > 0 ? `Serving ${cachedZones.length} zones from IndexedDB cache` : 'Serving seeded fallback data — sync to load live data'}</span>
           {lastSyncTime && (<><span className="text-white/20">·</span><Clock className="h-3.5 w-3.5" /><span>Synced {lastSyncTime.toLocaleTimeString()}</span></>)}
@@ -142,8 +142,8 @@ export function CrowdManagementDashboard() {
 
         <div>
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-white font-semibold text-base">Zone Density Heatmap</h2>
-            <Badge className="bg-white/5 border-white/10 text-white/60 text-xs">{zones.length} zones</Badge>
+            <h2 className="text-[#0D0D0D] font-semibold text-base">Zone Density Heatmap</h2>
+            <Badge className="bg-[#F8F9FF] border-[#E5E7EB] text-[#6B7280] text-xs">{zones.length} zones</Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {zones.map((zone, i) => {
@@ -151,20 +151,20 @@ export function CrowdManagementDashboard() {
               const pct = Math.round(density * 100);
               return (
                 <motion.div key={zone.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.06 }}>
-                  <Card className="bg-[#0f1520]/80 backdrop-blur border-white/10 p-5 hover:border-white/20 transition-all">
+                  <Card className="bg-[#0f1520]/80 backdrop-blur border-[#E5E7EB] p-5 hover:border-[#E5E7EB] transition-all">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2">
                         <div className={`p-1.5 rounded-lg border ${getDensityColor(density)}`}><MapPin className="h-4 w-4" /></div>
                         <div>
-                          <p className="text-sm font-medium text-white leading-tight">{zone.name}</p>
-                          <p className="text-xs text-white/40">{zone.attendees?.toLocaleString() ?? '—'} people</p>
+                          <p className="text-sm font-medium text-[#0D0D0D] leading-tight">{zone.name}</p>
+                          <p className="text-xs text-[#9CA3AF]">{zone.attendees?.toLocaleString() ?? '—'} people</p>
                         </div>
                       </div>
                       <Badge className={`text-xs border ${getDensityColor(density)}`}>{getDensityLabel(density)}</Badge>
                     </div>
                     <div className="space-y-1">
-                      <div className="flex justify-between text-xs"><span className="text-white/40">Occupancy</span><span className="text-white font-mono">{pct}%</span></div>
-                      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                      <div className="flex justify-between text-xs"><span className="text-[#9CA3AF]">Occupancy</span><span className="text-[#0D0D0D] font-mono">{pct}%</span></div>
+                      <div className="h-2 bg-[#F3F4F6] rounded-full overflow-hidden">
                         <motion.div className={`h-full rounded-full ${getDensityBarColor(density)}`} initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ duration: 0.8, delay: i * 0.08 }} />
                       </div>
                       <div className="flex justify-between text-xs text-white/30"><span>0</span><span>{zone.capacity?.toLocaleString() ?? '—'} cap.</span></div>
@@ -187,24 +187,24 @@ export function CrowdManagementDashboard() {
               <Card onClick={action.onClick} className={`cursor-pointer border p-4 ${action.bg} transition-all`}>
                 <div className="flex flex-col items-center text-center gap-2">
                   <action.icon className={`h-6 w-6 ${action.color}`} />
-                  <div><p className="text-sm font-medium text-white">{action.label}</p><p className="text-xs text-white/40">{action.sublabel}</p></div>
+                  <div><p className="text-sm font-medium text-[#0D0D0D]">{action.label}</p><p className="text-xs text-[#9CA3AF]">{action.sublabel}</p></div>
                 </div>
               </Card>
             </motion.div>
           ))}
         </div>
 
-        <Card className="bg-[#0f1520]/60 border-white/10 p-4">
-          <h3 className="text-sm font-medium text-white mb-3 flex items-center gap-2"><Activity className="h-4 w-4 text-sky-400" />Density Legend</h3>
+        <Card className="bg-[#0f1520]/60 border-[#E5E7EB] p-4">
+          <h3 className="text-sm font-medium text-[#0D0D0D] mb-3 flex items-center gap-2"><Activity className="h-4 w-4 text-sky-400" />Density Legend</h3>
           <div className="flex flex-wrap gap-4 text-xs">
             {[{ label: 'Normal (0–50%)', dot: 'bg-emerald-400' }, { label: 'Moderate (50–70%)', dot: 'bg-emerald-400' }, { label: 'High (70–90%)', dot: 'bg-amber-400' }, { label: 'Critical (90%+)', dot: 'bg-red-400' }].map((item) => (
-              <div key={item.label} className="flex items-center gap-1.5 text-white/60"><div className={`h-2.5 w-2.5 rounded-full ${item.dot}`} />{item.label}</div>
+              <div key={item.label} className="flex items-center gap-1.5 text-[#6B7280]"><div className={`h-2.5 w-2.5 rounded-full ${item.dot}`} />{item.label}</div>
             ))}
           </div>
         </Card>
 
         <Card className="bg-gradient-to-br from-indigo-900/20 to-[#0f1520] border-indigo-500/20 p-5">
-          <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2"><Database className="h-4 w-4 text-indigo-400" />Offline System Status</h3>
+          <h3 className="text-sm font-semibold text-[#0D0D0D] mb-4 flex items-center gap-2"><Database className="h-4 w-4 text-indigo-400" />Offline System Status</h3>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {[
               { label: 'IndexedDB Cache', value: cachedZones.length > 0 ? 'Active' : 'Empty', icon: Database, ok: cachedZones.length > 0 },
@@ -212,11 +212,11 @@ export function CrowdManagementDashboard() {
               { label: 'Connectivity', value: isOnline ? 'Online' : 'Offline', icon: isOnline ? Wifi : WifiOff, ok: isOnline },
               { label: 'Last Sync', value: lastSyncTime ? lastSyncTime.toLocaleTimeString() : 'Never', icon: Clock, ok: !!lastSyncTime },
             ].map((item, i) => (
-              <div key={i} className="bg-white/5 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-1"><item.icon className="h-3.5 w-3.5 text-white/40" /><span className="text-xs text-white/40">{item.label}</span></div>
+              <div key={i} className="bg-[#F8F9FF] rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-1"><item.icon className="h-3.5 w-3.5 text-[#9CA3AF]" /><span className="text-xs text-[#9CA3AF]">{item.label}</span></div>
                 <div className="flex items-center gap-1.5">
                   {item.ok ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> : <XCircle className="h-3.5 w-3.5 text-amber-400" />}
-                  <span className={`text-sm font-medium ${item.ok ? 'text-white' : 'text-amber-300'}`}>{item.value}</span>
+                  <span className={`text-sm font-medium ${item.ok ? 'text-[#0D0D0D]' : 'text-amber-300'}`}>{item.value}</span>
                 </div>
               </div>
             ))}
@@ -228,12 +228,12 @@ export function CrowdManagementDashboard() {
         {showIncidentForm && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40" onClick={() => setShowIncidentForm(false)} />
-            <motion.div initial={{ y: '100%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '100%', opacity: 0 }} transition={{ type: 'spring', damping: 28, stiffness: 300 }} className="fixed bottom-0 left-0 right-0 z-50 bg-[#0d1219] border-t border-white/10 rounded-t-2xl p-5 max-h-[85vh] overflow-y-auto">
+            <motion.div initial={{ y: '100%', opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: '100%', opacity: 0 }} transition={{ type: 'spring', damping: 28, stiffness: 300 }} className="fixed bottom-0 left-0 right-0 z-50 bg-[#0d1219] border-t border-[#E5E7EB] rounded-t-2xl p-5 max-h-[85vh] overflow-y-auto">
               <div className="w-10 h-1 bg-white/20 rounded-full mx-auto mb-4" />
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-lg font-bold text-white flex items-center gap-2"><AlertTriangle className="h-5 w-5 text-red-400" />Report Incident</h2>
-                  <p className="text-xs text-white/50 mt-0.5">{isOnline ? 'Report will be sent to server immediately.' : '⚡ Offline: report will be saved locally and auto-synced.'}</p>
+                  <h2 className="text-lg font-bold text-[#0D0D0D] flex items-center gap-2"><AlertTriangle className="h-5 w-5 text-red-400" />Report Incident</h2>
+                  <p className="text-xs text-[#6B7280] mt-0.5">{isOnline ? 'Report will be sent to server immediately.' : '⚡ Offline: report will be saved locally and auto-synced.'}</p>
                 </div>
                 <Badge className={isOnline ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border-amber-500/30'}>{isOnline ? 'Online' : 'Queued'}</Badge>
               </div>
@@ -246,30 +246,30 @@ export function CrowdManagementDashboard() {
               </AnimatePresence>
               <form onSubmit={handleIncidentSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-medium text-white/60 mb-1.5">Zone <span className="text-red-400">*</span></label>
-                  <select value={incidentZone} onChange={e => setIncidentZone(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500/50 appearance-none">
+                  <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Zone <span className="text-red-400">*</span></label>
+                  <select value={incidentZone} onChange={e => setIncidentZone(e.target.value)} required className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2.5 text-sm text-[#0D0D0D] focus:outline-none focus:border-sky-500/50 appearance-none">
                     <option value="" className="bg-[#0d1219]">Select a zone...</option>
                     {zones.map(z => (<option key={z.id} value={z.name} className="bg-[#0d1219]">{z.name}</option>))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-white/60 mb-1.5">Incident Type <span className="text-red-400">*</span></label>
-                  <select value={incidentType} onChange={e => setIncidentType(e.target.value)} required className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500/50 appearance-none">
+                  <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Incident Type <span className="text-red-400">*</span></label>
+                  <select value={incidentType} onChange={e => setIncidentType(e.target.value)} required className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2.5 text-sm text-[#0D0D0D] focus:outline-none focus:border-sky-500/50 appearance-none">
                     <option value="" className="bg-[#0d1219]">Select type...</option>
                     {INCIDENT_TYPES.map(t => (<option key={t} value={t} className="bg-[#0d1219]">{t}</option>))}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-white/60 mb-1.5">Description</label>
-                  <textarea value={incidentDesc} onChange={e => setIncidentDesc(e.target.value)} rows={3} placeholder="Brief description of the incident..." className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-sky-500/50 resize-none" />
+                  <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Description</label>
+                  <textarea value={incidentDesc} onChange={e => setIncidentDesc(e.target.value)} rows={3} placeholder="Brief description of the incident..." className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2.5 text-sm text-[#0D0D0D] placeholder-white/30 focus:outline-none focus:border-sky-500/50 resize-none" />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-white/60 mb-1.5">Reporter Phone (for SMS confirmation)</label>
-                  <input type="tel" value={incidentPhone} onChange={e => setIncidentPhone(e.target.value)} placeholder="+234 xxx xxx xxxx" className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-sky-500/50" />
+                  <label className="block text-xs font-medium text-[#6B7280] mb-1.5">Reporter Phone (for SMS confirmation)</label>
+                  <input type="tel" value={incidentPhone} onChange={e => setIncidentPhone(e.target.value)} placeholder="+234 xxx xxx xxxx" className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-lg px-3 py-2.5 text-sm text-[#0D0D0D] placeholder-white/30 focus:outline-none focus:border-sky-500/50" />
                 </div>
                 <div className="flex gap-3 pt-1">
-                  <Button type="button" variant="ghost" onClick={() => setShowIncidentForm(false)} className="flex-1 text-white/60 border border-white/10">Cancel</Button>
-                  <Button type="submit" disabled={isSubmitting || !incidentZone || !incidentType} className="flex-1 bg-red-500 hover:bg-red-600 text-white">
+                  <Button type="button" variant="ghost" onClick={() => setShowIncidentForm(false)} className="flex-1 text-[#6B7280] border border-[#E5E7EB]">Cancel</Button>
+                  <Button type="submit" disabled={isSubmitting || !incidentZone || !incidentType} className="flex-1 bg-red-500 hover:bg-red-600 text-[#0D0D0D]">
                     {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
                     {isSubmitting ? 'Submitting...' : isOnline ? 'Submit Report' : 'Queue Report'}
                   </Button>

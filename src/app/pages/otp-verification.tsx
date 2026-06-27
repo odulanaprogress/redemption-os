@@ -16,18 +16,18 @@ export function OtpVerification() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8F9FF] to-white flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.1),transparent_50%)]" />
       
-      <Card className="relative w-full max-w-md bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-8">
+      <Card className="relative w-full max-w-md bg-white backdrop-blur-lg border-[#E5E7EB] p-8">
         <div className="mb-8 text-center">
           <div className="mb-4 flex items-center justify-center">
-            <div className="rounded-full bg-[#0ea5e9]/10 p-4">
-              <Shield className="h-8 w-8 text-[#0ea5e9]" />
+            <div className="rounded-full bg-[#EDE9FE] p-4">
+              <Shield className="h-8 w-8 text-[#5B4FE8]" />
             </div>
           </div>
-          <h2 className="text-xl text-white mb-2">Verify Your Account</h2>
-          <p className="text-white/60">
+          <h2 className="text-xl text-[#0D0D0D] mb-2">Verify Your Account</h2>
+          <p className="text-[#6B7280]">
             Enter the 6-digit code sent to your phone
           </p>
         </div>
@@ -40,12 +40,12 @@ export function OtpVerification() {
               onChange={setOtp}
             >
               <InputOTPGroup>
-                <InputOTPSlot index={0} className="bg-white/5 border-white/10 text-white" />
-                <InputOTPSlot index={1} className="bg-white/5 border-white/10 text-white" />
-                <InputOTPSlot index={2} className="bg-white/5 border-white/10 text-white" />
-                <InputOTPSlot index={3} className="bg-white/5 border-white/10 text-white" />
-                <InputOTPSlot index={4} className="bg-white/5 border-white/10 text-white" />
-                <InputOTPSlot index={5} className="bg-white/5 border-white/10 text-white" />
+                <InputOTPSlot index={0} className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D]" />
+                <InputOTPSlot index={1} className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D]" />
+                <InputOTPSlot index={2} className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D]" />
+                <InputOTPSlot index={3} className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D]" />
+                <InputOTPSlot index={4} className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D]" />
+                <InputOTPSlot index={5} className="bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D]" />
               </InputOTPGroup>
             </InputOTP>
           </div>
@@ -53,15 +53,15 @@ export function OtpVerification() {
           <Button
             onClick={handleVerify}
             disabled={otp.length !== 6}
-            className="w-full bg-gradient-to-r from-[#0ea5e9] to-[#10b981] hover:opacity-90 text-white disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] hover:opacity-90 text-[#0D0D0D] disabled:opacity-50"
           >
             Verify & Continue
           </Button>
 
           <div className="text-center">
-            <p className="text-sm text-white/60">
+            <p className="text-sm text-[#6B7280]">
               Didn't receive code?{" "}
-              <button className="text-[#0ea5e9] hover:underline">
+              <button className="text-[#5B4FE8] hover:underline">
                 Resend
               </button>
             </p>

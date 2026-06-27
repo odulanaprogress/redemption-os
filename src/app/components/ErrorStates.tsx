@@ -41,8 +41,8 @@ export function ErrorState({
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-white">{title}</h2>
-          <p className="text-white/60">{message}</p>
+          <h2 className="text-2xl font-bold text-[#0D0D0D]">{title}</h2>
+          <p className="text-[#6B7280]">{message}</p>
         </div>
 
         {children}
@@ -51,7 +51,7 @@ export function ErrorState({
           {showRetry && onRetry && (
             <button
               onClick={onRetry}
-              className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-6 py-3 rounded-lg transition-colors flex items-center gap-2"
+              className="bg-emerald-500 hover:bg-emerald-600 text-[#0D0D0D] font-medium px-6 py-3 rounded-lg transition-colors flex items-center gap-2"
             >
               <RefreshCw className="w-4 h-4" />
               Try Again
@@ -61,7 +61,7 @@ export function ErrorState({
           {showGoBack && (
             <button
               onClick={onGoBack || (() => navigate(-1))}
-              className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium px-6 py-3 rounded-lg transition-colors flex items-center gap-2"
+              className="bg-[#F8F9FF] hover:bg-[#F3F4F6] border border-[#E5E7EB] text-[#0D0D0D] font-medium px-6 py-3 rounded-lg transition-colors flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
               Go Back
@@ -71,7 +71,7 @@ export function ErrorState({
           {showGoHome && (
             <button
               onClick={onGoHome || (() => navigate('/dashboard'))}
-              className="bg-white/5 hover:bg-white/10 border border-white/10 text-white font-medium px-6 py-3 rounded-lg transition-colors flex items-center gap-2"
+              className="bg-[#F8F9FF] hover:bg-[#F3F4F6] border border-[#E5E7EB] text-[#0D0D0D] font-medium px-6 py-3 rounded-lg transition-colors flex items-center gap-2"
             >
               <Home className="w-4 h-4" />
               Go Home
@@ -116,7 +116,7 @@ export function APIError({ onRetry, errorCode }: { onRetry?: () => void; errorCo
       showGoHome
     >
       {errorCode && (
-        <div className="text-sm text-white/60">
+        <div className="text-sm text-[#6B7280]">
           Error Code: <span className="font-mono text-red-400">{errorCode}</span>
         </div>
       )}
@@ -249,7 +249,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       }
 
       return (
-        <div className="min-h-screen bg-black text-white p-8">
+        <div className="min-h-screen bg-black text-[#0D0D0D] p-8">
           <GenericError
             message={this.state.error?.message}
             onRetry={() => this.setState({ hasError: false, error: null })}
@@ -305,7 +305,7 @@ export function ErrorToast({ message, onDismiss }: { message: string; onDismiss:
 // Loading Error State (for failed lazy loads)
 export function LoadError({ onRetry }: { onRetry: () => void }) {
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center p-8">
+    <div className="min-h-screen bg-black text-[#0D0D0D] flex items-center justify-center p-8">
       <div className="text-center max-w-md space-y-6">
         <div className="inline-flex items-center justify-center w-20 h-20 bg-red-500/10 border border-red-500/30 rounded-full">
           <AlertCircle className="w-10 h-10 text-red-400" />
@@ -313,12 +313,12 @@ export function LoadError({ onRetry }: { onRetry: () => void }) {
 
         <div className="space-y-2">
           <h2 className="text-2xl font-bold">Failed to Load</h2>
-          <p className="text-white/60">Unable to load this page. Please try refreshing.</p>
+          <p className="text-[#6B7280]">Unable to load this page. Please try refreshing.</p>
         </div>
 
         <button
           onClick={onRetry}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-6 py-3 rounded-lg transition-colors flex items-center gap-2 mx-auto"
+          className="bg-emerald-500 hover:bg-emerald-600 text-[#0D0D0D] font-medium px-6 py-3 rounded-lg transition-colors flex items-center gap-2 mx-auto"
         >
           <RefreshCw className="w-4 h-4" />
           Reload Page

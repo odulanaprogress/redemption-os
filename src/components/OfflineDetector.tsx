@@ -27,7 +27,7 @@ export function OfflineDetector() {
     <div
       className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 ${
         isOnline
-          ? 'bg-emerald-500 text-white shadow-md'
+          ? 'bg-emerald-500 text-[#0D0D0D] shadow-md'
           : 'bg-amber-500 text-slate-950 shadow-md font-semibold'
       }`}
     >

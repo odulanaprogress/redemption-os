@@ -25,19 +25,19 @@ export function EmptyState({
       className="flex items-center justify-center min-h-[400px]"
     >
       <div className="text-center max-w-md space-y-6">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-white/10 rounded-full">
-          <Icon className="w-10 h-10 text-white/40" />
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-[#E5E7EB] rounded-full">
+          <Icon className="w-10 h-10 text-[#9CA3AF]" />
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-white">{title}</h2>
-          <p className="text-white/60">{message}</p>
+          <h2 className="text-2xl font-bold text-[#0D0D0D]">{title}</h2>
+          <p className="text-[#6B7280]">{message}</p>
         </div>
 
         {suggestions && suggestions.length > 0 && (
-          <div className="bg-white/5 border border-white/10 rounded-xl p-6 text-left">
-            <div className="font-semibold mb-3 text-white">Suggestions:</div>
-            <ul className="space-y-2 text-sm text-white/60">
+          <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6 text-left">
+            <div className="font-semibold mb-3 text-[#0D0D0D]">Suggestions:</div>
+            <ul className="space-y-2 text-sm text-[#6B7280]">
               {suggestions.map((suggestion, index) => (
                 <li key={index} className="flex items-start gap-2">
                   <span className="text-emerald-400">•</span>
@@ -51,7 +51,7 @@ export function EmptyState({
         {actionLabel && onAction && (
           <button
             onClick={onAction}
-            className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium px-6 py-3 rounded-lg transition-colors"
+            className="bg-emerald-500 hover:bg-emerald-600 text-[#0D0D0D] font-medium px-6 py-3 rounded-lg transition-colors"
           >
             {actionLabel}
           </button>
@@ -308,13 +308,13 @@ export function CustomEmpty({
       className="flex items-center justify-center min-h-[400px]"
     >
       <div className="text-center max-w-md space-y-6">
-        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-white/10 rounded-full">
-          <Icon className="w-10 h-10 text-white/40" />
+        <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-emerald-500/10 to-blue-500/10 border border-[#E5E7EB] rounded-full">
+          <Icon className="w-10 h-10 text-[#9CA3AF]" />
         </div>
 
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-white">{title}</h2>
-          <p className="text-white/60">{message}</p>
+          <h2 className="text-2xl font-bold text-[#0D0D0D]">{title}</h2>
+          <p className="text-[#6B7280]">{message}</p>
         </div>
 
         {children}

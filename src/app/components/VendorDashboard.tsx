@@ -57,7 +57,7 @@ export default function VendorDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 md:p-8">
+    <div className="min-h-screen bg-black text-[#0D0D0D] p-6 md:p-8">
       {showUploadModal && (
         <UploadProductModal onClose={() => setShowUploadModal(false)} onSubmit={(newProduct) => {
           setProducts(prev => [...prev, newProduct]);
@@ -79,10 +79,10 @@ export default function VendorDashboard() {
         className="max-w-7xl mx-auto space-y-8"
       >
         {/* Header */}
-        <div className="border-b border-white/10 pb-6">
+        <div className="border-b border-[#E5E7EB] pb-6">
           <button
             onClick={() => navigate('/marketplace')}
-            className="flex items-center gap-2 text-white/50 hover:text-white mb-4 transition-colors"
+            className="flex items-center gap-2 text-[#6B7280] hover:text-[#0D0D0D] mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Marketplace
@@ -96,7 +96,7 @@ export default function VendorDashboard() {
                   <h1 className="text-2xl md:text-3xl font-bold">{vendor.name}</h1>
                   {vendor.verified && <CheckCircle className="w-6 h-6 text-emerald-400" />}
                 </div>
-                <p className="text-white/50 text-sm">{vendor.description}</p>
+                <p className="text-[#6B7280] text-sm">{vendor.description}</p>
               </div>
             </div>
             <div className={`px-4 py-2 rounded-xl font-semibold text-sm ${
@@ -123,7 +123,7 @@ export default function VendorDashboard() {
                 className={`flex-shrink-0 px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2 text-sm ${
                   selectedTab === id
                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                    : 'bg-white/5 text-white/60 hover:bg-white/10 border border-white/10'
+                    : 'bg-[#F8F9FF] text-[#6B7280] hover:bg-[#F3F4F6] border border-[#E5E7EB]'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -163,7 +163,7 @@ function OverviewTab({ vendor, products, orders, revenueData }: any) {
         <StatCard icon={TrendingUp} label="Avg Rating" value={vendor.rating.toString()} change={`${vendor.totalReviews} reviews`} color="purple" />
       </div>
 
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6">
         <h3 className="text-lg font-semibold mb-4">Revenue Overview (7 Days)</h3>
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={revenueData}>
@@ -182,24 +182,24 @@ function OverviewTab({ vendor, products, orders, revenueData }: any) {
         </ResponsiveContainer>
       </div>
 
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Recent Orders</h3>
           <button onClick={() => {}} className="text-emerald-400 hover:text-emerald-300 text-sm">View All →</button>
         </div>
         <div className="space-y-3">
           {orders.slice(0, 4).map((order: any) => (
-            <div key={order.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+            <div key={order.id} className="flex items-center justify-between p-3 bg-[#F8F9FF] rounded-lg">
               <div>
                 <div className="font-medium text-sm">{order.productName}</div>
-                <div className="text-xs text-white/50">{order.userName} · {new Date(order.orderDate).toLocaleDateString()}</div>
+                <div className="text-xs text-[#6B7280]">{order.userName} · {new Date(order.orderDate).toLocaleDateString()}</div>
               </div>
               <div className="text-right">
                 <div className="font-semibold text-emerald-400 text-sm">${order.totalPrice}</div>
                 <div className={`text-xs capitalize ${
                   order.status === 'delivered' ? 'text-emerald-400' :
                   order.status === 'in_transit' ? 'text-blue-400' :
-                  order.status === 'preparing' ? 'text-yellow-400' : 'text-white/50'
+                  order.status === 'preparing' ? 'text-yellow-400' : 'text-[#6B7280]'
                 }`}>
                   {order.status.replace('_', ' ')}
                 </div>
@@ -217,7 +217,7 @@ function ProductsTab({ products, onUpload, onEdit, onDelete }: any) {
     <div className="space-y-6">
       <button
         onClick={onUpload}
-        className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2"
+        className="w-full bg-emerald-500 hover:bg-emerald-600 text-[#0D0D0D] font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2"
       >
         <Upload className="w-5 h-5" />
         Upload New Product
@@ -231,8 +231,8 @@ function ProductsTab({ products, onUpload, onEdit, onDelete }: any) {
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {products.map((product: Product) => (
-            <div key={product.id} className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl flex-shrink-0 overflow-hidden bg-white/5 border border-white/10 flex items-center justify-center">
+            <div key={product.id} className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-4 flex items-center gap-4">
+              <div className="w-16 h-16 rounded-xl flex-shrink-0 overflow-hidden bg-[#F8F9FF] border border-[#E5E7EB] flex items-center justify-center">
                 {product.image?.startsWith('http') ? (
                   <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
                 ) : (
@@ -241,20 +241,20 @@ function ProductsTab({ products, onUpload, onEdit, onDelete }: any) {
               </div>
               <div className="flex-1 min-w-0">
                 <h3 className="font-semibold mb-1">{product.name}</h3>
-                <p className="text-sm text-white/50 mb-2 line-clamp-1">{product.description}</p>
+                <p className="text-sm text-[#6B7280] mb-2 line-clamp-1">{product.description}</p>
                 <div className="flex items-center gap-4 text-sm flex-wrap">
                   <span className="text-emerald-400 font-semibold">${product.price}</span>
                   <span className={product.inStock ? 'text-emerald-400' : 'text-red-400'}>
                     {product.inStock ? `${product.stock} in stock` : 'Out of stock'}
                   </span>
-                  <span className="text-white/50">{product.reviews} reviews</span>
+                  <span className="text-[#6B7280]">{product.reviews} reviews</span>
                   <span className="text-yellow-400">★ {product.rating}</span>
                 </div>
               </div>
               <div className="flex gap-2 flex-shrink-0">
                 <button
                   onClick={() => onEdit(product)}
-                  className="p-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors"
+                  className="p-2 bg-[#F8F9FF] hover:bg-[#F3F4F6] border border-[#E5E7EB] rounded-lg transition-colors"
                 >
                   <Edit className="w-4 h-4" />
                 </button>
@@ -281,7 +281,7 @@ function OrdersTab({ orders, onAdvance }: { orders: Order[]; onAdvance: (id: str
         const isComplete = order.status === 'delivered' || order.status === 'cancelled';
 
         return (
-          <div key={order.id} className="bg-white/5 border border-white/10 rounded-xl p-6">
+          <div key={order.id} className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">
@@ -290,16 +290,16 @@ function OrdersTab({ orders, onAdvance }: { orders: Order[]; onAdvance: (id: str
                     order.status === 'delivered' ? 'bg-emerald-500/20 text-emerald-400' :
                     order.status === 'in_transit' ? 'bg-blue-500/20 text-blue-400' :
                     order.status === 'preparing' ? 'bg-yellow-500/20 text-yellow-400' :
-                    'bg-white/10 text-white/60'
+                    'bg-[#F3F4F6] text-[#6B7280]'
                   }`}>
                     {order.status.replace('_', ' ')}
                   </span>
                 </div>
-                <div className="text-sm text-white/50">{new Date(order.orderDate).toLocaleString()}</div>
+                <div className="text-sm text-[#6B7280]">{new Date(order.orderDate).toLocaleString()}</div>
               </div>
               <div className="text-right">
                 <div className="text-xl font-bold text-emerald-400">${order.totalPrice}</div>
-                <div className="text-sm text-white/50">{order.quantity}× {order.productName}</div>
+                <div className="text-sm text-[#6B7280]">{order.quantity}× {order.productName}</div>
               </div>
             </div>
 
@@ -308,7 +308,7 @@ function OrdersTab({ orders, onAdvance }: { orders: Order[]; onAdvance: (id: str
               <div className="flex items-center gap-1">
                 {ORDER_STATUSES.map((s, i) => (
                   <div key={s} className="flex items-center flex-1">
-                    <div className={`flex-1 h-1.5 rounded-full transition-all ${i <= statusIdx ? 'bg-emerald-500' : 'bg-white/10'}`} />
+                    <div className={`flex-1 h-1.5 rounded-full transition-all ${i <= statusIdx ? 'bg-emerald-500' : 'bg-[#F3F4F6]'}`} />
                     {i < ORDER_STATUSES.length - 1 && <div className="w-1" />}
                   </div>
                 ))}
@@ -324,11 +324,11 @@ function OrdersTab({ orders, onAdvance }: { orders: Order[]; onAdvance: (id: str
 
             <div className="grid grid-cols-2 gap-4 text-sm mb-4">
               <div>
-                <div className="text-white/50 mb-1">Customer</div>
+                <div className="text-[#6B7280] mb-1">Customer</div>
                 <div className="font-medium">{order.userName}</div>
               </div>
               <div>
-                <div className="text-white/50 mb-1">Delivery Address</div>
+                <div className="text-[#6B7280] mb-1">Delivery Address</div>
                 <div className="font-medium">{order.deliveryAddress}</div>
               </div>
             </div>
@@ -336,7 +336,7 @@ function OrdersTab({ orders, onAdvance }: { orders: Order[]; onAdvance: (id: str
             {!isComplete && (
               <button
                 onClick={() => onAdvance(order.id)}
-                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-emerald-500 hover:bg-emerald-600 text-[#0D0D0D] font-medium py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
               >
                 <RefreshCw className="w-4 h-4" />
                 Advance to Next Status
@@ -358,7 +358,7 @@ function OrdersTab({ orders, onAdvance }: { orders: Order[]; onAdvance: (id: str
 function AnalyticsTab({ revenueData, productPerformance }: any) {
   return (
     <div className="space-y-6">
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6">
         <h3 className="text-lg font-semibold mb-4">Revenue Trend</h3>
         <ResponsiveContainer width="100%" height={280}>
           <LineChart data={revenueData}>
@@ -370,7 +370,7 @@ function AnalyticsTab({ revenueData, productPerformance }: any) {
           </LineChart>
         </ResponsiveContainer>
       </div>
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6">
         <h3 className="text-lg font-semibold mb-4">Product Performance</h3>
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={productPerformance}>
@@ -395,13 +395,13 @@ function StatCard({ icon: Icon, label, value, change, positive, color }: any) {
     emerald: 'text-emerald-400', blue: 'text-blue-400', purple: 'text-purple-400', yellow: 'text-yellow-400'
   };
   return (
-    <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-      <div className="flex items-center gap-2 text-white/50 mb-2">
+    <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-5">
+      <div className="flex items-center gap-2 text-[#6B7280] mb-2">
         <Icon className="w-4 h-4" />
         <span className="text-sm">{label}</span>
       </div>
       <div className={`text-3xl font-bold mb-1 ${colors[color]}`}>{value}</div>
-      {change && <div className={`text-sm ${positive ? 'text-emerald-400' : 'text-white/50'}`}>{change}</div>}
+      {change && <div className={`text-sm ${positive ? 'text-emerald-400' : 'text-[#6B7280]'}`}>{change}</div>}
     </div>
   );
 }
@@ -459,30 +459,30 @@ function UploadProductModal({ onClose, onSubmit }: { onClose: () => void; onSubm
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 w-full max-w-lg shadow-2xl"
+        className="relative bg-[#0a0a0a] border border-[#E5E7EB] rounded-2xl p-6 w-full max-w-lg shadow-2xl"
       >
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Upload className="w-5 h-5 text-emerald-400" />
             <h2 className="text-xl font-bold">Upload Product</h2>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="p-2 hover:bg-[#F8F9FF] rounded-lg transition-colors"><X className="w-5 h-5" /></button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Product image upload */}
           <div>
-            <label className="block text-sm text-white/60 mb-2">Product Image</label>
+            <label className="block text-sm text-[#6B7280] mb-2">Product Image</label>
             <input ref={fileRef} type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
             <div
               onClick={() => fileRef.current?.click()}
-              className="w-full h-36 bg-white/5 border-2 border-dashed border-white/20 rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-emerald-500/40 hover:bg-white/10 transition-all"
+              className="w-full h-36 bg-[#F8F9FF] border-2 border-dashed border-[#E5E7EB] rounded-xl flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-emerald-500/40 hover:bg-[#F3F4F6] transition-all"
             >
               {imageUploading ? (
-                <><Loader2 className="w-8 h-8 text-emerald-400 animate-spin" /><span className="text-sm text-white/50">Uploading...</span></>
+                <><Loader2 className="w-8 h-8 text-emerald-400 animate-spin" /><span className="text-sm text-[#6B7280]">Uploading...</span></>
               ) : imageUrl ? (
                 <img src={imageUrl} alt="product" className="w-full h-full object-cover rounded-xl" />
               ) : (
-                <><ImageIcon className="w-8 h-8 text-white/30" /><span className="text-sm text-white/40">Click to upload product image</span></>
+                <><ImageIcon className="w-8 h-8 text-white/30" /><span className="text-sm text-[#9CA3AF]">Click to upload product image</span></>
               )}
             </div>
           </div>
@@ -494,22 +494,22 @@ function UploadProductModal({ onClose, onSubmit }: { onClose: () => void; onSubm
             { key: 'stock', label: 'Initial Stock', type: 'number', placeholder: '10' },
           ].map(f => (
             <div key={f.key}>
-              <label className="block text-sm text-white/60 mb-1">{f.label}</label>
+              <label className="block text-sm text-[#6B7280] mb-1">{f.label}</label>
               <input
                 type={f.type}
                 placeholder={f.placeholder}
                 value={(form as any)[f.key]}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50"
+                className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl px-4 py-2.5 text-[#0D0D0D] placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50"
               />
             </div>
           ))}
           <div>
-            <label className="block text-sm text-white/60 mb-1">Category</label>
+            <label className="block text-sm text-[#6B7280] mb-1">Category</label>
             <select
               value={form.category}
               onChange={e => setForm(prev => ({ ...prev, category: e.target.value }))}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none"
+              className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl px-4 py-2.5 text-[#0D0D0D] focus:outline-none"
             >
               {['Books', 'Food & Drinks', 'Religious Materials', 'Clothing', 'Electronics', 'Essentials', 'Event Supplies'].map(c => (
                 <option key={c} value={c}>{c}</option>
@@ -519,9 +519,9 @@ function UploadProductModal({ onClose, onSubmit }: { onClose: () => void; onSubm
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/50 text-[#0D0D0D] font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
           >
-            {submitting ? <><div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Uploading...</> : <><Plus className="w-4 h-4" /> Upload Product</>}
+            {submitting ? <><div className="w-4 h-4 border-2 border-[#E5E7EB] border-t-white rounded-full animate-spin" /> Uploading...</> : <><Plus className="w-4 h-4" /> Upload Product</>}
           </button>
         </form>
       </motion.div>
@@ -538,14 +538,14 @@ function EditProductModal({ product, onClose, onSave }: { product: Product; onCl
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="relative bg-[#0a0a0a] border border-white/10 rounded-2xl p-6 w-full max-w-md shadow-2xl"
+        className="relative bg-[#0a0a0a] border border-[#E5E7EB] rounded-2xl p-6 w-full max-w-md shadow-2xl"
       >
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Edit className="w-5 h-5 text-blue-400" />
             <h2 className="text-xl font-bold">Edit Product</h2>
           </div>
-          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-lg transition-colors"><X className="w-5 h-5" /></button>
+          <button onClick={onClose} className="p-2 hover:bg-[#F8F9FF] rounded-lg transition-colors"><X className="w-5 h-5" /></button>
         </div>
         <div className="space-y-4">
           {[
@@ -554,20 +554,20 @@ function EditProductModal({ product, onClose, onSave }: { product: Product; onCl
             { key: 'stock', label: 'Stock Quantity', type: 'number' },
           ].map(f => (
             <div key={f.key}>
-              <label className="block text-sm text-white/60 mb-1">{f.label}</label>
+              <label className="block text-sm text-[#6B7280] mb-1">{f.label}</label>
               <input
                 type={f.type}
                 value={(form as any)[f.key]}
                 onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-white focus:outline-none focus:border-blue-500/50"
+                className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl px-4 py-2.5 text-[#0D0D0D] focus:outline-none focus:border-blue-500/50"
               />
             </div>
           ))}
           <div className="flex gap-3 pt-2">
-            <button onClick={onClose} className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 py-2.5 rounded-xl transition-colors text-sm font-medium">Cancel</button>
+            <button onClick={onClose} className="flex-1 bg-[#F8F9FF] hover:bg-[#F3F4F6] border border-[#E5E7EB] py-2.5 rounded-xl transition-colors text-sm font-medium">Cancel</button>
             <button
               onClick={() => onSave({ ...product, name: form.name, price: parseFloat(form.price), stock: parseInt(form.stock), inStock: parseInt(form.stock) > 0 })}
-              className="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-xl transition-colors text-sm font-semibold"
+              className="flex-1 bg-blue-500 hover:bg-blue-600 text-[#0D0D0D] py-2.5 rounded-xl transition-colors text-sm font-semibold"
             >
               Save Changes
             </button>

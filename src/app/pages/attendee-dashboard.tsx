@@ -43,26 +43,26 @@ export function AttendeeDashboard() {
   const recentNotifs = notifications.slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628] pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8F9FF] to-white pb-20">
       {/* Header */}
-      <div className="bg-[#1a1f2e]/80 backdrop-blur-lg border-b border-white/10 p-4 sticky top-0 z-10">
+      <div className="bg-white backdrop-blur-lg border-b border-[#E5E7EB] p-4 sticky top-0 z-10">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl text-white">
+            <h1 className="text-xl text-[#0D0D0D]">
               Welcome{userProfile?.displayName ? `, ${userProfile.displayName.split(" ")[0]}` : " Back"}
             </h1>
             <div className="flex items-center gap-2 mt-0.5">
-              <Badge className={`text-xs border-0 ${isParent ? "bg-[#10b981]/20 text-[#10b981]" : "bg-[#0ea5e9]/20 text-[#0ea5e9]"}`}>
+              <Badge className={`text-xs border-0 ${isParent ? "bg-[#10b981]/20 text-[#059669]" : "bg-[#0ea5e9]/20 text-[#5B4FE8]"}`}>
                 {isParent ? "Parent / Guardian" : "Attendee"}
               </Badge>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <NotificationBell />
-            <Button onClick={() => navigate("/settings")} variant="ghost" size="icon" className="text-white/60 hover:text-white">
+            <Button onClick={() => navigate("/settings")} variant="ghost" size="icon" className="text-[#6B7280] hover:text-[#0D0D0D]">
               <User className="h-5 w-5" />
             </Button>
-            <Button onClick={logout} variant="ghost" size="icon" className="text-white/40 hover:text-red-400">
+            <Button onClick={logout} variant="ghost" size="icon" className="text-[#9CA3AF] hover:text-red-400">
               <LogOut className="h-5 w-5" />
             </Button>
           </div>
@@ -76,17 +76,17 @@ export function AttendeeDashboard() {
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
             <Card
               onClick={() => navigate("/qr-identity")}
-              className="cursor-pointer bg-gradient-to-br from-[#0ea5e9]/20 to-[#10b981]/10 border-[#0ea5e9]/30 p-5 hover:scale-[1.01] transition-all"
+              className="cursor-pointer bg-gradient-to-br from-[#0ea5e9]/20 to-[#10b981]/10 border-[#5B4FE8]/30 p-5 hover:scale-[1.01] transition-all"
             >
               <div className="flex items-center gap-4">
                 <div className="rounded-xl bg-[#0ea5e9]/20 p-3">
-                  <QrCode className="h-7 w-7 text-[#0ea5e9]" />
+                  <QrCode className="h-7 w-7 text-[#5B4FE8]" />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-white font-semibold">Child Safety QR Tags</h2>
-                  <p className="text-sm text-white/60 mt-0.5">Register your children & generate their safety QR codes</p>
+                  <h2 className="text-[#0D0D0D] font-semibold">Child Safety QR Tags</h2>
+                  <p className="text-sm text-[#6B7280] mt-0.5">Register your children & generate their safety QR codes</p>
                 </div>
-                <Badge className="bg-[#0ea5e9]/20 text-[#0ea5e9] border-[#0ea5e9]/30 text-xs shrink-0">Tap to open</Badge>
+                <Badge className="bg-[#0ea5e9]/20 text-[#5B4FE8] border-[#5B4FE8]/30 text-xs shrink-0">Tap to open</Badge>
               </div>
             </Card>
           </motion.div>
@@ -99,17 +99,17 @@ export function AttendeeDashboard() {
               <div className="flex items-center gap-3">
                 <div className="h-3 w-3 rounded-full bg-[#10b981] animate-pulse" />
                 <div>
-                  <h2 className="text-lg text-white">Sunday Service — Live</h2>
-                  <p className="text-sm text-white/60">Main Sanctuary</p>
+                  <h2 className="text-lg text-[#0D0D0D]">Sunday Service — Live</h2>
+                  <p className="text-sm text-[#6B7280]">Main Sanctuary</p>
                 </div>
               </div>
-              <Badge className="bg-[#10b981]/20 text-[#10b981] border-[#10b981]/30">Live</Badge>
+              <Badge className="bg-[#10b981]/20 text-[#059669] border-[#10b981]/30">Live</Badge>
             </div>
-            <div className="flex items-center gap-4 text-sm text-white/60">
+            <div className="flex items-center gap-4 text-sm text-[#6B7280]">
               <div className="flex items-center gap-2"><Clock className="h-4 w-4" /><span>Started 12:05 PM</span></div>
               <div className="flex items-center gap-2"><Users className="h-4 w-4" /><span>12,847 attending</span></div>
             </div>
-            <Button onClick={() => navigate("/gospel-feed")} className="mt-4 bg-[#10b981]/20 hover:bg-[#10b981]/30 text-[#10b981] border border-[#10b981]/30 w-full">
+            <Button onClick={() => navigate("/gospel-feed")} className="mt-4 bg-[#10b981]/20 hover:bg-[#10b981]/30 text-[#059669] border border-[#10b981]/30 w-full">
               <Radio className="h-4 w-4 mr-2" /> Join Live Feed
             </Button>
           </Card>
@@ -117,19 +117,19 @@ export function AttendeeDashboard() {
 
         {/* Quick Actions */}
         <div>
-          <h3 className="mb-4 text-white">{isParent ? "Family Tools" : "Quick Actions"}</h3>
+          <h3 className="mb-4 text-[#0D0D0D]">{isParent ? "Family Tools" : "Quick Actions"}</h3>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {quickActions.map((action, i) => (
               <motion.div key={action.label} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.07 }}>
                 <Card
                   onClick={() => navigate(action.route)}
-                  className={`cursor-pointer bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-4 hover:scale-105 transition-all duration-200 ${action.glow} hover:border-white/20`}
+                  className={`cursor-pointer bg-white backdrop-blur-lg border-[#E5E7EB] p-4 hover:scale-105 transition-all duration-200 ${action.glow} hover:border-[#E5E7EB]`}
                 >
                   <div className={`mb-3 inline-flex rounded-xl ${action.color} p-2.5`}>
-                    <action.icon className="h-5 w-5 text-white" />
+                    <action.icon className="h-5 w-5 text-[#0D0D0D]" />
                   </div>
-                  <h4 className="text-white text-sm mb-0.5">{action.label}</h4>
-                  <p className="text-xs text-white/50">{action.description}</p>
+                  <h4 className="text-[#0D0D0D] text-sm mb-0.5">{action.label}</h4>
+                  <p className="text-xs text-[#6B7280]">{action.description}</p>
                 </Card>
               </motion.div>
             ))}
@@ -140,20 +140,20 @@ export function AttendeeDashboard() {
         <div className="grid grid-cols-2 gap-3">
           <Card
             onClick={() => navigate("/community-signal")}
-            className="cursor-pointer bg-[#1a1f2e]/80 backdrop-blur-lg border-amber-500/30 p-4 hover:scale-105 transition-all"
+            className="cursor-pointer bg-white backdrop-blur-lg border-amber-500/30 p-4 hover:scale-105 transition-all"
           >
             <div className="flex items-center gap-3">
               <div className="rounded-lg bg-amber-500/10 p-2"><AlertTriangle className="h-5 w-5 text-amber-400" /></div>
-              <div><h4 className="text-sm text-white">Report Issue</h4><p className="text-xs text-white/50">Quick report</p></div>
+              <div><h4 className="text-sm text-[#0D0D0D]">Report Issue</h4><p className="text-xs text-[#6B7280]">Quick report</p></div>
             </div>
           </Card>
           <Card
             onClick={() => navigate("/emergency")}
-            className="cursor-pointer bg-[#1a1f2e]/80 backdrop-blur-lg border-red-500/30 p-4 hover:scale-105 transition-all"
+            className="cursor-pointer bg-white backdrop-blur-lg border-red-500/30 p-4 hover:scale-105 transition-all"
           >
             <div className="flex items-center gap-3">
               <div className="rounded-lg bg-red-500/10 p-2"><ShieldAlert className="h-5 w-5 text-red-400" /></div>
-              <div><h4 className="text-sm text-white">Emergency SOS</h4><p className="text-xs text-white/50">Instant help</p></div>
+              <div><h4 className="text-sm text-[#0D0D0D]">Emergency SOS</h4><p className="text-xs text-[#6B7280]">Instant help</p></div>
             </div>
           </Card>
         </div>
@@ -162,24 +162,24 @@ export function AttendeeDashboard() {
         <div>
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <h3 className="text-white">Live Updates</h3>
+              <h3 className="text-[#0D0D0D]">Live Updates</h3>
               {unreadCount > 0 && (
                 <Badge className="bg-red-500/20 text-red-400 border-red-500/30 text-xs">{unreadCount} new</Badge>
               )}
             </div>
-            <Button variant="ghost" size="sm" onClick={() => navigate("/communications")} className="text-[#0ea5e9]">
+            <Button variant="ghost" size="sm" onClick={() => navigate("/communications")} className="text-[#5B4FE8]">
               View All
             </Button>
           </div>
           <div className="space-y-3">
             {recentNotifs.length > 0 ? recentNotifs.map((notif, i) => (
               <motion.div key={notif.id} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}>
-                <Card className={`bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-4 ${!notif.read ? 'border-l-2 border-l-[#0ea5e9]' : ''}`}>
+                <Card className={`bg-white backdrop-blur-lg border-[#E5E7EB] p-4 ${!notif.read ? 'border-l-2 border-l-[#0ea5e9]' : ''}`}>
                   <div className="flex items-start gap-3">
-                    <div className="rounded-lg bg-[#0ea5e9]/10 p-2 shrink-0"><Activity className="h-4 w-4 text-[#0ea5e9]" /></div>
+                    <div className="rounded-lg bg-[#EDE9FE] p-2 shrink-0"><Activity className="h-4 w-4 text-[#5B4FE8]" /></div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-white">{notif.title}</p>
-                      <p className="text-xs text-white/50 mt-0.5 line-clamp-1">{notif.message}</p>
+                      <p className="text-sm text-[#0D0D0D]">{notif.title}</p>
+                      <p className="text-xs text-[#6B7280] mt-0.5 line-clamp-1">{notif.message}</p>
                       <p className="text-xs text-white/30 mt-1">{formatDistanceToNow(notif.createdAt, { addSuffix: true })}</p>
                     </div>
                   </div>
@@ -190,10 +190,10 @@ export function AttendeeDashboard() {
               { icon: MapPin, message: "Main Hall — Low crowd density", time: "5 min ago" },
               { icon: Users, message: "12,847 attendees checked in", time: "10 min ago" },
             ].map((n, i) => (
-              <Card key={i} className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-4">
+              <Card key={i} className="bg-white backdrop-blur-lg border-[#E5E7EB] p-4">
                 <div className="flex items-start gap-3">
-                  <div className="rounded-lg bg-[#0ea5e9]/10 p-2 shrink-0"><n.icon className="h-4 w-4 text-[#0ea5e9]" /></div>
-                  <div><p className="text-sm text-white">{n.message}</p><p className="text-xs text-white/40 mt-1">{n.time}</p></div>
+                  <div className="rounded-lg bg-[#EDE9FE] p-2 shrink-0"><n.icon className="h-4 w-4 text-[#5B4FE8]" /></div>
+                  <div><p className="text-sm text-[#0D0D0D]">{n.message}</p><p className="text-xs text-[#9CA3AF] mt-1">{n.time}</p></div>
                 </div>
               </Card>
             ))}
@@ -202,8 +202,8 @@ export function AttendeeDashboard() {
 
         {/* Crowd Status — Attendee only */}
         {!isParent && (
-          <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-4">
-            <h4 className="text-white mb-3">Current Crowd Status</h4>
+          <Card className="bg-white backdrop-blur-lg border-[#E5E7EB] p-4">
+            <h4 className="text-[#0D0D0D] mb-3">Current Crowd Status</h4>
             {[
               { label: "Main Hall", percent: 85, level: "High",   color: "from-red-500 to-orange-400" },
               { label: "Hall B",    percent: 40, level: "Low",    color: "from-[#10b981] to-[#0ea5e9]" },
@@ -211,12 +211,12 @@ export function AttendeeDashboard() {
             ].map(({ label, percent, level, color }) => (
               <div key={label} className="mb-3 last:mb-0">
                 <div className="flex items-center justify-between text-sm mb-1.5">
-                  <span className="text-white/60">{label}</span>
-                  <span className={`text-xs ${percent > 75 ? "text-red-400" : percent > 50 ? "text-amber-400" : "text-[#10b981]"}`}>
+                  <span className="text-[#6B7280]">{label}</span>
+                  <span className={`text-xs ${percent > 75 ? "text-red-400" : percent > 50 ? "text-amber-400" : "text-[#059669]"}`}>
                     {level} — {percent}%
                   </span>
                 </div>
-                <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-1.5 bg-[#F3F4F6] rounded-full overflow-hidden">
                   <div className={`h-full bg-gradient-to-r ${color} transition-all`} style={{ width: `${percent}%` }} />
                 </div>
               </div>
@@ -226,7 +226,7 @@ export function AttendeeDashboard() {
       </div>
 
       {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 bg-[#1a1f2e]/95 backdrop-blur-lg border-t border-white/10 px-2 py-3 z-20">
+      <div className="fixed bottom-0 left-0 right-0 bg-white backdrop-blur-lg border-t border-[#E5E7EB] px-2 py-3 z-20">
         <div className="flex items-center justify-around">
           {(isParent ? [
             { icon: Home,         label: "Home",     route: "/dashboard",      active: true },
@@ -243,7 +243,7 @@ export function AttendeeDashboard() {
           ]).map((item) => (
             <button key={item.label} onClick={() => navigate(item.route)}
               className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors relative ${
-                item.active ? "text-[#0ea5e9]" : "text-white/40 hover:text-white/60"
+                item.active ? "text-[#5B4FE8]" : "text-[#9CA3AF] hover:text-[#6B7280]"
               }`}
             >
               <item.icon className="h-5 w-5" />

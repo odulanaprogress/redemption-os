@@ -55,8 +55,8 @@ export class ErrorBoundary extends Component<Props, State> {
                 <AlertTriangle className="w-6 h-6 text-red-500" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">Something went wrong</h2>
-                <p className="text-white/60 text-sm">
+                <h2 className="text-xl font-bold text-[#0D0D0D]">Something went wrong</h2>
+                <p className="text-[#6B7280] text-sm">
                   An error occurred while rendering this component
                 </p>
               </div>
@@ -73,14 +73,14 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex gap-3">
               <button
                 onClick={this.handleReset}
-                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-[#0D0D0D] rounded-lg font-medium transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
                 Try Again
               </button>
               <button
                 onClick={() => (window.location.href = '/')}
-                className="px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-lg font-medium transition-colors"
+                className="px-4 py-3 bg-zinc-800 hover:bg-zinc-700 text-[#0D0D0D] rounded-lg font-medium transition-colors"
               >
                 Go Home
               </button>

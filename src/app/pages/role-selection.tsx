@@ -19,8 +19,8 @@ export function RoleSelection() {
       icon: Users,
       title: "Attendee",
       description: "Access worship services, navigation, and assistance",
-      color: "text-[#0ea5e9]",
-      bgColor: "bg-[#0ea5e9]/10",
+      color: "text-[#5B4FE8]",
+      bgColor: "bg-[#EDE9FE]",
       route: "/dashboard",
     },
     {
@@ -28,8 +28,8 @@ export function RoleSelection() {
       icon: Heart,
       title: "Volunteer",
       description: "Coordinate support and assist attendees",
-      color: "text-[#10b981]",
-      bgColor: "bg-[#10b981]/10",
+      color: "text-[#059669]",
+      bgColor: "bg-emerald-50",
       route: "/dashboard",
     },
     {
@@ -46,8 +46,8 @@ export function RoleSelection() {
       icon: Video,
       title: "Media Team",
       description: "Manage broadcasts and technical operations",
-      color: "text-[#a78bfa]",
-      bgColor: "bg-[#a78bfa]/10",
+      color: "text-[#5B4FE8]",
+      bgColor: "bg-[#EDE9FE]",
       route: "/operations",
     },
     {
@@ -93,20 +93,20 @@ export function RoleSelection() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8F9FF] to-white flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.1),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(167,139,250,0.1),transparent_50%)]" />
 
       <div className="relative w-full max-w-4xl">
         <div className="mb-8 text-center">
           <div className="mb-4 flex items-center justify-center gap-2">
-            <Globe className="h-8 w-8 text-[#0ea5e9]" />
-            <h1 className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] bg-clip-text text-2xl font-bold text-transparent">
+            <Globe className="h-8 w-8 text-[#5B4FE8]" />
+            <h1 className="bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] bg-clip-text text-2xl font-bold text-transparent">
               Redemption OS
             </h1>
           </div>
-          <h2 className="text-xl text-white mb-2">Select Your Role</h2>
-          <p className="text-white/60">Choose how you'll interact with the platform</p>
+          <h2 className="text-xl text-[#0D0D0D] mb-2">Select Your Role</h2>
+          <p className="text-[#6B7280]">Choose how you'll interact with the platform</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -119,13 +119,13 @@ export function RoleSelection() {
             >
               <Card
                 onClick={() => !updating && handleRoleSelect(role.id, role.route)}
-                className={`cursor-pointer bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-6 hover:border-white/30 hover:scale-105 transition-all duration-300 ${updating ? 'opacity-50 pointer-events-none' : ''}`}
+                className={`cursor-pointer bg-white backdrop-blur-lg border-[#E5E7EB] p-6 hover:border-[#E5E7EB] hover:scale-105 transition-all duration-300 ${updating ? 'opacity-50 pointer-events-none' : ''}`}
               >
                 <div className={`mb-4 inline-flex rounded-xl ${role.bgColor} p-3`}>
                   <role.icon className={`h-8 w-8 ${role.color}`} />
                 </div>
-                <h3 className="mb-2 text-lg text-white">{role.title}</h3>
-                <p className="text-sm text-white/60">{role.description}</p>
+                <h3 className="mb-2 text-lg text-[#0D0D0D]">{role.title}</h3>
+                <p className="text-sm text-[#6B7280]">{role.description}</p>
               </Card>
             </motion.div>
           ))}
@@ -133,7 +133,7 @@ export function RoleSelection() {
 
         {updating && (
           <div className="mt-6 text-center">
-            <div className="inline-flex items-center gap-2 text-white/60">
+            <div className="inline-flex items-center gap-2 text-[#6B7280]">
               <div className="h-4 w-4 border-2 border-[#0ea5e9] border-t-transparent rounded-full animate-spin" />
               <span>Updating role...</span>
             </div>

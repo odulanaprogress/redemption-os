@@ -45,10 +45,10 @@ export function CartDrawer() {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 28, stiffness: 220 }}
-          className="fixed right-0 top-0 h-full w-full max-w-md bg-[#080808] border-l border-white/10 z-50 flex flex-col shadow-2xl shadow-black/60"
+          className="fixed right-0 top-0 h-full w-full max-w-md bg-[#080808] border-l border-[#E5E7EB] z-50 flex flex-col shadow-2xl shadow-black/60"
         >
             {/* Header */}
-            <div className="p-6 border-b border-white/10 flex items-center justify-between">
+            <div className="p-6 border-b border-[#E5E7EB] flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <ShoppingCart className="w-6 h-6 text-emerald-400" />
                 <h2 className="text-xl font-bold">Your Cart</h2>
@@ -58,7 +58,7 @@ export function CartDrawer() {
                   </span>
                 )}
               </div>
-              <button onClick={closeCart} className="p-2 hover:bg-white/5 rounded-lg transition-colors text-white/60 hover:text-white">
+              <button onClick={closeCart} className="p-2 hover:bg-[#F8F9FF] rounded-lg transition-colors text-[#6B7280] hover:text-[#0D0D0D]">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -82,7 +82,7 @@ export function CartDrawer() {
                   </motion.div>
                   <div className="space-y-1">
                     <h3 className="text-2xl font-bold">Order Placed!</h3>
-                    <p className="text-white/60">Estimated delivery in 12–18 min</p>
+                    <p className="text-[#6B7280]">Estimated delivery in 12–18 min</p>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-emerald-400">
                     <Truck className="w-4 h-4" />
@@ -104,16 +104,16 @@ export function CartDrawer() {
                 <div className="flex-1 overflow-y-auto p-6 space-y-3">
                   {items.length === 0 ? (
                     <div className="flex flex-col items-center justify-center h-full text-center space-y-4 pt-16">
-                      <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center">
+                      <div className="w-20 h-20 bg-[#F8F9FF] rounded-full flex items-center justify-center">
                         <ShoppingCart className="w-10 h-10 text-white/20" />
                       </div>
                       <div>
-                        <div className="font-semibold text-white/60">Your cart is empty</div>
+                        <div className="font-semibold text-[#6B7280]">Your cart is empty</div>
                         <div className="text-sm text-white/30 mt-1">Browse the marketplace to add items</div>
                       </div>
                       <button
                         onClick={closeCart}
-                        className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-lg transition-colors font-medium text-sm"
+                        className="bg-emerald-500 hover:bg-emerald-600 text-[#0D0D0D] px-6 py-2.5 rounded-lg transition-colors font-medium text-sm"
                       >
                         Browse Products
                       </button>
@@ -126,26 +126,26 @@ export function CartDrawer() {
                         initial={{ opacity: 0, x: 30 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 30 }}
-                        className="bg-white/5 border border-white/10 rounded-xl p-4 flex gap-3"
+                        className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-4 flex gap-3"
                       >
                         <div className="w-14 h-14 bg-gradient-to-br from-emerald-500/20 to-blue-500/20 rounded-lg flex items-center justify-center text-3xl flex-shrink-0">
                           {item.product.image}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="font-medium text-sm truncate">{item.product.name}</div>
-                          <div className="text-xs text-white/50 mb-2">{item.product.vendorName}</div>
+                          <div className="text-xs text-[#6B7280] mb-2">{item.product.vendorName}</div>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-1.5">
                               <button
                                 onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                                className="w-6 h-6 bg-white/10 hover:bg-white/20 rounded-md flex items-center justify-center transition-colors"
+                                className="w-6 h-6 bg-[#F3F4F6] hover:bg-white/20 rounded-md flex items-center justify-center transition-colors"
                               >
                                 <Minus className="w-3 h-3" />
                               </button>
                               <span className="font-semibold w-5 text-center text-sm">{item.quantity}</span>
                               <button
                                 onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                className="w-6 h-6 bg-white/10 hover:bg-white/20 rounded-md flex items-center justify-center transition-colors"
+                                className="w-6 h-6 bg-[#F3F4F6] hover:bg-white/20 rounded-md flex items-center justify-center transition-colors"
                               >
                                 <Plus className="w-3 h-3" />
                               </button>
@@ -168,23 +168,23 @@ export function CartDrawer() {
 
                 {/* Footer */}
                 {items.length > 0 && (
-                  <div className="p-6 border-t border-white/10 space-y-4">
+                  <div className="p-6 border-t border-[#E5E7EB] space-y-4">
                     <div className="flex items-center gap-2 text-sm text-emerald-400 bg-emerald-500/10 px-3 py-2.5 rounded-lg border border-emerald-500/20">
                       <Truck className="w-4 h-4 flex-shrink-0" />
                       <span>Estimated delivery: 12–18 minutes</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-white/60">Order Total</span>
-                      <span className="text-2xl font-bold text-white">${totalPrice.toFixed(2)}</span>
+                      <span className="text-[#6B7280]">Order Total</span>
+                      <span className="text-2xl font-bold text-[#0D0D0D]">${totalPrice.toFixed(2)}</span>
                     </div>
                     <button
                       onClick={handleCheckout}
                       disabled={isCheckingOut}
-                      className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/60 text-white font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2"
+                      className="w-full bg-emerald-500 hover:bg-emerald-600 disabled:bg-emerald-500/60 text-[#0D0D0D] font-semibold py-4 rounded-xl transition-colors flex items-center justify-center gap-2"
                     >
                       {isCheckingOut ? (
                         <>
-                          <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          <div className="w-4 h-4 border-2 border-[#E5E7EB] border-t-white rounded-full animate-spin" />
                           Placing Order...
                         </>
                       ) : (
@@ -196,7 +196,7 @@ export function CartDrawer() {
                     </button>
                     <button
                       onClick={clearCart}
-                      className="w-full bg-white/5 hover:bg-white/10 border border-white/10 font-medium py-2 rounded-lg transition-colors text-sm text-white/60"
+                      className="w-full bg-[#F8F9FF] hover:bg-[#F3F4F6] border border-[#E5E7EB] font-medium py-2 rounded-lg transition-colors text-sm text-[#6B7280]"
                     >
                       Clear Cart
                     </button>

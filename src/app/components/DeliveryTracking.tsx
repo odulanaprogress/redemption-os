@@ -42,11 +42,11 @@ export default function DeliveryTracking() {
 
   if (!order) {
     return (
-      <div className="min-h-screen bg-black text-white p-8 flex items-center justify-center">
+      <div className="min-h-screen bg-black text-[#0D0D0D] p-8 flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="text-6xl">📦</div>
           <h2 className="text-2xl font-bold">Order Not Found</h2>
-          <p className="text-white/60">This delivery doesn't exist or has been removed.</p>
+          <p className="text-[#6B7280]">This delivery doesn't exist or has been removed.</p>
           <button onClick={() => navigate('/marketplace')} className="bg-emerald-500 hover:bg-emerald-600 px-6 py-3 rounded-xl transition-colors font-medium">
             Back to Marketplace
           </button>
@@ -66,28 +66,28 @@ export default function DeliveryTracking() {
   const currentIdx = statusOrder.indexOf(order.status);
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 md:p-8">
+    <div className="min-h-screen bg-black text-[#0D0D0D] p-6 md:p-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-7xl mx-auto space-y-6"
       >
         {/* Nav */}
-        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-white/50 hover:text-white transition-colors">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-[#6B7280] hover:text-[#0D0D0D] transition-colors">
           <ArrowLeft className="w-5 h-5" />
           Back
         </button>
 
-        <div className="border-b border-white/10 pb-4">
+        <div className="border-b border-[#E5E7EB] pb-4">
           <h1 className="text-2xl md:text-3xl font-bold mb-1">Live Delivery Tracking</h1>
-          <p className="text-white/50">Order #{order.id} · {order.productName}</p>
+          <p className="text-[#6B7280]">Order #{order.id} · {order.productName}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Map Section */}
           <div className="space-y-4">
             {/* Live Map */}
-            <div className="relative aspect-square bg-gradient-to-br from-emerald-950/80 to-blue-950/80 border border-white/10 rounded-2xl overflow-hidden">
+            <div className="relative aspect-square bg-gradient-to-br from-emerald-950/80 to-blue-950/80 border border-[#E5E7EB] rounded-2xl overflow-hidden">
               {/* Grid background */}
               <div className="absolute inset-0 opacity-10">
                 <svg width="100%" height="100%">
@@ -130,8 +130,8 @@ export default function DeliveryTracking() {
                 initial={{ scale: 0, y: -10 }}
                 animate={{ scale: 1, y: 0 }}
               >
-                <div className="bg-blue-500 w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/40 border-2 border-white/20">
-                  <MapPin className="w-5 h-5 text-white" />
+                <div className="bg-blue-500 w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/40 border-2 border-[#E5E7EB]">
+                  <MapPin className="w-5 h-5 text-[#0D0D0D]" />
                 </div>
                 <div className="mt-1 text-xs font-semibold bg-black/80 px-2 py-0.5 rounded whitespace-nowrap text-center">
                   {order.vendorName}
@@ -149,9 +149,9 @@ export default function DeliveryTracking() {
                 <motion.div
                   animate={{ y: [0, -4, 0] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="bg-purple-500 w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-purple-500/40 border-2 border-white/20"
+                  className="bg-purple-500 w-10 h-10 rounded-full flex items-center justify-center shadow-lg shadow-purple-500/40 border-2 border-[#E5E7EB]"
                 >
-                  <MapPin className="w-5 h-5 text-white" />
+                  <MapPin className="w-5 h-5 text-[#0D0D0D]" />
                 </motion.div>
                 <div className="mt-1 text-xs font-semibold bg-black/80 px-2 py-0.5 rounded whitespace-nowrap text-center">
                   Your Location
@@ -174,7 +174,7 @@ export default function DeliveryTracking() {
                     transition={{ duration: 1.5, repeat: Infinity }}
                     className="bg-emerald-500 w-12 h-12 rounded-full flex items-center justify-center shadow-xl shadow-emerald-500/50 border-2 border-emerald-300/30 z-10"
                   >
-                    <Truck className="w-6 h-6 text-white" />
+                    <Truck className="w-6 h-6 text-[#0D0D0D]" />
                   </motion.div>
                   {order.driverName && (
                     <div className="mt-1 text-xs font-semibold bg-emerald-500/20 border border-emerald-500/40 px-2 py-0.5 rounded whitespace-nowrap text-emerald-300 text-center">
@@ -186,7 +186,7 @@ export default function DeliveryTracking() {
 
               {/* Live badge */}
               {order.status === 'in_transit' && (
-                <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-white/10">
+                <div className="absolute top-4 left-4 flex items-center gap-2 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-lg border border-[#E5E7EB]">
                   <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
                   <span className="text-xs font-semibold">LIVE</span>
                 </div>
@@ -216,7 +216,7 @@ export default function DeliveryTracking() {
 
             {/* Driver Info */}
             {order.status === 'in_transit' && order.driverName && (
-              <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+              <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-5">
                 <h3 className="font-semibold mb-3">Your Driver</h3>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
@@ -225,7 +225,7 @@ export default function DeliveryTracking() {
                     </div>
                     <div>
                       <div className="font-semibold">{order.driverName}</div>
-                      <div className="flex items-center gap-1 text-sm text-white/50">
+                      <div className="flex items-center gap-1 text-sm text-[#6B7280]">
                         <Star className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
                         4.9 rating
                       </div>
@@ -240,8 +240,8 @@ export default function DeliveryTracking() {
 
             {/* Live activity feed */}
             {liveActivity.length > 0 && (
-              <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-2">
-                <div className="flex items-center gap-2 text-xs text-white/50 mb-2">
+              <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-4 space-y-2">
+                <div className="flex items-center gap-2 text-xs text-[#6B7280] mb-2">
                   <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" />
                   Live Activity
                 </div>
@@ -251,7 +251,7 @@ export default function DeliveryTracking() {
                       key={msg}
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1 - i * 0.25, x: 0 }}
-                      className="text-sm text-white/70"
+                      className="text-sm text-[#4B5563]"
                     >
                       {msg}
                     </motion.div>
@@ -264,7 +264,7 @@ export default function DeliveryTracking() {
           {/* Order Details */}
           <div className="space-y-5">
             {/* Status Progress */}
-            <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+            <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6">
               <h3 className="font-semibold mb-6">Delivery Status</h3>
               <div className="space-y-5">
                 {statusSteps.map((step, index) => {
@@ -281,10 +281,10 @@ export default function DeliveryTracking() {
                           className={`w-11 h-11 rounded-full flex items-center justify-center transition-all ${
                             isCompleted
                               ? 'bg-emerald-500 shadow-lg shadow-emerald-500/30'
-                              : 'bg-white/10'
+                              : 'bg-[#F3F4F6]'
                           } ${isActive ? 'ring-2 ring-emerald-500/50' : ''}`}
                         >
-                          <Icon className={`w-5 h-5 ${isCompleted ? 'text-white' : 'text-white/30'}`} />
+                          <Icon className={`w-5 h-5 ${isCompleted ? 'text-[#0D0D0D]' : 'text-white/30'}`} />
                         </motion.div>
                         {index < statusSteps.length - 1 && (
                           <div className="absolute left-5 top-11 w-0.5 h-8">
@@ -294,12 +294,12 @@ export default function DeliveryTracking() {
                               transition={{ duration: 0.5, delay: 0.2 }}
                               className="bg-emerald-500 w-full"
                             />
-                            <div className="absolute inset-0 bg-white/10 -z-10" />
+                            <div className="absolute inset-0 bg-[#F3F4F6] -z-10" />
                           </div>
                         )}
                       </div>
                       <div className="flex-1 pt-2">
-                        <div className={`font-semibold ${isCompleted ? 'text-white' : 'text-white/40'}`}>{step.label}</div>
+                        <div className={`font-semibold ${isCompleted ? 'text-[#0D0D0D]' : 'text-[#9CA3AF]'}`}>{step.label}</div>
                         {isActive && <div className="text-sm text-emerald-400 mt-0.5">In Progress...</div>}
                         {isCompleted && !isActive && <div className="text-sm text-emerald-400 mt-0.5">Completed ✓</div>}
                       </div>
@@ -310,7 +310,7 @@ export default function DeliveryTracking() {
             </div>
 
             {/* Order Summary */}
-            <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+            <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-5">
               <h3 className="font-semibold mb-4">Order Summary</h3>
               <div className="space-y-2.5 text-sm">
                 {[
@@ -320,19 +320,19 @@ export default function DeliveryTracking() {
                   { label: 'Delivery Address', value: order.deliveryAddress },
                 ].map(row => (
                   <div key={row.label} className="flex items-start justify-between gap-4">
-                    <span className="text-white/50 flex-shrink-0">{row.label}</span>
+                    <span className="text-[#6B7280] flex-shrink-0">{row.label}</span>
                     <span className="font-medium text-right">{row.value}</span>
                   </div>
                 ))}
-                <div className="border-t border-white/10 pt-2.5 flex items-center justify-between">
-                  <span className="text-white/50">Total</span>
+                <div className="border-t border-[#E5E7EB] pt-2.5 flex items-center justify-between">
+                  <span className="text-[#6B7280]">Total</span>
                   <span className="text-xl font-bold text-emerald-400">${order.totalPrice}</span>
                 </div>
               </div>
             </div>
 
             {/* Tracking History */}
-            <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+            <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-5">
               <h3 className="font-semibold mb-4">Tracking History</h3>
               <div className="space-y-3">
                 {order.trackingUpdates.slice().reverse().map((update, index) => (
@@ -342,7 +342,7 @@ export default function DeliveryTracking() {
                     </div>
                     <div className="flex-1 pb-3 border-b border-white/5 last:border-0">
                       <div className="font-medium text-sm">{update.message}</div>
-                      <div className="text-xs text-white/40 mt-0.5">
+                      <div className="text-xs text-[#9CA3AF] mt-0.5">
                         {new Date(update.timestamp).toLocaleString()}
                         {update.location && ` · ${update.location}`}
                       </div>
@@ -360,7 +360,7 @@ export default function DeliveryTracking() {
                 </div>
                 <div>
                   <div className="font-semibold">AI-Optimized Route Active</div>
-                  <div className="text-sm text-white/50">Fastest path recalculated in real-time · Saves ~3 min</div>
+                  <div className="text-sm text-[#6B7280]">Fastest path recalculated in real-time · Saves ~3 min</div>
                 </div>
               </div>
             )}

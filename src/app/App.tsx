@@ -18,7 +18,7 @@ function AuthInitializer({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider attribute="class" defaultTheme="dark">
+      <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light">
         <CartProvider>
           <OfflineProvider>
             <AuthInitializer>

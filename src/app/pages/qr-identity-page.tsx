@@ -209,12 +209,12 @@ export function QRIdentityPage() {
     w.print();
   };
 
-  const inputCls = "bg-white/5 border-white/10 text-white placeholder:text-white/40";
+  const inputCls = "bg-[#F8F9FF] border-[#E5E7EB] text-[#0D0D0D] placeholder:text-[#9CA3AF]";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628]">
+    <div className="min-h-screen bg-gradient-to-br from-[#F8F9FF] to-white">
       {/* Header */}
-      <div className="bg-[#1a1f2e]/80 backdrop-blur-lg border-b border-white/10 p-4 sticky top-0 z-10">
+      <div className="bg-white backdrop-blur-lg border-b border-[#E5E7EB] p-4 sticky top-0 z-10">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
@@ -223,17 +223,17 @@ export function QRIdentityPage() {
               if (step === "list" || step === "scan") navigate(-1);
               else setStep("list");
             }}
-            className="text-white/60 hover:text-white"
+            className="text-[#6B7280] hover:text-[#0D0D0D]"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex-1 flex justify-between items-center">
             <div>
-              <h1 className="text-lg text-white">QR Identity System</h1>
-              <p className="text-sm text-white/60">Child Safety & Reunification</p>
+              <h1 className="text-lg text-[#0D0D0D]">QR Identity System</h1>
+              <p className="text-sm text-[#6B7280]">Child Safety & Reunification</p>
             </div>
             {isAdminOrSecurity && step !== "scan" && (
-              <Button onClick={() => setStep("scan")} size="sm" className="bg-[#0ea5e9] hover:bg-[#0284c7] text-white">
+              <Button onClick={() => setStep("scan")} size="sm" className="bg-[#0ea5e9] hover:bg-[#0284c7] text-[#0D0D0D]">
                 <ScanLine className="h-4 w-4 mr-2" />
                 Scan Tag
               </Button>
@@ -250,10 +250,10 @@ export function QRIdentityPage() {
             <motion.div key="list" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}>
               {!isAdminOrSecurity && (
                 <div className="flex justify-between items-center mb-4">
-                  <p className="text-white/60 text-sm">{members.length} child{members.length !== 1 ? "ren" : ""} registered</p>
+                  <p className="text-[#6B7280] text-sm">{members.length} child{members.length !== 1 ? "ren" : ""} registered</p>
                   <Button
                     onClick={() => setStep("register")}
-                    className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white"
+                    className="bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] text-[#0D0D0D]"
                   >
                     <Plus className="h-4 w-4 mr-2" />
                     Register Child
@@ -263,16 +263,16 @@ export function QRIdentityPage() {
 
               {loading ? (
                 <div className="flex justify-center py-16">
-                  <Loader2 className="h-8 w-8 animate-spin text-[#0ea5e9]" />
+                  <Loader2 className="h-8 w-8 animate-spin text-[#5B4FE8]" />
                 </div>
               ) : members.length === 0 ? (
-                <Card className="bg-[#1a1f2e]/80 border-white/10 p-10 text-center">
+                <Card className="bg-white border-[#E5E7EB] p-10 text-center">
                   <Baby className="h-12 w-12 text-white/20 mx-auto mb-4" />
-                  <p className="text-white/60 mb-2">No children registered yet</p>
+                  <p className="text-[#6B7280] mb-2">No children registered yet</p>
                   {!isAdminOrSecurity && (
                     <>
-                      <p className="text-white/40 text-sm mb-6">Register your children to generate QR tags for safe tracking.</p>
-                      <Button onClick={() => setStep("register")} className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white">
+                      <p className="text-[#9CA3AF] text-sm mb-6">Register your children to generate QR tags for safe tracking.</p>
+                      <Button onClick={() => setStep("register")} className="bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] text-[#0D0D0D]">
                         <Plus className="h-4 w-4 mr-2" /> Register First Child
                       </Button>
                     </>
@@ -283,19 +283,19 @@ export function QRIdentityPage() {
                   {members.map((member) => (
                     <Card
                       key={member.id}
-                      className="bg-[#1a1f2e]/80 border-white/10 p-4 flex items-center gap-4 cursor-pointer hover:border-[#0ea5e9]/40 transition-all"
+                      className="bg-white border-[#E5E7EB] p-4 flex items-center gap-4 cursor-pointer hover:border-[#0ea5e9]/40 transition-all"
                       onClick={() => viewQR(member)}
                     >
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#0ea5e9]/20 to-[#10b981]/20 flex items-center justify-center shrink-0">
                         {member.photoURL ? (
                           <img src={member.photoURL} className="w-12 h-12 rounded-full object-cover" alt="" />
                         ) : (
-                          <User className="h-6 w-6 text-[#0ea5e9]" />
+                          <User className="h-6 w-6 text-[#5B4FE8]" />
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-white font-medium">{member.firstName} {member.lastName}</p>
-                        <p className="text-white/50 text-sm">{member.assignedZone}</p>
+                        <p className="text-[#0D0D0D] font-medium">{member.firstName} {member.lastName}</p>
+                        <p className="text-[#6B7280] text-sm">{member.assignedZone}</p>
                         {member.allergies && member.allergies.length > 0 && (
                           <div className="flex items-center gap-1 mt-1">
                             <AlertTriangle className="h-3 w-3 text-amber-400" />
@@ -304,7 +304,7 @@ export function QRIdentityPage() {
                         )}
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge className="bg-[#10b981]/10 text-[#10b981] border-[#10b981]/30">
+                        <Badge className="bg-emerald-50 text-[#059669] border-[#10b981]/30">
                           <QrCode className="h-3 w-3 mr-1" /> QR Active
                         </Badge>
                         <ChevronRight className="h-4 w-4 text-white/30" />
@@ -317,10 +317,10 @@ export function QRIdentityPage() {
               {/* Info card */}
               <Card className="bg-[#0ea5e9]/5 border-[#0ea5e9]/20 p-4 mt-6">
                 <div className="flex items-start gap-3">
-                  <ShieldCheck className="h-5 w-5 text-[#0ea5e9] shrink-0 mt-0.5" />
+                  <ShieldCheck className="h-5 w-5 text-[#5B4FE8] shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-white text-sm font-medium">How QR Identity Works</p>
-                    <p className="text-white/50 text-xs mt-1">Each child gets a unique QR tag. Security staff scan it to instantly see their name, zone, allergies, and your contact info — enabling safe and fast family reunification.</p>
+                    <p className="text-[#0D0D0D] text-sm font-medium">How QR Identity Works</p>
+                    <p className="text-[#6B7280] text-xs mt-1">Each child gets a unique QR tag. Security staff scan it to instantly see their name, zone, allergies, and your contact info — enabling safe and fast family reunification.</p>
                   </div>
                 </div>
               </Card>
@@ -330,18 +330,18 @@ export function QRIdentityPage() {
           {/* STEP: Register */}
           {step === "register" && (
             <motion.div key="register" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <Card className="bg-[#1a1f2e]/80 border-white/10 p-6">
-                <h2 className="text-white mb-6">Register a Child</h2>
+              <Card className="bg-white border-[#E5E7EB] p-6">
+                <h2 className="text-[#0D0D0D] mb-6">Register a Child</h2>
                 <form onSubmit={handleRegister} className="space-y-5">
                   {/* Child photo */}
                   <div className="flex flex-col items-center gap-3">
                     <input ref={photoRef} type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
                     <div
                       onClick={() => photoRef.current?.click()}
-                      className="relative w-24 h-24 rounded-full bg-white/5 border-2 border-dashed border-white/20 flex items-center justify-center cursor-pointer hover:border-[#0ea5e9]/50 transition-all overflow-hidden"
+                      className="relative w-24 h-24 rounded-full bg-[#F8F9FF] border-2 border-dashed border-[#E5E7EB] flex items-center justify-center cursor-pointer hover:border-[#0ea5e9]/50 transition-all overflow-hidden"
                     >
                       {photoUploading ? (
-                        <Loader2 className="h-6 w-6 animate-spin text-[#0ea5e9]" />
+                        <Loader2 className="h-6 w-6 animate-spin text-[#5B4FE8]" />
                       ) : photoUrl ? (
                         <img src={photoUrl} alt="child" className="w-full h-full object-cover" />
                       ) : (
@@ -351,76 +351,76 @@ export function QRIdentityPage() {
                         </div>
                       )}
                     </div>
-                    <p className="text-xs text-white/40">Child's photo (optional but recommended)</p>
+                    <p className="text-xs text-[#9CA3AF]">Child's photo (optional but recommended)</p>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <Label className="text-white/70 text-xs">First Name *</Label>
+                      <Label className="text-[#4B5563] text-xs">First Name *</Label>
                       <Input value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} className={inputCls} required placeholder="e.g. Timmy" />
                     </div>
                     <div className="space-y-1.5">
-                      <Label className="text-white/70 text-xs">Last Name *</Label>
+                      <Label className="text-[#4B5563] text-xs">Last Name *</Label>
                       <Input value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} className={inputCls} required placeholder="e.g. Okonkwo" />
                     </div>
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-white/70 text-xs">Date of Birth *</Label>
+                    <Label className="text-[#4B5563] text-xs">Date of Birth *</Label>
                     <Input type="date" value={form.dateOfBirth} onChange={(e) => setForm({ ...form, dateOfBirth: e.target.value })} className={inputCls} required />
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-white/70 text-xs">Assigned Zone</Label>
+                    <Label className="text-[#4B5563] text-xs">Assigned Zone</Label>
                     <select
                       value={form.assignedZone}
                       onChange={(e) => setForm({ ...form, assignedZone: e.target.value })}
-                      className="w-full rounded-md bg-white/5 border border-white/10 text-white px-3 py-2 text-sm"
+                      className="w-full rounded-md bg-[#F8F9FF] border border-[#E5E7EB] text-[#0D0D0D] px-3 py-2 text-sm"
                     >
                       {["Children Zone A", "Children Zone B", "Nursery", "Youth Zone"].map((z) => (
-                        <option key={z} value={z} className="bg-[#1a1f2e]">{z}</option>
+                        <option key={z} value={z} className="bg-white">{z}</option>
                       ))}
                     </select>
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-white/70 text-xs">Allergies (comma separated)</Label>
+                    <Label className="text-[#4B5563] text-xs">Allergies (comma separated)</Label>
                     <Input value={form.allergies} onChange={(e) => setForm({ ...form, allergies: e.target.value })} className={inputCls} placeholder="Peanuts, Latex, Shellfish" />
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-white/70 text-xs">Medical Notes</Label>
+                    <Label className="text-[#4B5563] text-xs">Medical Notes</Label>
                     <Input value={form.medicalNotes} onChange={(e) => setForm({ ...form, medicalNotes: e.target.value })} className={inputCls} placeholder="e.g. Carries inhaler, wears glasses" />
                   </div>
 
-                  <div className="border-t border-white/10 pt-4">
-                    <p className="text-white/70 text-sm mb-3 flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-[#0ea5e9]" /> Emergency Contact
+                  <div className="border-t border-[#E5E7EB] pt-4">
+                    <p className="text-[#4B5563] text-sm mb-3 flex items-center gap-2">
+                      <Phone className="h-4 w-4 text-[#5B4FE8]" /> Emergency Contact
                     </p>
                     <div className="space-y-3">
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1.5">
-                          <Label className="text-white/70 text-xs">Contact Name *</Label>
+                          <Label className="text-[#4B5563] text-xs">Contact Name *</Label>
                           <Input value={form.contactName} onChange={(e) => setForm({ ...form, contactName: e.target.value })} className={inputCls} required placeholder="Full name" />
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-white/70 text-xs">Relationship</Label>
+                          <Label className="text-[#4B5563] text-xs">Relationship</Label>
                           <Input value={form.contactRelationship} onChange={(e) => setForm({ ...form, contactRelationship: e.target.value })} className={inputCls} placeholder="Parent, Guardian..." />
                         </div>
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-1.5">
-                          <Label className="text-white/70 text-xs">Phone Number *</Label>
+                          <Label className="text-[#4B5563] text-xs">Phone Number *</Label>
                           <Input value={form.contactPhone} onChange={(e) => setForm({ ...form, contactPhone: e.target.value })} className={inputCls} required placeholder="+234 800..." />
                         </div>
                         <div className="space-y-1.5">
-                          <Label className="text-white/70 text-xs">Alt. Phone</Label>
+                          <Label className="text-[#4B5563] text-xs">Alt. Phone</Label>
                           <Input value={form.contactAltPhone} onChange={(e) => setForm({ ...form, contactAltPhone: e.target.value })} className={inputCls} placeholder="+234 800..." />
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <Button type="submit" disabled={submitting} className="w-full bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white py-5 disabled:opacity-50">
+                  <Button type="submit" disabled={submitting} className="w-full bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] text-[#0D0D0D] py-5 disabled:opacity-50">
                     {submitting ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Generating QR...</> : <><QrCode className="h-4 w-4 mr-2" />Generate QR Tag</>}
                   </Button>
                 </form>
@@ -432,35 +432,35 @@ export function QRIdentityPage() {
           {step === "card" && selectedMember && (
             <motion.div key="card" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
               <div className="text-center mb-4">
-                <Badge className="bg-[#10b981]/10 text-[#10b981] border-[#10b981]/30 px-3 py-1">
+                <Badge className="bg-emerald-50 text-[#059669] border-[#10b981]/30 px-3 py-1">
                   <CheckCircle className="h-3.5 w-3.5 mr-1.5" /> QR Tag Generated
                 </Badge>
               </div>
 
-              <Card className="bg-[#1a1f2e]/80 border-white/10 overflow-hidden">
+              <Card className="bg-white border-[#E5E7EB] overflow-hidden">
                 <div ref={printRef}>
-                  <div className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] p-4 text-center">
-                    <p className="text-white/80 text-xs uppercase tracking-widest">Redemption OS — Child Safety Tag</p>
-                    <h2 className="text-white text-xl mt-1">{selectedMember.firstName} {selectedMember.lastName}</h2>
-                    <p className="text-white/80 text-sm">{selectedMember.assignedZone}</p>
+                  <div className="bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] p-4 text-center">
+                    <p className="text-[#4B5563] text-xs uppercase tracking-widest">Redemption OS — Child Safety Tag</p>
+                    <h2 className="text-[#0D0D0D] text-xl mt-1">{selectedMember.firstName} {selectedMember.lastName}</h2>
+                    <p className="text-[#4B5563] text-sm">{selectedMember.assignedZone}</p>
                   </div>
 
                   <div className="p-6 flex flex-col items-center">
                     {qrCodeUrl ? (
-                      <img src={qrCodeUrl} alt="QR Code" className="w-48 h-48 rounded-xl border-2 border-white/20" />
+                      <img src={qrCodeUrl} alt="QR Code" className="w-48 h-48 rounded-xl border-2 border-[#E5E7EB]" />
                     ) : (
-                      <div className="w-48 h-48 rounded-xl bg-white/5 flex items-center justify-center">
-                        <Loader2 className="h-8 w-8 animate-spin text-white/40" />
+                      <div className="w-48 h-48 rounded-xl bg-[#F8F9FF] flex items-center justify-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-[#9CA3AF]" />
                       </div>
                     )}
 
                     <div className="mt-4 w-full space-y-3">
-                      <div className="flex items-center gap-3 p-3 bg-white/5 rounded-lg">
-                        <Phone className="h-4 w-4 text-[#0ea5e9] shrink-0" />
+                      <div className="flex items-center gap-3 p-3 bg-[#F8F9FF] rounded-lg">
+                        <Phone className="h-4 w-4 text-[#5B4FE8] shrink-0" />
                         <div>
-                          <p className="text-xs text-white/40">Emergency Contact</p>
-                          <p className="text-white text-sm">{selectedMember.emergencyContact.name} ({selectedMember.emergencyContact.relationship})</p>
-                          <p className="text-[#0ea5e9] text-sm">{selectedMember.emergencyContact.phoneNumber}</p>
+                          <p className="text-xs text-[#9CA3AF]">Emergency Contact</p>
+                          <p className="text-[#0D0D0D] text-sm">{selectedMember.emergencyContact.name} ({selectedMember.emergencyContact.relationship})</p>
+                          <p className="text-[#5B4FE8] text-sm">{selectedMember.emergencyContact.phoneNumber}</p>
                         </div>
                       </div>
 
@@ -487,17 +487,17 @@ export function QRIdentityPage() {
                   </div>
                 </div>
 
-                <div className="p-4 border-t border-white/10 grid grid-cols-2 gap-3">
-                  <Button onClick={downloadQR} variant="outline" className="border-white/10 text-white hover:bg-white/10">
+                <div className="p-4 border-t border-[#E5E7EB] grid grid-cols-2 gap-3">
+                  <Button onClick={downloadQR} variant="outline" className="border-[#E5E7EB] text-[#0D0D0D] hover:bg-[#F3F4F6]">
                     <Download className="h-4 w-4 mr-2" /> Download
                   </Button>
-                  <Button onClick={printQR} className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] text-white">
+                  <Button onClick={printQR} className="bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] text-[#0D0D0D]">
                     <Printer className="h-4 w-4 mr-2" /> Print Tag
                   </Button>
                 </div>
               </Card>
 
-              <Button onClick={() => setStep("list")} variant="ghost" className="w-full mt-3 text-white/60 hover:text-white">
+              <Button onClick={() => setStep("list")} variant="ghost" className="w-full mt-3 text-[#6B7280] hover:text-[#0D0D0D]">
                 Back to Family List
               </Button>
             </motion.div>
@@ -507,11 +507,11 @@ export function QRIdentityPage() {
           {step === "scan" && (
             <motion.div key="scan" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}>
               {!scanResult ? (
-                <Card className="bg-[#1a1f2e]/80 border-white/10 overflow-hidden">
+                <Card className="bg-white border-[#E5E7EB] overflow-hidden">
                   <div className="p-6 text-center">
-                    <ScanLine className="h-12 w-12 text-[#0ea5e9] mx-auto mb-4" />
-                    <h2 className="text-white text-lg font-semibold mb-2">Scan Identity Tag</h2>
-                    <p className="text-white/60 text-sm mb-6">Point your camera at the child's QR code to pull up their emergency contact info.</p>
+                    <ScanLine className="h-12 w-12 text-[#5B4FE8] mx-auto mb-4" />
+                    <h2 className="text-[#0D0D0D] text-lg font-semibold mb-2">Scan Identity Tag</h2>
+                    <p className="text-[#6B7280] text-sm mb-6">Point your camera at the child's QR code to pull up their emergency contact info.</p>
                     
                     <div className="rounded-xl overflow-hidden border-2 border-dashed border-[#0ea5e9]/50 p-2 relative">
                       <div id="reader" className="w-full bg-black rounded-lg min-h-[250px]"></div>
@@ -522,12 +522,12 @@ export function QRIdentityPage() {
                   </div>
                 </Card>
               ) : (
-                <Card className="bg-[#1a1f2e]/80 border-white/10 overflow-hidden">
-                  <div className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] p-4 flex justify-between items-start">
+                <Card className="bg-white border-[#E5E7EB] overflow-hidden">
+                  <div className="bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] p-4 flex justify-between items-start">
                     <div>
-                      <Badge className="bg-white/20 text-white border-none mb-2">Verified Tag</Badge>
-                      <h2 className="text-white text-2xl font-bold">{scanResult.child.name}</h2>
-                      <p className="text-white/90 flex items-center gap-1 text-sm mt-1">
+                      <Badge className="bg-white/20 text-[#0D0D0D] border-none mb-2">Verified Tag</Badge>
+                      <h2 className="text-[#0D0D0D] text-2xl font-bold">{scanResult.child.name}</h2>
+                      <p className="text-[#111827] flex items-center gap-1 text-sm mt-1">
                         <MapPin className="h-3.5 w-3.5" /> {scanResult.assignedZone}
                       </p>
                     </div>
@@ -535,26 +535,26 @@ export function QRIdentityPage() {
                       <img src={scanResult.child.photo} alt="Child" className="w-16 h-16 rounded-full border-2 border-white object-cover" />
                     ) : (
                       <div className="w-16 h-16 rounded-full bg-white/20 flex items-center justify-center">
-                        <User className="h-8 w-8 text-white" />
+                        <User className="h-8 w-8 text-[#0D0D0D]" />
                       </div>
                     )}
                   </div>
 
                   <div className="p-5 space-y-4">
                     {/* Emergency Contact */}
-                    <div className="bg-[#0ea5e9]/10 border border-[#0ea5e9]/30 rounded-xl p-4">
-                      <h3 className="text-white text-sm font-semibold flex items-center gap-2 mb-3">
-                        <Phone className="h-4 w-4 text-[#0ea5e9]" /> Emergency Contact
+                    <div className="bg-[#EDE9FE] border border-[#5B4FE8]/30 rounded-xl p-4">
+                      <h3 className="text-[#0D0D0D] text-sm font-semibold flex items-center gap-2 mb-3">
+                        <Phone className="h-4 w-4 text-[#5B4FE8]" /> Emergency Contact
                       </h3>
                       <div className="flex justify-between items-center">
                         <div>
-                          <p className="text-white font-medium">{scanResult.guardian.name}</p>
-                          <p className="text-[#0ea5e9] text-sm">{scanResult.guardian.phoneNumber}</p>
-                          <p className="text-white/40 text-xs capitalize">{scanResult.guardian.relationship}</p>
+                          <p className="text-[#0D0D0D] font-medium">{scanResult.guardian.name}</p>
+                          <p className="text-[#5B4FE8] text-sm">{scanResult.guardian.phoneNumber}</p>
+                          <p className="text-[#9CA3AF] text-xs capitalize">{scanResult.guardian.relationship}</p>
                         </div>
                         <a 
                           href={`tel:${scanResult.guardian.phoneNumber}`}
-                          className="flex items-center gap-2 px-4 py-2 bg-[#0ea5e9] hover:bg-[#0284c7] text-white rounded-lg transition-colors font-medium text-sm"
+                          className="flex items-center gap-2 px-4 py-2 bg-[#0ea5e9] hover:bg-[#0284c7] text-[#0D0D0D] rounded-lg transition-colors font-medium text-sm"
                         >
                           <Phone className="h-4 w-4" /> Call
                         </a>
@@ -585,7 +585,7 @@ export function QRIdentityPage() {
                       </div>
                     )}
                     
-                    <Button onClick={() => setScanResult(null)} variant="outline" className="w-full border-white/10 text-white hover:bg-white/10 mt-4">
+                    <Button onClick={() => setScanResult(null)} variant="outline" className="w-full border-[#E5E7EB] text-[#0D0D0D] hover:bg-[#F3F4F6] mt-4">
                       Scan Another Tag
                     </Button>
                   </div>

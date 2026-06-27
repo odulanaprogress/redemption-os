@@ -60,17 +60,17 @@ export default function AdminMarketplace() {
     : products;
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 md:p-8">
+    <div className="min-h-screen bg-black text-[#0D0D0D] p-6 md:p-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-7xl mx-auto space-y-8"
       >
         {/* Header */}
-        <div className="border-b border-white/10 pb-6">
+        <div className="border-b border-[#E5E7EB] pb-6">
           <button
             onClick={() => navigate('/marketplace')}
-            className="flex items-center gap-2 text-white/50 hover:text-white mb-4 transition-colors"
+            className="flex items-center gap-2 text-[#6B7280] hover:text-[#0D0D0D] mb-4 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Marketplace
@@ -79,7 +79,7 @@ export default function AdminMarketplace() {
             <Shield className="w-8 h-8 text-emerald-400" />
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">Marketplace Control Center</h1>
-              <p className="text-white/50 text-sm">Manage vendors, verify products, monitor operations</p>
+              <p className="text-[#6B7280] text-sm">Manage vendors, verify products, monitor operations</p>
             </div>
           </div>
 
@@ -94,7 +94,7 @@ export default function AdminMarketplace() {
                 <AlertTriangle className="w-5 h-5 text-yellow-400 flex-shrink-0" />
                 <div className="flex-1">
                   <div className="font-semibold text-yellow-400">{pendingVendors.length} vendor approval{pendingVendors.length !== 1 ? 's' : ''} pending</div>
-                  <div className="text-sm text-white/50">Review and approve vendor applications to activate their stores</div>
+                  <div className="text-sm text-[#6B7280]">Review and approve vendor applications to activate their stores</div>
                 </div>
                 <button
                   onClick={() => setSelectedTab('vendors')}
@@ -121,7 +121,7 @@ export default function AdminMarketplace() {
                 className={`flex-shrink-0 px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2 text-sm whitespace-nowrap ${
                   selectedTab === id
                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'
-                    : 'bg-white/5 text-white/60 hover:bg-white/10 border border-white/10'
+                    : 'bg-[#F8F9FF] text-[#6B7280] hover:bg-[#F3F4F6] border border-[#E5E7EB]'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -185,12 +185,12 @@ function OverviewTab({ vendors, products, fraudAlerts }: any) {
         </div>
         <div className="space-y-3">
           {fraudAlerts.map((alert: any) => (
-            <div key={alert.id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+            <div key={alert.id} className="flex items-center justify-between p-3 bg-[#F8F9FF] rounded-lg">
               <div className="flex items-center gap-3">
                 <div className={`w-2 h-2 rounded-full ${alert.severity === 'high' ? 'bg-red-400 animate-pulse' : alert.severity === 'medium' ? 'bg-yellow-400' : 'bg-blue-400'}`} />
                 <div>
                   <div className="font-medium text-sm">{alert.type}</div>
-                  <div className="text-xs text-white/50">{alert.vendor} · {alert.time}</div>
+                  <div className="text-xs text-[#6B7280]">{alert.vendor} · {alert.time}</div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -199,14 +199,14 @@ function OverviewTab({ vendors, products, fraudAlerts }: any) {
                   alert.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
                   'bg-blue-500/20 text-blue-400'
                 }`}>{alert.severity}</span>
-                <button className="text-xs text-white/50 hover:text-white transition-colors px-2 py-1 bg-white/5 rounded">Review</button>
+                <button className="text-xs text-[#6B7280] hover:text-[#0D0D0D] transition-colors px-2 py-1 bg-[#F8F9FF] rounded">Review</button>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6">
         <h3 className="text-lg font-semibold mb-4">Revenue & Orders (7 Days)</h3>
         <ResponsiveContainer width="100%" height={300}>
           <AreaChart data={marketplaceData}>
@@ -227,11 +227,11 @@ function OverviewTab({ vendors, products, fraudAlerts }: any) {
         </ResponsiveContainer>
       </div>
 
-      <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+      <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6">
         <h3 className="text-lg font-semibold mb-4">Top Performing Vendors</h3>
         <div className="space-y-3">
           {[...vendors].sort((a: Vendor, b: Vendor) => b.totalSales - a.totalSales).slice(0, 5).map((vendor: Vendor) => (
-            <div key={vendor.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl">
+            <div key={vendor.id} className="flex items-center justify-between p-3 bg-[#F8F9FF] rounded-xl">
               <div className="flex items-center gap-3">
                 <div className="text-3xl">{vendor.logo}</div>
                 <div>
@@ -239,12 +239,12 @@ function OverviewTab({ vendors, products, fraudAlerts }: any) {
                     <span className="font-medium">{vendor.name}</span>
                     {vendor.verified && <CheckCircle className="w-4 h-4 text-emerald-400" />}
                   </div>
-                  <div className="text-sm text-white/50">{vendor.category}</div>
+                  <div className="text-sm text-[#6B7280]">{vendor.category}</div>
                 </div>
               </div>
               <div className="text-right">
                 <div className="font-semibold text-emerald-400">{vendor.totalSales.toLocaleString()} sales</div>
-                <div className="text-sm text-white/50">★ {vendor.rating}</div>
+                <div className="text-sm text-[#6B7280]">★ {vendor.rating}</div>
               </div>
             </div>
           ))}
@@ -285,7 +285,7 @@ function VendorsTab({ vendors, onApprove, onReject, onSuspend, onRestore }: any)
             <VendorCard key={vendor.id} vendor={vendor} onSuspend={onSuspend} />
           ))}
         </div>
-        {active.length === 0 && <div className="text-white/40 text-center py-8">No active vendors</div>}
+        {active.length === 0 && <div className="text-[#9CA3AF] text-center py-8">No active vendors</div>}
       </div>
 
       {suspended.length > 0 && (
@@ -309,7 +309,7 @@ function VendorCard({ vendor, isPending, isSuspended, onApprove, onReject, onSus
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <motion.div layout className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+    <motion.div layout className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl overflow-hidden">
       <div className="p-5">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-4">
@@ -324,10 +324,10 @@ function VendorCard({ vendor, isPending, isSuspended, onApprove, onReject, onSus
                   'bg-red-500/20 text-red-400'
                 } capitalize`}>{vendor.status}</span>
               </div>
-              <p className="text-white/50 text-sm">{vendor.description}</p>
+              <p className="text-[#6B7280] text-sm">{vendor.description}</p>
             </div>
           </div>
-          <button onClick={() => setExpanded(e => !e)} className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-white transition-colors">
+          <button onClick={() => setExpanded(e => !e)} className="p-2 hover:bg-[#F8F9FF] rounded-lg text-[#9CA3AF] hover:text-[#0D0D0D] transition-colors">
             <Eye className="w-4 h-4" />
           </button>
         </div>
@@ -340,29 +340,29 @@ function VendorCard({ vendor, isPending, isSuspended, onApprove, onReject, onSus
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
             >
-              <div className="grid grid-cols-3 gap-4 py-3 mb-3 border-t border-white/10 text-sm">
+              <div className="grid grid-cols-3 gap-4 py-3 mb-3 border-t border-[#E5E7EB] text-sm">
                 <div>
-                  <div className="text-white/50 mb-1">Email</div>
+                  <div className="text-[#6B7280] mb-1">Email</div>
                   <div className="font-medium">{vendor.contactEmail}</div>
                 </div>
                 <div>
-                  <div className="text-white/50 mb-1">Phone</div>
+                  <div className="text-[#6B7280] mb-1">Phone</div>
                   <div className="font-medium">{vendor.contactPhone}</div>
                 </div>
                 <div>
-                  <div className="text-white/50 mb-1">Joined</div>
+                  <div className="text-[#6B7280] mb-1">Joined</div>
                   <div className="font-medium">{new Date(vendor.joinedDate).toLocaleDateString()}</div>
                 </div>
                 <div>
-                  <div className="text-white/50 mb-1">Category</div>
+                  <div className="text-[#6B7280] mb-1">Category</div>
                   <div className="font-medium">{vendor.category}</div>
                 </div>
                 <div>
-                  <div className="text-white/50 mb-1">Location</div>
+                  <div className="text-[#6B7280] mb-1">Location</div>
                   <div className="font-medium">{vendor.location}</div>
                 </div>
                 <div>
-                  <div className="text-white/50 mb-1">Total Sales</div>
+                  <div className="text-[#6B7280] mb-1">Total Sales</div>
                   <div className="font-medium text-emerald-400">{vendor.totalSales.toLocaleString()}</div>
                 </div>
               </div>
@@ -370,7 +370,7 @@ function VendorCard({ vendor, isPending, isSuspended, onApprove, onReject, onSus
           )}
         </AnimatePresence>
 
-        <div className="flex items-center justify-between text-sm text-white/50 mb-4">
+        <div className="flex items-center justify-between text-sm text-[#6B7280] mb-4">
           <span>★ {vendor.rating} ({vendor.totalReviews} reviews)</span>
           <span>{vendor.totalSales.toLocaleString()} sales</span>
           <span>~{vendor.averageDeliveryTime} min delivery</span>
@@ -380,7 +380,7 @@ function VendorCard({ vendor, isPending, isSuspended, onApprove, onReject, onSus
           <div className="flex gap-3">
             <button
               onClick={() => onApprove(vendor.id)}
-              className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
+              className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-[#0D0D0D] font-medium py-2.5 rounded-xl transition-colors flex items-center justify-center gap-2"
             >
               <CheckCircle className="w-4 h-4" />
               Approve Vendor
@@ -396,7 +396,7 @@ function VendorCard({ vendor, isPending, isSuspended, onApprove, onReject, onSus
         )}
         {!isPending && !isSuspended && (
           <div className="flex gap-3">
-            <button className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 font-medium py-2.5 rounded-xl transition-colors text-sm flex items-center justify-center gap-2">
+            <button className="flex-1 bg-[#F8F9FF] hover:bg-[#F3F4F6] border border-[#E5E7EB] font-medium py-2.5 rounded-xl transition-colors text-sm flex items-center justify-center gap-2">
               <Eye className="w-4 h-4" />
               View Details
             </button>
@@ -428,36 +428,36 @@ function ProductsTab({ products, search, onSearchChange, onRemove }: any) {
       <div className="flex items-center justify-between gap-4">
         <h2 className="text-xl font-semibold">All Products</h2>
         <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9CA3AF]" />
           <input
             value={search}
             onChange={e => onSearchChange(e.target.value)}
             placeholder="Search products..."
-            className="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50"
+            className="w-full bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl pl-9 pr-4 py-2.5 text-sm text-[#0D0D0D] placeholder:text-white/30 focus:outline-none focus:border-emerald-500/50"
           />
         </div>
       </div>
 
       <div className="grid grid-cols-1 gap-3">
         {products.map((product: Product) => (
-          <div key={product.id} className="bg-white/5 border border-white/10 rounded-xl p-4 flex items-center gap-4">
+          <div key={product.id} className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-4 flex items-center gap-4">
             <div className="text-5xl flex-shrink-0">{product.image}</div>
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold mb-1">{product.name}</h3>
               <div className="flex items-center gap-2 mb-1">
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-sm text-white/50">{product.vendorName}</span>
+                <span className="text-sm text-[#6B7280]">{product.vendorName}</span>
               </div>
               <div className="flex items-center gap-4 text-sm flex-wrap">
                 <span className="text-emerald-400 font-semibold">${product.price}</span>
                 <span className={product.inStock ? 'text-emerald-400' : 'text-red-400'}>
                   {product.inStock ? `${product.stock} in stock` : 'Out of stock'}
                 </span>
-                <span className="text-white/40">★ {product.rating} ({product.reviews})</span>
+                <span className="text-[#9CA3AF]">★ {product.rating} ({product.reviews})</span>
               </div>
             </div>
             <div className="flex gap-2 flex-shrink-0">
-              <button className="px-3 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg transition-colors text-sm">
+              <button className="px-3 py-2 bg-[#F8F9FF] hover:bg-[#F3F4F6] border border-[#E5E7EB] rounded-lg transition-colors text-sm">
                 View
               </button>
               <button
@@ -485,7 +485,7 @@ function OrdersTab() {
     <div className="space-y-4">
       <h2 className="text-xl font-semibold">All Orders</h2>
       {mockOrders.map(order => (
-        <div key={order.id} className="bg-white/5 border border-white/10 rounded-xl p-5">
+        <div key={order.id} className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-5">
           <div className="flex items-center justify-between mb-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -494,27 +494,27 @@ function OrdersTab() {
                   order.status === 'delivered' ? 'bg-emerald-500/20 text-emerald-400' :
                   order.status === 'in_transit' ? 'bg-blue-500/20 text-blue-400' :
                   order.status === 'preparing' ? 'bg-yellow-500/20 text-yellow-400' :
-                  'bg-white/10 text-white/60'
+                  'bg-[#F3F4F6] text-[#6B7280]'
                 }`}>{order.status.replace('_', ' ')}</span>
               </div>
-              <div className="text-sm text-white/50">{new Date(order.orderDate).toLocaleString()}</div>
+              <div className="text-sm text-[#6B7280]">{new Date(order.orderDate).toLocaleString()}</div>
             </div>
             <div className="text-right">
               <div className="text-xl font-bold text-emerald-400">${order.totalPrice}</div>
-              <div className="text-sm text-white/50">{order.vendorName}</div>
+              <div className="text-sm text-[#6B7280]">{order.vendorName}</div>
             </div>
           </div>
           <div className="grid grid-cols-3 gap-4 text-sm">
             <div>
-              <div className="text-white/50 mb-1">Product</div>
+              <div className="text-[#6B7280] mb-1">Product</div>
               <div className="font-medium">{order.productName}</div>
             </div>
             <div>
-              <div className="text-white/50 mb-1">Customer</div>
+              <div className="text-[#6B7280] mb-1">Customer</div>
               <div className="font-medium">{order.userName}</div>
             </div>
             <div>
-              <div className="text-white/50 mb-1">Delivery Address</div>
+              <div className="text-[#6B7280] mb-1">Delivery Address</div>
               <div className="font-medium">{order.deliveryAddress}</div>
             </div>
           </div>
@@ -536,7 +536,7 @@ function AnalyticsTab() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white/5 border border-white/10 rounded-xl p-6">
+        <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-6">
           <h3 className="text-lg font-semibold mb-4">Sales by Category</h3>
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
@@ -551,7 +551,7 @@ function AnalyticsTab() {
         </div>
 
         <div className="space-y-4">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+          <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-5">
             <h3 className="font-semibold mb-4">Key Metrics</h3>
             <div className="space-y-3">
               {[
@@ -560,14 +560,14 @@ function AnalyticsTab() {
                 { label: 'Customer Satisfaction', value: '4.7 ⭐', color: 'text-purple-400' },
               ].map(m => (
                 <div key={m.label} className="flex items-center justify-between">
-                  <div className="text-sm text-white/50">{m.label}</div>
+                  <div className="text-sm text-[#6B7280]">{m.label}</div>
                   <div className={`text-xl font-bold ${m.color}`}>{m.value}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-white/5 border border-white/10 rounded-xl p-5">
+          <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-5">
             <h3 className="font-semibold mb-4">Operational Health</h3>
             <div className="space-y-3">
               {[
@@ -577,10 +577,10 @@ function AnalyticsTab() {
               ].map(m => (
                 <div key={m.label}>
                   <div className="flex justify-between mb-1 text-sm">
-                    <span className="text-white/50">{m.label}</span>
+                    <span className="text-[#6B7280]">{m.label}</span>
                     <span className="font-semibold">{m.value}%</span>
                   </div>
-                  <div className="h-2 bg-white/10 rounded-full overflow-hidden">
+                  <div className="h-2 bg-[#F3F4F6] rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${m.value}%` }}
@@ -601,13 +601,13 @@ function AnalyticsTab() {
 function StatCard({ icon: Icon, label, value, subtext, color }: any) {
   const colors: Record<string, string> = { emerald: 'text-emerald-400', blue: 'text-blue-400', purple: 'text-purple-400', yellow: 'text-yellow-400' };
   return (
-    <div className="bg-white/5 border border-white/10 rounded-xl p-5">
-      <div className="flex items-center gap-2 text-white/50 mb-2">
+    <div className="bg-[#F8F9FF] border border-[#E5E7EB] rounded-xl p-5">
+      <div className="flex items-center gap-2 text-[#6B7280] mb-2">
         <Icon className="w-4 h-4" />
         <span className="text-sm">{label}</span>
       </div>
       <div className={`text-3xl font-bold mb-1 ${colors[color]}`}>{value}</div>
-      <div className="text-sm text-white/50">{subtext}</div>
+      <div className="text-sm text-[#6B7280]">{subtext}</div>
     </div>
   );
 }

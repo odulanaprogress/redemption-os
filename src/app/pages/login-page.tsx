@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Card } from "../components/ui/card";
 import { Globe, Lock, Mail, ArrowLeft, ChevronDown, ChevronUp, Zap } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "sonner";
@@ -27,105 +26,55 @@ export function LoginPage() {
   }, [isAuthenticated, userProfile, isLoading, isSeeding]);
 
   const redirectBasedOnRole = () => {
-    if (!userProfile) {
-      console.log('[LOGIN] ⏳ User profile not yet loaded');
-      return;
-    }
-
-    console.log('[LOGIN] 🧭 Redirecting based on role:', userProfile.role);
-
-    // Role-based redirects per audit requirements
+    if (!userProfile) return;
     switch (userProfile.role) {
-      case 'admin':
-        console.log('[LOGIN] ➡️  Redirecting to /admin');
-        navigate("/admin", { replace: true });
-        break;
-      case 'vendor':
-        console.log('[LOGIN] ➡️  Redirecting to /marketplace/vendor');
-        navigate("/marketplace/vendor", { replace: true });
-        break;
-      case 'delivery_personnel':
-        console.log('[LOGIN] ➡️  Redirecting to /logistics');
-        navigate("/logistics", { replace: true });
-        break;
-      case 'security':
-        console.log('[LOGIN] ➡️  Redirecting to /operations');
-        navigate("/operations", { replace: true });
-        break;
-      case 'volunteer':
-        console.log('[LOGIN] ➡️  Redirecting to /dashboard');
-        navigate("/dashboard", { replace: true });
-        break;
-      case 'parent':
-        console.log('[LOGIN] ➡️  Redirecting to /dashboard');
-        navigate("/dashboard", { replace: true });
-        break;
-      case 'attendee':
-      default:
-        console.log('[LOGIN] ➡️  Redirecting to /dashboard (default)');
-        navigate("/dashboard", { replace: true });
+      case "admin": navigate("/admin", { replace: true }); break;
+      case "vendor": navigate("/marketplace/vendor", { replace: true }); break;
+      case "delivery_personnel": navigate("/logistics", { replace: true }); break;
+      case "security": navigate("/operations", { replace: true }); break;
+      default: navigate("/dashboard", { replace: true });
     }
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = await login(email, password);
-    if (result.success) {
-      toast.success("Welcome back!");
-    } else if (result.error) {
-      toast.error(result.error.message);
-    }
+    if (result.success) { toast.success("Welcome back!"); }
+    else if (result.error) { toast.error(result.error.message); }
   };
 
   const quickLogin = async (demoEmail: string, demoPassword: string) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
     const result = await login(demoEmail, demoPassword);
-    if (result.success) {
-      toast.success("Demo login successful!");
-    } else if (result.error) {
-      toast.error(result.error.message);
-    }
+    if (result.success) { toast.success("Demo login successful!"); }
+    else if (result.error) { toast.error(result.error.message); }
   };
 
   const handleForgotPassword = async (e: React.MouseEvent) => {
     e.preventDefault();
-    if (!email) {
-      toast.error("Please enter your email address first");
-      return;
-    }
-    
+    if (!email) { toast.error("Please enter your email address first"); return; }
     setResettingPassword(true);
     const result = await resetPassword(email);
-    if (result.success) {
-      toast.success("Password reset email sent! Please check your inbox.");
-    } else if (result.error) {
-      toast.error(result.error.message);
-    }
+    if (result.success) { toast.success("Password reset email sent!"); }
+    else if (result.error) { toast.error(result.error.message); }
     setResettingPassword(false);
   };
 
   const handleSeedDatabase = async () => {
     if (!window.confirm("This will create all demo accounts in your LIVE Firebase database. Are you sure?")) return;
-    
     setIsSeeding(true);
     toast.info("Seeding live database with demo users... please wait.");
-    
     try {
       let successCount = 0;
       for (const user of MOCK_USERS) {
         const profile = MOCK_PROFILES[user.uid];
-        console.log(`[SEED] Creating ${user.email}...`);
         const res = await authService.register(user.email, user.password, user.displayName, profile.role, profile);
-        if (res.success || res.error?.code === 'auth/email-already-in-use') {
-          successCount++;
-        }
+        if (res.success || res.error?.code === "auth/email-already-in-use") { successCount++; }
       }
-      
       await authService.logout();
-      toast.success(`Successfully seeded ${successCount} demo users to the live database!`);
+      toast.success(`Successfully seeded ${successCount} demo users!`);
     } catch (e) {
-      console.error("[SEED] Error:", e);
       toast.error("An error occurred while seeding the database.");
     } finally {
       setIsSeeding(false);
@@ -133,80 +82,79 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0e1a] via-[#0f1420] to-[#0a1628] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.1),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(167,139,250,0.1),transparent_50%)]" />
+    <div className="min-h-screen bg-[#F8F9FF] flex items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-4">
 
-      <div className="relative w-full max-w-md space-y-4">
-        <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-white/10 p-8">
-          <Button
-            variant="ghost"
+        {/* Main Card */}
+        <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm p-8">
+          <button
             onClick={() => navigate("/")}
-            className="mb-6 -ml-2 text-white/60 hover:text-white"
+            className="mb-6 flex items-center gap-1.5 text-sm text-[#6B7280] hover:text-[#0D0D0D] transition-colors"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="h-4 w-4" />
             Back to Home
-          </Button>
+          </button>
 
+          {/* Logo & heading */}
           <div className="mb-8 text-center">
             <div className="mb-4 flex items-center justify-center gap-2">
-              <Globe className="h-8 w-8 text-[#0ea5e9]" />
-              <h1 className="bg-gradient-to-r from-[#0ea5e9] to-[#10b981] bg-clip-text text-2xl font-bold text-transparent">
-                Redemption OS
-              </h1>
+              <div className="h-9 w-9 rounded-xl bg-[#5B4FE8] flex items-center justify-center">
+                <Globe className="h-5 w-5 text-white" />
+              </div>
+              <span className="text-2xl font-bold text-[#0D0D0D] tracking-tight">Redemption OS</span>
             </div>
-            <h2 className="text-xl text-white mb-2">Welcome Back</h2>
-            <p className="text-white/60">Sign in to access your dashboard</p>
+            <h1 className="text-xl font-semibold text-[#0D0D0D] mb-1">Welcome back</h1>
+            <p className="text-sm text-[#6B7280]">Sign in to access your dashboard</p>
             {isMockMode && (
-              <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs">
+              <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#EDE9FE] text-[#5B4FE8] text-xs font-medium">
                 <Zap className="h-3 w-3" />
-                Demo Mode — use the quick-login buttons below
+                Demo Mode — use quick-login below
               </div>
             )}
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-white/80">
-                Email Address
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-sm font-medium text-[#0D0D0D]">
+                Email address
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]" />
                 <Input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your.email@example.com"
-                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                  className="pl-10 h-10 border-[#E5E7EB] bg-white text-[#0D0D0D] placeholder:text-[#9CA3AF] focus:border-[#5B4FE8] focus:ring-[#5B4FE8]/10 rounded-md"
                   required
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-white/80">
+                <Label htmlFor="password" className="text-sm font-medium text-[#0D0D0D]">
                   Password
                 </Label>
                 <button
                   type="button"
                   onClick={handleForgotPassword}
                   disabled={resettingPassword}
-                  className="text-xs text-[#0ea5e9] hover:underline"
+                  className="text-xs text-[#5B4FE8] hover:text-[#4840C8] transition-colors"
                 >
-                  {resettingPassword ? "Sending..." : "Forgot Password?"}
+                  {resettingPassword ? "Sending..." : "Forgot password?"}
                 </button>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]" />
                 <Input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/40"
+                  className="pl-10 h-10 border-[#E5E7EB] bg-white text-[#0D0D0D] placeholder:text-[#9CA3AF] focus:border-[#5B4FE8] focus:ring-[#5B4FE8]/10 rounded-md"
                   required
                 />
               </div>
@@ -215,26 +163,26 @@ export function LoginPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-[#0ea5e9] to-[#10b981] hover:opacity-90 text-white shadow-[0_0_25px_rgba(14,165,233,0.5)] disabled:opacity-50"
+              className="w-full h-10 bg-[#5B4FE8] hover:bg-[#4840C8] text-white rounded-md font-medium transition-colors disabled:opacity-50"
             >
-              {isLoading ? "Signing In..." : "Sign In"}
+              {isLoading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-white/60">
+            <p className="text-sm text-[#6B7280]">
               Don't have an account?{" "}
               <button
                 onClick={() => navigate("/register")}
-                className="text-[#0ea5e9] hover:underline"
+                className="text-[#5B4FE8] font-medium hover:text-[#4840C8] transition-colors"
               >
                 Register here
               </button>
             </p>
           </div>
 
-          <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-xs text-center text-white/40">
+          <div className="mt-6 pt-6 border-t border-[#E5E7EB]">
+            <p className="text-xs text-center text-[#9CA3AF]">
               Secure enterprise-grade authentication
             </p>
             {!isMockMode && (
@@ -244,25 +192,25 @@ export function LoginPage() {
                   size="sm"
                   onClick={handleSeedDatabase}
                   disabled={isSeeding}
-                  className="bg-transparent border-white/20 text-white/70 hover:text-white hover:bg-white/10"
+                  className="border-[#E5E7EB] text-[#6B7280] hover:text-[#0D0D0D] hover:border-[#5B4FE8] hover:text-[#5B4FE8] rounded-md"
                 >
-                  <Zap className="mr-2 h-3 w-3 text-amber-400" />
-                  {isSeeding ? "Seeding Database..." : "Seed Demo Accounts to Live DB"}
+                  <Zap className="mr-2 h-3 w-3 text-[#D97706]" />
+                  {isSeeding ? "Seeding database..." : "Seed demo accounts to live DB"}
                 </Button>
               </div>
             )}
           </div>
-        </Card>
+        </div>
 
         {/* Demo Accounts Panel */}
-        <Card className="bg-[#1a1f2e]/80 backdrop-blur-lg border-amber-500/20 overflow-hidden mt-6">
+        <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-sm overflow-hidden">
           <button
             onClick={() => setShowDemo(!showDemo)}
-            className="w-full flex items-center justify-between px-5 py-4 text-amber-400 hover:bg-white/5 transition-colors"
+            className="w-full flex items-center justify-between px-5 py-4 text-[#5B4FE8] hover:bg-[#F8F9FF] transition-colors"
           >
             <div className="flex items-center gap-2">
               <Zap className="h-4 w-4" />
-              <span className="text-sm font-medium">Quick Login (Live Database)</span>
+              <span className="text-sm font-medium">Quick login (Live database)</span>
             </div>
             {showDemo ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </button>
@@ -274,21 +222,21 @@ export function LoginPage() {
                   key={account.email}
                   onClick={() => quickLogin(account.email, account.password)}
                   disabled={isLoading}
-                  className="flex items-center justify-between w-full px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 hover:border-amber-500/40 transition-all text-left group disabled:opacity-50"
+                  className="flex items-center justify-between w-full px-4 py-3 rounded-lg bg-[#F8F9FF] hover:bg-[#EDE9FE] border border-[#E5E7EB] hover:border-[#5B4FE8]/30 transition-all text-left group disabled:opacity-50"
                 >
                   <div>
-                    <p className="text-white text-sm group-hover:text-amber-300 transition-colors">{account.role}</p>
-                    <p className="text-white/40 text-xs mt-0.5">{account.description}</p>
+                    <p className="text-sm font-medium text-[#0D0D0D] group-hover:text-[#5B4FE8] transition-colors">{account.role}</p>
+                    <p className="text-xs text-[#6B7280] mt-0.5">{account.description}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-white/50 text-xs">{account.email}</p>
-                  </div>
+                  <p className="text-xs text-[#9CA3AF]">{account.email}</p>
                 </button>
               ))}
-              <p className="text-center text-white/30 text-xs mt-2">Make sure to 'Seed Database' first if these accounts don't exist yet.</p>
+              <p className="text-center text-[#9CA3AF] text-xs mt-2">
+                Seed the database first if accounts don't exist yet.
+              </p>
             </div>
           )}
-        </Card>
+        </div>
       </div>
     </div>
   );
