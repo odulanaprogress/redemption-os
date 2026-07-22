@@ -121,7 +121,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
-                BoxShadow(color: const Color(0xFF5B4FE8).withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 4)),
+                BoxShadow(color: const Color(0xFF5B4FE8).withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
               ],
             ),
             child: Row(
@@ -156,7 +156,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                   elevation: 1,
                   child: ListTile(
                     leading: CircleAvatar(
-                      backgroundColor: color.withOpacity(0.15),
+                      backgroundColor: color.withValues(alpha: 0.15),
                       child: Icon(Icons.location_on, color: color),
                     ),
                     title: Text(loc.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),

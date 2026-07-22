@@ -14,20 +14,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    const HomeDashboardTab(),
-    const NavigationScreen(),
-    const MarketplaceScreen(),
-    const MessagesScreen(),
-    const QRIdentityScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<Widget> pages = [
+      HomeDashboardTab(onSelectTab: (index) => setState(() => _currentIndex = index)),
+      const NavigationScreen(),
+      const MarketplaceScreen(),
+      const MessagesScreen(),
+      const QRIdentityScreen(),
+    ];
+
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: _pages,
+        children: pages,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
@@ -48,7 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class HomeDashboardTab extends StatelessWidget {
-  const HomeDashboardTab({super.key});
+  final ValueChanged<int>? onSelectTab;
+
+  const HomeDashboardTab({super.key, this.onSelectTab});
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +90,7 @@ class HomeDashboardTab extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
-                  BoxShadow(color: const Color(0xFF5B4FE8).withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 4)),
+                  BoxShadow(color: const Color(0xFF5B4FE8).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4)),
                 ],
               ),
               child: Column(
@@ -120,10 +122,7 @@ class HomeDashboardTab extends StatelessWidget {
                   title: 'Smart Navigation',
                   subtitle: '28 Locations & Satellite',
                   color: Colors.purple,
-                  onTap: () {
-                    final homeState = context.findAncestorStateOfType<_HomeScreenState>();
-                    homeState?.setState(() => homeState._currentIndex = 1);
-                  },
+                  onTap: () => onSelectTab?.call(1),
                 ),
                 _buildQuickCard(
                   context,
@@ -131,10 +130,7 @@ class HomeDashboardTab extends StatelessWidget {
                   title: 'Marketplace',
                   subtitle: 'Camp Stores & Food',
                   color: Colors.orange,
-                  onTap: () {
-                    final homeState = context.findAncestorStateOfType<_HomeScreenState>();
-                    homeState?.setState(() => homeState._currentIndex = 2);
-                  },
+                  onTap: () => onSelectTab?.call(2),
                 ),
                 _buildQuickCard(
                   context,
@@ -142,10 +138,7 @@ class HomeDashboardTab extends StatelessWidget {
                   title: 'Communications',
                   subtitle: 'Live Channel Stream',
                   color: Colors.blue,
-                  onTap: () {
-                    final homeState = context.findAncestorStateOfType<_HomeScreenState>();
-                    homeState?.setState(() => homeState._currentIndex = 3);
-                  },
+                  onTap: () => onSelectTab?.call(3),
                 ),
                 _buildQuickCard(
                   context,
@@ -153,10 +146,7 @@ class HomeDashboardTab extends StatelessWidget {
                   title: 'Child Safety QR',
                   subtitle: 'Family Badges',
                   color: const Color(0xFF10B981),
-                  onTap: () {
-                    final homeState = context.findAncestorStateOfType<_HomeScreenState>();
-                    homeState?.setState(() => homeState._currentIndex = 4);
-                  },
+                  onTap: () => onSelectTab?.call(4),
                 ),
                 _buildQuickCard(
                   context,
@@ -197,7 +187,7 @@ class HomeDashboardTab extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 18,
-              backgroundColor: color.withOpacity(0.15),
+              backgroundColor: color.withValues(alpha: 0.15),
               child: Icon(icon, color: color, size: 20),
             ),
             const SizedBox(height: 10),
