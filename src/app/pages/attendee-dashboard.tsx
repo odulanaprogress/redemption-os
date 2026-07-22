@@ -358,21 +358,37 @@ export function AttendeeDashboard() {
                 </Button>
               </div>
               <div className="space-y-3">
-                {liveBroadcasts.length > 0 ? (
-                  liveBroadcasts.slice(0, 3).map((bc, i) => (
-                    <motion.div key={bc.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}>
-                      <Card className="bg-white border-[#f0edff] p-4 border-l-2 border-l-[#5B4FE8]">
-                        <div className="flex items-start gap-3">
-                          <div className="rounded-lg bg-[#EDE9FE] p-2 shrink-0"><Activity className="h-4 w-4 text-[#5B4FE8]" /></div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm text-[#0D0D0D] font-medium">{bc.title}</p>
-                            <p className="text-xs text-[#6B7280] mt-0.5 line-clamp-2">{bc.message}</p>
-                            <p className="text-xs text-[#9CA3AF] mt-1">{formatDistanceToNow(bc.createdAt, { addSuffix: true })}</p>
+                {notifications.length > 0 || liveBroadcasts.length > 0 ? (
+                  [
+                    ...notifications.map((n) => ({
+                      id: n.id,
+                      title: n.title,
+                      message: n.message,
+                      createdAt: n.createdAt,
+                    })),
+                    ...liveBroadcasts.map((b) => ({
+                      id: b.id,
+                      title: b.title,
+                      message: b.message,
+                      createdAt: b.createdAt,
+                    })),
+                  ]
+                    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+                    .slice(0, 3)
+                    .map((item, i) => (
+                      <motion.div key={item.id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}>
+                        <Card className="bg-white border-[#f0edff] p-4 border-l-2 border-l-[#5B4FE8]">
+                          <div className="flex items-start gap-3">
+                            <div className="rounded-lg bg-[#EDE9FE] p-2 shrink-0"><Activity className="h-4 w-4 text-[#5B4FE8]" /></div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm text-[#0D0D0D] font-medium">{item.title}</p>
+                              <p className="text-xs text-[#6B7280] mt-0.5 line-clamp-2">{item.message}</p>
+                              <p className="text-xs text-[#9CA3AF] mt-1">{formatDistanceToNow(item.createdAt, { addSuffix: true })}</p>
+                            </div>
                           </div>
-                        </div>
-                      </Card>
-                    </motion.div>
-                  ))
+                        </Card>
+                      </motion.div>
+                    ))
                 ) : (
                   [
                     { icon: Activity, message: "Holy Ghost Congress: Night session begins at 9 PM", time: "Just now" },
