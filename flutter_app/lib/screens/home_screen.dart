@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'navigation_screen.dart';
 import 'messages_screen.dart';
 import 'qr_identity_screen.dart';
+import 'marketplace_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     const HomeDashboardTab(),
     const NavigationScreen(),
+    const MarketplaceScreen(),
     const MessagesScreen(),
     const QRIdentityScreen(),
   ];
@@ -36,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.map_outlined), label: 'Navigation'),
+          BottomNavigationBarItem(icon: Icon(Icons.storefront_outlined), label: 'Marketplace'),
           BottomNavigationBarItem(icon: Icon(Icons.message_outlined), label: 'Messages'),
           BottomNavigationBarItem(icon: Icon(Icons.qr_code_2), label: 'QR Safety'),
         ],
@@ -124,13 +127,24 @@ class HomeDashboardTab extends StatelessWidget {
                 ),
                 _buildQuickCard(
                   context,
+                  icon: Icons.storefront_outlined,
+                  title: 'Marketplace',
+                  subtitle: 'Camp Stores & Food',
+                  color: Colors.orange,
+                  onTap: () {
+                    final homeState = context.findAncestorStateOfType<_HomeScreenState>();
+                    homeState?.setState(() => homeState._currentIndex = 2);
+                  },
+                ),
+                _buildQuickCard(
+                  context,
                   icon: Icons.chat_bubble_outline,
                   title: 'Communications',
                   subtitle: 'Live Channel Stream',
                   color: Colors.blue,
                   onTap: () {
                     final homeState = context.findAncestorStateOfType<_HomeScreenState>();
-                    homeState?.setState(() => homeState._currentIndex = 2);
+                    homeState?.setState(() => homeState._currentIndex = 3);
                   },
                 ),
                 _buildQuickCard(
@@ -141,7 +155,7 @@ class HomeDashboardTab extends StatelessWidget {
                   color: const Color(0xFF10B981),
                   onTap: () {
                     final homeState = context.findAncestorStateOfType<_HomeScreenState>();
-                    homeState?.setState(() => homeState._currentIndex = 3);
+                    homeState?.setState(() => homeState._currentIndex = 4);
                   },
                 ),
                 _buildQuickCard(
