@@ -87,6 +87,25 @@ const mockMembers: FamilyMember[] = [
 
 const mockQRTags: QRTag[] = [];
 
+function toDate(val: any): Date {
+  if (!val) return new Date();
+  if (val instanceof Date) return val;
+  if (typeof val === 'object' && 'toDate' in val && typeof val.toDate === 'function') {
+    return val.toDate();
+  }
+  return new Date(val);
+}
+
+function parseFamilyMemberDoc(id: string, data: any): FamilyMember {
+  return {
+    id,
+    ...data,
+    dateOfBirth: data.dateOfBirth ? toDate(data.dateOfBirth) : undefined,
+    createdAt: data.createdAt ? toDate(data.createdAt) : new Date(),
+    updatedAt: data.updatedAt ? toDate(data.updatedAt) : new Date(),
+  } as FamilyMember;
+}
+
 export class FamilyService {
   private collectionName = 'family_members';
   private qrCollectionName = 'qr_tags';
@@ -146,7 +165,7 @@ export class FamilyService {
     try {
       const ref = doc(db!, this.collectionName, id);
       const snap = await getDoc(ref);
-      if (snap.exists()) return { id, ...snap.data() } as FamilyMember;
+      if (snap.exists()) return parseFamilyMemberDoc(id, snap.data());
       return null;
     } catch (error) {
       console.error('Get family member error:', error);
@@ -160,7 +179,7 @@ export class FamilyService {
     try {
       const q = query(collection(db!, this.collectionName), where('parentId', '==', parentId));
       const snap = await getDocs(q);
-      return snap.docs.map((d) => ({ id: d.id, ...d.data() } as FamilyMember));
+      return snap.docs.map((d) => parseFamilyMemberDoc(d.id, d.data()));
     } catch (error) {
       console.error('Get family members error:', error);
       return [];
