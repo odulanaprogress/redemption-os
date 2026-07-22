@@ -14,6 +14,8 @@ import { MarketplaceSkeleton } from './SkeletonLoaders';
 import { useCart } from '../context/CartContext';
 import { CartDrawer } from './CartDrawer';
 
+import { vendorService } from '../../services/vendor.service';
+
 export default function MarketplaceHome() {
   const navigate = useNavigate();
   const { addItem, totalItems, toggleCart } = useCart();
@@ -24,9 +26,24 @@ export default function MarketplaceHome() {
   const [liveOrders, setLiveOrders] = useState(1247);
   const [activeVendors] = useState(89);
 
+  const [productsList, setProductsList] = useState<Product[]>(mockProducts);
+
   useEffect(() => {
-    const t = setTimeout(() => setIsLoading(false), 1400);
-    return () => clearTimeout(t);
+    let isMounted = true;
+    async function loadLiveData() {
+      try {
+        const dbProducts = await vendorService.getAllProducts();
+        if (isMounted && dbProducts.length > 0) {
+          setProductsList(dbProducts);
+        }
+      } catch (err) {
+        console.warn('Using seed products fallback:', err);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    }
+    loadLiveData();
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
@@ -38,13 +55,13 @@ export default function MarketplaceHome() {
 
   const aiRecommendations = useMemo(() => {
     const base = selectedCategory === 'all'
-      ? mockProducts.filter(p => p.featured || p.trending)
-      : mockProducts.filter(p => p.category === mockCategories.find(c => c.id === selectedCategory)?.name);
+      ? productsList.filter(p => p.featured || p.trending)
+      : productsList.filter(p => p.category === mockCategories.find(c => c.id === selectedCategory)?.name);
     return base.slice(0, 3);
-  }, [selectedCategory]);
+  }, [selectedCategory, productsList]);
 
   const filteredProducts = useMemo(() => {
-    let products = [...mockProducts];
+    let products = [...productsList];
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       products = products.filter(p =>
@@ -65,7 +82,7 @@ export default function MarketplaceHome() {
       default: products.sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
     }
     return products;
-  }, [searchQuery, selectedCategory, sortBy]);
+  }, [searchQuery, selectedCategory, sortBy, productsList]);
 
   const showSearchResults = !!(searchQuery || selectedCategory !== 'all');
   const featuredProducts = getFeaturedProducts();
