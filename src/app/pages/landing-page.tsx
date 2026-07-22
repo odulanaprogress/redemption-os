@@ -80,8 +80,33 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F8F9FF] to-white">
+      {/* Top Navbar */}
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E5E7EB] px-4 py-3">
+        <div className="mx-auto max-w-7xl flex items-center justify-between">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
+            <Globe className="h-6 w-6 text-[#5B4FE8]" />
+            <span className="font-bold text-lg text-[#0D0D0D]">Redemption OS</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={() => navigate("/login")}
+              variant="ghost"
+              className="text-[#0D0D0D] hover:text-[#5B4FE8]"
+            >
+              Login
+            </Button>
+            <Button
+              onClick={() => navigate("/register")}
+              className="bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] hover:opacity-90 text-white font-semibold shadow-sm"
+            >
+              Sign Up
+            </Button>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden px-4 py-20 md:py-32">
+      <section className="relative overflow-hidden px-4 py-16 md:py-24">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.1),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(167,139,250,0.1),transparent_50%)]" />
 
@@ -112,17 +137,18 @@ export function LandingPage() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
-                onClick={() => navigate("/login")}
-                className="bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] hover:opacity-90 text-[#0D0D0D] px-8 py-6 text-lg shadow-[0_0_25px_rgba(14,165,233,0.5)]"
+                onClick={() => navigate("/register")}
+                className="bg-gradient-to-r from-[#5B4FE8] to-[#8B82F0] hover:opacity-90 text-white px-8 py-6 text-lg font-semibold shadow-[0_0_25px_rgba(91,79,232,0.4)]"
               >
                 <Zap className="mr-2 h-5 w-5" />
-                Launch Platform
+                Sign Up
               </Button>
               <Button
+                onClick={() => navigate("/login")}
                 variant="outline"
-                className="border-[#0ea5e9]/50 text-[#0D0D0D] hover:bg-[#EDE9FE] px-8 py-6 text-lg"
+                className="border-[#5B4FE8]/40 text-[#0D0D0D] hover:bg-[#EDE9FE] px-8 py-6 text-lg font-semibold"
               >
-                Watch Live Demo
+                Login
               </Button>
             </div>
           </motion.div>
