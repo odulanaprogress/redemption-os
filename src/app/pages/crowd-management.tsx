@@ -1,15 +1,16 @@
-﻿import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ArrowLeft, MapPin, AlertTriangle, Radio, RefreshCw,
   WifiOff, Wifi, Clock, CheckCircle2, XCircle, Loader2,
-  Send, Database, Activity, Shield, PhoneCall,
+  Send, Database, Activity, Shield, PhoneCall, Users, Layers,
 } from 'lucide-react';
 import { Card } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { useOfflineSync } from '../../hooks/useOfflineSync';
+import { locationService, UserLocationDoc } from '../../services/location.service';
 
 function getDensityColor(density: number) {
   if (density >= 0.9) return 'text-red-400 bg-red-500/10 border-red-500/30';
@@ -53,6 +54,7 @@ export function CrowdManagementDashboard() {
   const latestSnapshot = cachedSnapshots.length > 0 ? cachedSnapshots[cachedSnapshots.length - 1] : { density: FALLBACK_DENSITY };
   const densityMap: Record<string, number> = latestSnapshot?.density ?? FALLBACK_DENSITY;
 
+  const [liveLocations, setLiveLocations] = useState<UserLocationDoc[]>([]);
   const [showIncidentForm, setShowIncidentForm] = useState(false);
   const [incidentZone, setIncidentZone] = useState('');
   const [incidentType, setIncidentType] = useState('');
@@ -60,6 +62,14 @@ export function CrowdManagementDashboard() {
   const [incidentPhone, setIncidentPhone] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionResult, setSubmissionResult] = useState<{ success: boolean; queued: boolean; message: string } | null>(null);
+
+  // Subscribe to real-time attendee locations strictly inside Redemption City
+  useEffect(() => {
+    const unsub = locationService.subscribeToLiveLocations((locs) => {
+      setLiveLocations(locs);
+    });
+    return () => unsub();
+  }, []);
 
   async function handleIncidentSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -97,7 +107,11 @@ export function CrowdManagementDashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${isOnline ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' : 'bg-amber-500/10 border-amber-500/30 text-amber-300'}`}>
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border bg-purple-500/10 border-purple-500/30 text-purple-700">
+              <Users className="h-3 w-3 text-purple-600 animate-pulse" />
+              <span>{liveLocations.length} Live GPS in Camp</span>
+            </div>
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${isOnline ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700' : 'bg-amber-500/10 border-amber-500/30 text-amber-700'}`}>
               {isOnline ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3 animate-pulse" />}
               {isOnline ? 'Online' : 'Offline'}
             </div>

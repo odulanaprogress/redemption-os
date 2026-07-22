@@ -117,10 +117,36 @@ service cloud.firestore {
     // Notifications collection
     match /notifications/{notificationId} {
       allow read: if isAuthenticated() && isOwner(resource.data.userId);
-      allow create: if isAdmin();
+      allow create: if isAuthenticated();
       allow update: if isAuthenticated() && isOwner(resource.data.userId);
       allow delete: if isAuthenticated() &&
         (isOwner(resource.data.userId) || isAdmin());
     }
+
+    // ── Messages (real-time channels) ─────────────────────────────
+    match /messages/{messageId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() &&
+        (request.auth.uid == resource.data.senderId || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // ── Broadcasts (admin announcements) ──────────────────────────
+    match /broadcasts/{broadcastId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && (isAdmin() || isSecurity());
+      allow update: if isAuthenticated() && (isAdmin() || isSecurity());
+      allow delete: if isAdmin();
+    }
+
+    // ── User Locations (real-time crowd density) ──────────────────
+    // Attendees opt-in to share their GPS for crowd analysis
+    match /user_locations/{userId} {
+      allow read: if isAuthenticated() && (isAdmin() || isSecurity());
+      allow write: if isOwner(userId); // only you can update your own location
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+
   }
 }

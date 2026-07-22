@@ -25,7 +25,12 @@ import {
   ChevronRight,
   Loader2,
   AlertTriangle,
+  Layers,
+  Radio,
+  Eye,
 } from "lucide-react";
+import { locationService } from "../../services/location.service";
+import { useAuthStore } from "../../store/auth.store";
 import {
   RCCG_CAMP_CENTER,
   RCCG_CAMP_LOCATIONS,
@@ -116,22 +121,46 @@ export function SmartNavigation() {
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [isNavigating, setIsNavigating] = useState(false);   // real-time mode
   const [gpsError, setGpsError] = useState<string | null>(null);
+  const [mapMode, setMapMode] = useState<"street" | "satellite">("street");
+  const [isSharingLocation, setIsSharingLocation] = useState(false);
+  const [shareStatus, setShareStatus] = useState<string | null>(null);
+  const { user, userProfile } = useAuthStore();
   const watchIdRef = useRef<number | null>(null);
   const routeRefreshRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const locationShareCleanupRef = useRef<(() => void) | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  // One-time GPS position on mount
+  // Toggle real-time location sharing with camp safety team
+  const toggleLocationSharing = useCallback(() => {
+    if (isSharingLocation) {
+      if (locationShareCleanupRef.current) {
+        locationShareCleanupRef.current();
+        locationShareCleanupRef.current = null;
+      }
+      setIsSharingLocation(false);
+      setShareStatus("Stopped sharing location");
+      setTimeout(() => setShareStatus(null), 3000);
+    } else {
+      const uid = user?.uid || "guest-" + Math.random().toString(36).substring(2, 9);
+      const name = userProfile?.displayName || user?.email || "Attendee";
+      const role = userProfile?.role || "attendee";
+      
+      const cleanup = locationService.startSharing(uid, name, role, (msg) => {
+        setShareStatus(msg);
+      });
+      locationShareCleanupRef.current = cleanup;
+      setIsSharingLocation(true);
+    }
+  }, [isSharingLocation, user, userProfile]);
+
+  // Cleanup location sharing on unmount
   useEffect(() => {
-    if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setGpsError(null);
-        setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-      },
-      () => setGpsError("Location unavailable — showing from Main Gate")
-    );
-    return () => stopNavigating();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    return () => {
+      if (locationShareCleanupRef.current) {
+        locationShareCleanupRef.current();
+      }
+    };
+  }, []);
 
   // ── Real-time GPS watching ─────────────────────────────────────────────────
   const stopNavigating = useCallback(() => {
@@ -312,11 +341,18 @@ export function SmartNavigation() {
           style={{ height: "100%", width: "100%" }}
           zoomControl={false}
         >
-          {/* OpenStreetMap Tiles — free, no API key */}
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
+          {/* Base Tile Layer: Street (OpenStreetMap) vs Satellite (ArcGIS) */}
+          {mapMode === "street" ? (
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+          ) : (
+            <TileLayer
+              attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+              url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            />
+          )}
 
           {/* Fly map to selected location */}
           {flyTarget && <MapFlyTo coords={flyTarget} zoom={16} />}
@@ -366,27 +402,63 @@ export function SmartNavigation() {
           )}
         </MapContainer>
 
-        {/* ── Category filter pills — overlaid on map ── */}
-        <div className="absolute top-3 left-3 right-3 z-[400] flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-          {categories.map((cat) => (
+        {/* ── Layer Toggle & Location Sharing Pills ── */}
+        <div className="absolute top-3 left-3 right-3 z-[400] flex items-center justify-between gap-2 overflow-x-auto pb-1 scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setActiveFilter(cat)}
+                className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm border ${
+                  activeFilter === cat
+                    ? "bg-[#0D0D0D] text-white border-[#0D0D0D]"
+                    : "bg-white/90 backdrop-blur-md text-[#374151] border-[#E5E7EB] hover:bg-white"
+                }`}
+                style={
+                  activeFilter === cat && cat !== "all"
+                    ? { backgroundColor: CATEGORY_COLORS[cat], borderColor: CATEGORY_COLORS[cat] }
+                    : {}
+                }
+              >
+                {cat === "all" ? "All" : CATEGORY_LABELS[cat]}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            {/* Location Sharing Opt-in */}
             <button
-              key={cat}
-              onClick={() => setActiveFilter(cat)}
-              className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-sm border ${
-                activeFilter === cat
-                  ? "bg-[#0D0D0D] text-white border-[#0D0D0D]"
-                  : "bg-white text-[#374151] border-[#E5E7EB] hover:bg-[#F8F9FF]"
+              onClick={toggleLocationSharing}
+              title="Share position with safety team"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border shadow-sm transition-all ${
+                isSharingLocation
+                  ? "bg-emerald-600 text-white border-emerald-600 animate-pulse"
+                  : "bg-white/90 backdrop-blur-md text-[#374151] border-[#E5E7EB] hover:bg-white"
               }`}
-              style={
-                activeFilter === cat && cat !== "all"
-                  ? { backgroundColor: CATEGORY_COLORS[cat], borderColor: CATEGORY_COLORS[cat] }
-                  : {}
-              }
             >
-              {cat === "all" ? "All" : CATEGORY_LABELS[cat]}
+              <Radio className="h-3.5 w-3.5" />
+              <span>{isSharingLocation ? "Broadcasting GPS" : "Share GPS"}</span>
             </button>
-          ))}
+
+            {/* Map Mode Switcher */}
+            <button
+              onClick={() => setMapMode(mapMode === "street" ? "satellite" : "street")}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/90 backdrop-blur-md text-[#0D0D0D] border border-[#E5E7EB] hover:bg-white shadow-sm transition-all"
+            >
+              <Layers className="h-3.5 w-3.5 text-[#5B4FE8]" />
+              <span className="capitalize">{mapMode}</span>
+            </button>
+          </div>
         </div>
+
+        {shareStatus && (
+          <div className="absolute top-14 left-3 right-3 z-[400]">
+            <div className="bg-[#0D0D0D]/90 text-white text-xs px-3 py-2 rounded-lg shadow-lg backdrop-blur-md flex items-center gap-2">
+              <Radio className="h-3.5 w-3.5 text-emerald-400 animate-spin" />
+              <span>{shareStatus}</span>
+            </div>
+          </div>
+        )}
 
         {/* ── Selected destination card — overlaid at bottom of map ── */}
         {selected && (
