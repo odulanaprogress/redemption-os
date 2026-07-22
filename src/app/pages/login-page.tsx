@@ -107,11 +107,11 @@ export function LoginPage() {
 
           {/* Logo & heading */}
           <div className="mb-8 text-center">
-            <div className="mb-4 flex items-center justify-center gap-2">
-              <div className="h-9 w-9 rounded-xl bg-[#5B4FE8] flex items-center justify-center">
-                <Globe className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-[#0D0D0D] tracking-tight">Redemption OS</span>
+            <div className="mb-4 flex flex-col items-center justify-center gap-2">
+              <img src="/rccg_tech_logo.png" alt="RCCG Tech Emblem" className="h-16 w-16 rounded-full object-cover shadow-[0_0_20px_rgba(91,79,232,0.3)] border border-[#5B4FE8]/30 mb-1" />
+              <h1 className="bg-gradient-to-r from-[#0ea5e9] via-[#10b981] to-[#a78bfa] bg-clip-text text-3xl font-extrabold text-transparent">
+                Redemption OS
+              </h1>
             </div>
             <h1 className="text-xl font-semibold text-[#0D0D0D] mb-1">Welcome back</h1>
             <p className="text-sm text-[#6B7280]">Sign in to access your dashboard</p>

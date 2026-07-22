@@ -83,8 +83,8 @@ export function LandingPage() {
       {/* Top Navbar */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E5E7EB] px-4 py-3">
         <div className="mx-auto max-w-7xl flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
-            <Globe className="h-6 w-6 text-[#5B4FE8]" />
+          <div className="flex items-center gap-2.5 cursor-pointer" onClick={() => navigate("/")}>
+            <img src="/rccg_tech_logo.png" alt="RCCG Tech Logo" className="h-9 w-9 rounded-full object-cover shadow-sm border border-[#5B4FE8]/30" />
             <span className="font-bold text-lg text-[#0D0D0D]">Redemption OS</span>
           </div>
           <div className="flex items-center gap-3">
@@ -117,9 +117,9 @@ export function LandingPage() {
             transition={{ duration: 0.8 }}
             className="text-center"
           >
-            <div className="mb-6 flex items-center justify-center gap-2">
-              <Globe className="h-8 w-8 text-[#5B4FE8]" />
-              <h1 className="bg-gradient-to-r from-[#0ea5e9] via-[#10b981] to-[#a78bfa] bg-clip-text text-4xl md:text-6xl font-bold text-transparent">
+            <div className="mb-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <img src="/rccg_tech_logo.png" alt="RCCG Tech Emblem" className="h-20 w-20 md:h-24 md:w-24 rounded-full object-cover shadow-[0_0_30px_rgba(91,79,232,0.4)] border-2 border-white/20" />
+              <h1 className="bg-gradient-to-r from-[#0ea5e9] via-[#10b981] to-[#a78bfa] bg-clip-text text-4xl md:text-6xl font-extrabold text-transparent">
                 Redemption OS
               </h1>
             </div>
