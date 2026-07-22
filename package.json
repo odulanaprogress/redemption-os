@@ -1,11 +1,14 @@
 {
-  "name": "@figma/my-make-file",
+  "name": "redemption-os",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.2.0",
   "type": "module",
   "scripts": {
+    "dev": "vite",
+    "dev:backend": "cd server && node server.js",
     "build": "vite build",
-    "dev": "vite"
+    "build:apk": "cd flutter_app && flutter build apk --debug",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
