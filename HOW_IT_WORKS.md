@@ -210,8 +210,8 @@ To ensure the platform remains lightweight, responsive, and operational even in 
     *   *Real-time Database*: Syncs live gospel feeds, community broadcasts, and responder assignments across all active dashboards in real-time.
 *   **Cloudinary**:
     *   *Media Storage*: Manages secure hosting, resizing, and delivery of all uploaded images (e.g., child registration photographs, vendor store avatars, and product catalog listings).
-*   **Mapbox GL JS**:
-    *   *Interactive Navigation*: Renders venue floor plans, markers for restrooms, first-aid hubs, food courts, and computes active zone boundary lines.
+*   **OpenStreetMap & Esri ArcGIS Satellite Engine**:
+    *   *Interactive Navigation & Telemetry*: Renders vector and high-resolution aerial satellite maps of Redemption City (28 mapped places), OSRM turn-by-turn walking routes, and real-time GPS density heatmaps.
 *   **IndexedDB (`idb`) & Service Worker (`Workbox`)**:
     *   *Offline Local Cache*: Caches venue map GeoJSONs, zone statuses, and density parameters in the browser to maintain functionality during signal dropouts.
     *   *Background Queue*: Intercepts and holds outgoing incident reports when offline, and automatically dispatches them to the database once a connection is detected.
