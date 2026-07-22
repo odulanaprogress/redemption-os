@@ -27,7 +27,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       case 'gate':
         return Colors.lightBlue;
       case 'facility':
-        return Colors.emerald;
+        return const Color(0xFF10B981);
       case 'food':
         return Colors.amber;
       case 'transit':

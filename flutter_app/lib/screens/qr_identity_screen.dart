@@ -92,13 +92,13 @@ class _QRIdentityScreenState extends State<QRIdentityScreen> {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(color: Colors.emerald.shade50, borderRadius: BorderRadius.circular(20)),
+                  decoration: BoxDecoration(color: const Color(0xFFECFDF5), borderRadius: BorderRadius.circular(20)),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: const [
-                      Icon(Icons.verified, size: 16, color: Colors.emerald),
+                      Icon(Icons.verified, size: 16, color: Color(0xFF10B981)),
                       SizedBox(width: 6),
-                      Text('Official Redemption City Tag', style: TextStyle(color: Colors.emerald, fontWeight: FontWeight.bold, fontSize: 12)),
+                      Text('Official Redemption City Tag', style: TextStyle(color: Color(0xFF10B981), fontWeight: FontWeight.bold, fontSize: 12)),
                     ],
                   ),
                 ),

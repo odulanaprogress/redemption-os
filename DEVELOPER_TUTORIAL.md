@@ -1244,12 +1244,38 @@ Based on this codebase, these are the most valuable next topics for your growth:
 
 ---
 
-*You are not just a user of this codebase. You are its developer. Every pattern here is deliberate, every decision documented. Ask "why?" about everything you read. That curiosity is what makes a great engineer.*
+## Part 19 — Recent Production Architecture Milestones
+
+### 19.1 Dual-Engine Navigation System
+- **OpenStreetMap + Esri ArcGIS Satellite Tiles**: Vector maps and high-res aerial satellite tiles without API keys.
+- **28 Mapped Locations**: All auditoriums, gates, hospitals, security posts, guest houses, and universities inside Redemption City (`src/config/locations.ts`).
+- **Turn-by-Turn GPS Navigation**: `watchPosition` GPS watcher recalculating walking paths via OSRM every 15 seconds.
+
+### 19.2 Geofenced Telemetry & Satellite Crowd Estimator
+- **Redemption City Bounded Box**: Enforces GPS telemetry within `6.79°N–6.83°N, 3.44°E–3.47°E`.
+- **Live Crowd Estimator**: Aggregates active user signals and zone capacities into real-time occupancy percentages.
+
+### 19.3 Real-Time Reactive Messaging & Security Rules
+- **Firestore `onSnapshot` Streaming**: Reactive channel messages and admin broadcasts push instantly across devices.
+- **Cloudinary Media Uploads**: Unsigned presets for image and video attachments.
+
+### 19.4 Child Safety & Family QR Identity
+- **Digital QR Tags**: Client-side canvas QR code generation for family members.
+- **Role Isolation**: Restricted child registration strictly to Parent and Security/Admin roles.
+- **Camera QR Scanner**: Security officers use `html5-qrcode` to scan badges at camp gates and call parents instantly.
+
+### 19.5 Tech RCCG Emblem Branding & Flutter Mobile App
+- **Glassmorphic Tech RCCG Logo**: Generated custom emblem deployed across landing page, login, and registration.
+- **Flutter Native Mobile App (`/flutter_app`)**: Android APK compilation pipeline (`flutter build apk --debug / --release`) with bottom bar navigation, satellite telemetry, and QR badge screens.
+
+---
+
+*You are not just a user of this codebase. You are its developer. Every pattern here is deliberate, every decision documented.*
 
 ---
 
 **File names to remember**:
-- `redemption_os_developer_tutorial.md` ← this file (for your learning)
-- `redemption_os_presentation_notes.md` ← the investor-facing technical briefing
+- `DEVELOPER_TUTORIAL.md` ← this file (for your learning)
+- `INVESTOR_NOTES.md` ← the investor-facing technical briefing
+- `DEVELOPER_DOCS.md` ← technical API & service documentation
 
-Both are in: `C:\Users\PROGEETECHNOLOGY\.gemini\antigravity-ide\brain\858f87ce-4fd7-470e-8b05-6a76476cb01f\`

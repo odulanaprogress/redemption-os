@@ -63,9 +63,10 @@ Browser
 ### Key Design Decisions
 
 - **No Redux** — Zustand handles all global state (lightweight, hook-based).
-- **Live mode always on** — `VITE_USE_MOCK_DATA=false` in `.env`; the app always connects to the real `redemption-os` Firebase project.
-- **Cloudinary for Media** — Images/videos are stored on Cloudinary. Firebase Storage is reserved for internal configuration if needed.
-- **Mapbox GL JS** — Renders venue layouts and computes evacuation polygons.
+- **Live mode always on** — `VITE_USE_MOCK_DATA=false` in `.env`; the app connects directly to the live `redemption-os` Firebase project.
+- **Cloudinary for Media** — Images and videos are stored on Cloudinary with unsigned upload presets.
+- **OpenStreetMap & Esri Satellite Dual Engine** — Renders vector map tiles and high-resolution aerial satellite imagery of Redemption City (28 mapped locations) with turn-by-turn OSRM walking routes and real-time GPS tracking.
+- **Geofenced Telemetry & Satellite Estimator** — Tracks live attendee GPS signals bounded strictly within Redemption City coordinates (`6.79°N–6.83°N, 3.44°E–3.47°E`) to compute real-time crowd density.
 - **Offline-First Synchronization** — Leverages IndexedDB (`idb`) and Service Workers (`Workbox`) to cache static resources and core API responses. If an operator reports an incident while offline, it is queued and synchronized automatically on reconnection.
 - **USSD & SMS Fallbacks** — Integrated with Termii and Africa's Talking to allow low-bandwidth SMS dispatch and offline feature access via standard USSD dial codes (`*384#`).
 - **Sentry** — All frontend and backend runtime errors are reported to Sentry.
@@ -654,3 +655,40 @@ Sentry is initialized in `src/config/sentry.config.ts` and called from `src/main
 | **Real-time message backfill** | `subscribeToChannel` loads last 100 messages. Implement cursor-based pagination for older messages. |
 | **serviceAccountKey.json** | Never commit this file. It is in `.gitignore`. Rotate the key from Firebase Console if it is ever exposed. |
 | **Auth token expiry** | Firebase Auth tokens auto-refresh. If you see 401s on Firestore queries, the session may have expired — logout and log back in. |
+
+---
+
+## 24. Flutter Mobile App Build & Deployment
+
+The cross-platform native mobile application is located in the `/flutter_app` directory.
+
+### Structure
+```
+flutter_app/
+├── lib/
+│   ├── main.dart                 # Application entrypoint & Material3 theme
+│   ├── models/
+│   │   └── location_model.dart   # 28 Redemption City mapped locations
+│   └── screens/
+│       ├── home_screen.dart      # Bottom navigation & quick actions dashboard
+│       ├── navigation_screen.dart# Satellite telemetry & location search
+│       ├── messages_screen.dart  # Communication center & live broadcasts
+│       └── qr_identity_screen.dart# Child safety QR badge generator & scanner
+└── pubspec.yaml                  # Dependencies (Firebase, QR, FlutterBluePlus)
+```
+
+### Build Commands
+```bash
+cd flutter_app
+
+# Fetch dependencies
+flutter pub get
+
+# Debug run on connected Android/iOS device
+flutter run
+
+# Build release APK for Android distribution
+flutter build apk --release
+```
+Output APK location: `flutter_app/build/app/outputs/flutter-apk/app-release.apk`
+

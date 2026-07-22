@@ -138,7 +138,7 @@ class HomeDashboardTab extends StatelessWidget {
                   icon: Icons.qr_code,
                   title: 'Child Safety QR',
                   subtitle: 'Family Badges',
-                  color: Colors.emerald,
+                  color: const Color(0xFF10B981),
                   onTap: () {
                     final homeState = context.findAncestorStateOfType<_HomeScreenState>();
                     homeState?.setState(() => homeState._currentIndex = 3);

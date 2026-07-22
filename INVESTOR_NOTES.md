@@ -604,9 +604,11 @@ This means a demo can be run anywhere — no Firebase account, no credentials, n
 | 📊 **Satellite Crowd Estimator** | Geofenced strictly to Redemption City (`6.79°N–6.83°N, 3.44°E–3.47°E`). Real-time density calculation per zone (Main Auditorium, Youth Centre, Gates, Car Parks) with live Firestore telemetry & crowd percentage indicators. | **Production Live (Vercel)** |
 | 💬 **Real-Time Messaging System** | Fully reactive Firestore channel streaming (`onSnapshot`) for General, Emergency, Volunteers, Logistics, Zone A/B, and Admin Broadcasts. Integrated Cloudinary for photo/video attachments and deployed security rules. | **Production Live (Vercel)** |
 | 🛡️ **Child Safety & QR Identity** | Digital QR tag generation for family members, printable badge cards, and camera QR scanner (`html5-qrcode`) for camp security at gate checkpoints. Strict role access matrix (Parent-only child registration). | **Production Live (Vercel)** |
-| 📱 **Mobile App Pipeline (Flutter)** | Native cross-platform Flutter mobile codebase in `/flutter_app` with offline BLE Mesh relay and USSD fallback for non-smartphone users. | **In Active Development** |
+| 🎨 **Tech RCCG Emblem Branding** | Designed and integrated custom glassmorphic dark RCCG emblem with glowing neon rings across Landing Page, Login, and Registration interfaces. | **Production Live (Vercel)** |
+| 📱 **Flutter Mobile App & APK Build** | Native cross-platform Flutter mobile codebase in `/flutter_app` with Android APK compilation, offline BLE Mesh relay, and USSD fallback for non-smartphone users. | **APK Build Active** |
 
 ---
 
 *Redemption OS — Built for scale. Designed for resilience. Engineered for Africa.*
+
 
