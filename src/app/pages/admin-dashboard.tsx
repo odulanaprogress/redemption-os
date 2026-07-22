@@ -1,4 +1,4 @@
-﻿import { useNavigate, useSearchParams } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Card } from "../components/ui/card";
 import { Button } from "../components/ui/button";
@@ -687,12 +687,44 @@ function OnboardingTab() {
             <Button disabled={submittingLogin} className="w-full bg-[#5B4FE8] hover:bg-[#4840C8] text-white rounded-md h-9 font-medium">{submittingLogin ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <UserPlus className="h-4 w-4 mr-2" />}Generate & Email Login</Button>
           </form>
         </Card>
-        <Card className="bg-[#F8F9FF] border border-[#5B4FE8]/20 p-6 rounded-lg">
-          <div className="flex items-center gap-3 mb-4"><Link className="h-5 w-5 text-[#5B4FE8]" /><h2 className="font-semibold text-[#0D0D0D]">Public Pre-Registration</h2></div>
-          <p className="text-[#6B7280] text-sm mb-4">Share this link with parents so they can register their children and get QR tags before arriving.</p>
-          <div className="flex gap-2">
-            <Input readOnly value={window.location.origin + "/pre-register"} className="border-[#E5E7EB] text-[#6B7280] font-mono text-xs bg-white rounded-md" />
-            <Button onClick={() => { navigator.clipboard.writeText(window.location.origin + "/pre-register"); toast.success("Link copied!"); }} variant="outline" className="border-[#5B4FE8]/30 text-[#5B4FE8] hover:bg-[#EDE9FE] rounded-md">Copy</Button>
+        <Card className="bg-[#F8F9FF] border border-[#5B4FE8]/20 p-6 rounded-lg space-y-4">
+          <div className="flex items-center gap-3">
+            <Link className="h-5 w-5 text-[#5B4FE8]" />
+            <div>
+              <h2 className="font-semibold text-[#0D0D0D]">Registration Invite Links</h2>
+              <p className="text-[#6B7280] text-xs">Share custom registration links to onboard vendors, volunteers, security, & attendees live.</p>
+            </div>
+          </div>
+
+          <div className="space-y-2.5">
+            {[
+              { label: "🏪 Market Vendor Invite", role: "vendor", path: "/register?role=vendor" },
+              { label: "🤝 Volunteer Invite", role: "volunteer", path: "/register?role=volunteer" },
+              { label: "🛡️ Security Staff Invite", role: "security", path: "/register?role=security" },
+              { label: "🚚 Delivery Rider Invite", role: "delivery_personnel", path: "/register?role=delivery_personnel" },
+              { label: "👨‍👩‍👧 Parent & Child Safety", role: "parent", path: "/register?role=parent" },
+            ].map((item) => {
+              const fullUrl = window.location.origin + item.path;
+              return (
+                <div key={item.role} className="flex items-center justify-between gap-2 p-2.5 bg-white rounded-md border border-[#E5E7EB]">
+                  <div>
+                    <p className="text-xs font-medium text-[#0D0D0D]">{item.label}</p>
+                    <p className="text-[10px] text-[#9CA3AF] font-mono">{fullUrl}</p>
+                  </div>
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText(fullUrl);
+                      toast.success(`Copied ${item.label} to clipboard!`);
+                    }}
+                    variant="outline"
+                    className="border-[#5B4FE8]/30 text-[#5B4FE8] hover:bg-[#EDE9FE] h-7 text-xs px-2.5 shrink-0"
+                  >
+                    Copy Link
+                  </Button>
+                </div>
+              );
+            })}
           </div>
         </Card>
       </div>

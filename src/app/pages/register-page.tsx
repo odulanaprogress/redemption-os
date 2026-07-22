@@ -1,45 +1,54 @@
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card } from "../components/ui/card";
-import { Globe, Lock, Mail, User, Phone, ArrowLeft, Users, Baby } from "lucide-react";
+import { Globe, Lock, Mail, User, Phone, ArrowLeft, Users, Baby, Store, HeartHandshake, Shield, Truck } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "sonner";
 import { UserRole } from "../../types";
+import { vendorService } from "../../services/vendor.service";
 
-type RegisterRole = "attendee" | "parent";
+type RegisterRole = UserRole;
 
-const ROLES: { value: RegisterRole; label: string; icon: typeof Users; description: string; color: string }[] = [
-  {
-    value: "attendee",
-    label: "Attendee",
-    icon: Users,
-    description: "I am attending the event",
-    color: "from-[#0ea5e9] to-[#0284c7]",
-  },
-  {
-    value: "parent",
-    label: "Parent / Guardian",
-    icon: Baby,
-    description: "I have children attending with me",
-    color: "from-[#10b981] to-[#059669]",
-  },
+const ROLES: { value: RegisterRole; label: string; icon: any; description: string; color: string }[] = [
+  { value: "attendee", label: "Attendee", icon: Users, description: "General event attendee", color: "from-[#0ea5e9] to-[#0284c7]" },
+  { value: "parent", label: "Parent / Guardian", icon: Baby, description: "Parent registering children", color: "from-[#10b981] to-[#059669]" },
+  { value: "vendor", label: "Vendor / Merchant", icon: Store, description: "Market stall or shop owner", color: "from-[#5B4FE8] to-[#8B82F0]" },
+  { value: "volunteer", label: "Volunteer", icon: HeartHandshake, description: "Event volunteer staff", color: "from-amber-500 to-orange-400" },
+  { value: "security", label: "Security Officer", icon: Shield, description: "Camp security & safety team", color: "from-red-500 to-rose-600" },
+  { value: "delivery_personnel", label: "Delivery Rider", icon: Truck, description: "Logistics & order delivery", color: "from-teal-500 to-emerald-600" },
 ];
 
 export function RegisterPage() {
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState<RegisterRole>("attendee");
+  const [searchParams] = useSearchParams();
+  const roleFromUrl = searchParams.get("role") as RegisterRole | null;
+
+  const [selectedRole, setSelectedRole] = useState<RegisterRole>(
+    roleFromUrl && ROLES.some((r) => r.value === roleFromUrl) ? roleFromUrl : "attendee"
+  );
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     password: "",
     confirmPassword: "",
+    // Vendor specific fields
+    businessName: "",
+    vendorCategory: "Food & Beverages",
+    locationZone: "Zone C Marketplace",
   });
   const [agreed, setAgreed] = useState(false);
   const { register, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (roleFromUrl && ROLES.some((r) => r.value === roleFromUrl)) {
+      setSelectedRole(roleFromUrl);
+    }
+  }, [roleFromUrl]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,17 +72,41 @@ export function RegisterPage() {
       formData.email,
       formData.password,
       formData.name,
-      selectedRole as UserRole,
+      selectedRole,
       { phoneNumber: formData.phone }
     );
 
-    if (result.success) {
+    if (result.success && result.user) {
+      // If vendor registration, save live Vendor Profile in Firestore
+      if (selectedRole === "vendor") {
+        try {
+          await vendorService.createVendor(result.user.uid, {
+            name: formData.businessName || formData.name + "'s Store",
+            description: `Official ${formData.vendorCategory} vendor at Redemption City`,
+            category: formData.vendorCategory,
+            location: {
+              zone: formData.locationZone,
+              building: "Main Market",
+            },
+            status: "approved",
+            contactPhone: formData.phone,
+            contactEmail: formData.email,
+          });
+          toast.success("Vendor profile created live in database!");
+        } catch (vErr) {
+          console.warn("Failed creating live vendor doc:", vErr);
+        }
+      }
+
       toast.success("Account created! Welcome to Redemption OS 🎉");
-      // Route based on role
-      if (selectedRole === "parent") {
-        navigate("/dashboard");
-      } else {
-        navigate("/dashboard");
+      
+      // Dynamic route based on role
+      switch (selectedRole) {
+        case "admin": navigate("/admin"); break;
+        case "vendor": navigate("/marketplace/vendor"); break;
+        case "security": navigate("/operations"); break;
+        case "delivery_personnel": navigate("/logistics"); break;
+        default: navigate("/dashboard"); break;
       }
     } else if (result.error) {
       toast.error(result.error.message);
@@ -199,6 +232,56 @@ export function RegisterPage() {
               />
             </div>
           </div>
+
+          {/* Vendor Specific Inputs */}
+          {selectedRole === "vendor" && (
+            <div className="p-4 bg-[#EDE9FE]/40 border border-[#5B4FE8]/30 rounded-xl space-y-3">
+              <p className="text-xs font-semibold text-[#5B4FE8] uppercase tracking-wider flex items-center gap-1.5">
+                <Store className="h-4 w-4" /> Vendor Business Profile
+              </p>
+              <div className="space-y-1.5">
+                <Label htmlFor="businessName" className="text-xs text-[#4B5563]">Business / Store Name</Label>
+                <Input
+                  id="businessName"
+                  type="text"
+                  value={formData.businessName}
+                  onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+                  placeholder="e.g. Grace Kitchen & Snacks"
+                  className="bg-white border-[#E5E7EB] text-sm text-[#0D0D0D]"
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <Label className="text-xs text-[#4B5563] block mb-1">Category</Label>
+                  <select
+                    value={formData.vendorCategory}
+                    onChange={(e) => setFormData({ ...formData, vendorCategory: e.target.value })}
+                    className="w-full bg-white border border-[#E5E7EB] rounded-md px-2.5 py-2 text-xs text-[#0D0D0D]"
+                  >
+                    <option value="Food & Beverages">Food & Beverages</option>
+                    <option value="Books & Bibles">Books & Bibles</option>
+                    <option value="Sacraments & Oil">Sacraments & Oil</option>
+                    <option value="Souvenirs & Gifts">Souvenirs & Gifts</option>
+                    <option value="Clothing & Apparel">Clothing & Apparel</option>
+                  </select>
+                </div>
+                <div>
+                  <Label className="text-xs text-[#4B5563] block mb-1">Camp Zone</Label>
+                  <select
+                    value={formData.locationZone}
+                    onChange={(e) => setFormData({ ...formData, locationZone: e.target.value })}
+                    className="w-full bg-white border border-[#E5E7EB] rounded-md px-2.5 py-2 text-xs text-[#0D0D0D]"
+                  >
+                    <option value="Zone A Marketplace">Zone A Marketplace</option>
+                    <option value="Zone B Food Court">Zone B Food Court</option>
+                    <option value="Zone C Marketplace">Zone C Marketplace</option>
+                    <option value="Main Arena Stand">Main Arena Stand</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Password */}
           <div className="space-y-2">
