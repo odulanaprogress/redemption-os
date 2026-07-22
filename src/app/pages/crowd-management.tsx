@@ -154,6 +154,44 @@ export function CrowdManagementDashboard() {
           {lastSyncTime && (<><span className="text-[#D1D5DB]">·</span><Clock className="h-3.5 w-3.5" /><span>Synced {lastSyncTime.toLocaleTimeString()}</span></>)}
         </div>
 
+        {/* ── Real-Time Crowd Estimator Summary Card ── */}
+        <Card className="bg-gradient-to-r from-purple-900/40 via-[#0f1520] to-indigo-900/40 border-purple-500/30 p-5 shadow-xl">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <Layers className="h-5 w-5 text-purple-400" />
+                <h3 className="text-base font-bold text-[#0D0D0D]">Live Satellite Crowd Estimator</h3>
+                <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-500/30 text-xs">
+                  <Activity className="h-3 w-3 mr-1 animate-pulse" />Live Satellite Feed
+                </Badge>
+              </div>
+              <p className="text-xs text-[#6B7280]">
+                Aggregating satellite telemetry, gate sensors, and active GPS location streams inside Redemption City.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-6 bg-[#06080f]/80 p-3 rounded-xl border border-white/10 flex-shrink-0">
+              <div className="text-center">
+                <p className="text-2xl font-extrabold text-[#0D0D0D] tracking-tight">
+                  {zones.reduce((acc, z) => acc + (z.attendees || 0), 0).toLocaleString()}
+                </p>
+                <p className="text-[11px] text-[#9CA3AF] uppercase font-semibold">Est. Total Attendees</p>
+              </div>
+              <div className="w-px h-8 bg-white/10" />
+              <div className="text-center">
+                <p className="text-2xl font-extrabold text-purple-400 tracking-tight">
+                  {Math.round(
+                    (zones.reduce((acc, z) => acc + (z.attendees || 0), 0) /
+                      zones.reduce((acc, z) => acc + (z.capacity || 1), 0)) *
+                      100
+                  )}%
+                </p>
+                <p className="text-[11px] text-[#9CA3AF] uppercase font-semibold">Camp Occupancy</p>
+              </div>
+            </div>
+          </div>
+        </Card>
+
         <div>
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-[#0D0D0D] font-semibold text-base">Zone Density Heatmap</h2>
