@@ -1,3 +1,26 @@
+// ─── Navigation / Map Types ──────────────────────────────────────────────────
+export interface LatLng {
+  lat: number;
+  lng: number;
+}
+
+export type DestinationCategory =
+  | 'auditorium'
+  | 'gate'
+  | 'facility'
+  | 'food'
+  | 'transit'
+  | 'hostel'
+  | 'office';
+
+export interface Destination {
+  id: string;
+  name: string;
+  aliases: string[];
+  coordinates: LatLng;
+  category: DestinationCategory;
+}
+
 // User Types
 export type UserRole =
   | 'admin'

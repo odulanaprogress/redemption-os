@@ -19,34 +19,54 @@ function startAuthListener(
   setLoading(true);
 
   const unsubscribe = authService.onAuthStateChanged(async (firebaseUser) => {
-    try {
-      if (firebaseUser) {
-        setUser(firebaseUser);
-        const profile = await userService.getUser(firebaseUser.uid);
-        if (profile) {
-          setUserProfile(profile);
-        } else {
-          const defaultProfile: Omit<UserProfile, 'uid'> = {
-            email: firebaseUser.email!,
-            displayName: firebaseUser.displayName || 'User',
-            role: 'attendee' as UserRole,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            isActive: true,
-            metadata: { lastLogin: new Date(), loginCount: 1 },
-          };
-          await userService.createUser(firebaseUser.uid, defaultProfile);
-          const newProfile = await userService.getUser(firebaseUser.uid);
-          setUserProfile(newProfile);
-        }
-      } else {
-        setUser(null);
-        setUserProfile(null);
-      }
-    } catch (error) {
-      console.error('[useAuth] Auth state change error:', error);
+    if (!firebaseUser) {
+      // Genuine logout / no session
       setUser(null);
       setUserProfile(null);
+      setLoading(false);
+      return;
+    }
+
+    // Firebase Auth succeeded — set the user immediately
+    setUser(firebaseUser);
+
+    // Build a safe fallback profile in case Firestore is unavailable
+    const fallbackProfile: UserProfile = {
+      uid: firebaseUser.uid,
+      email: firebaseUser.email!,
+      displayName: firebaseUser.displayName || firebaseUser.email!.split('@')[0] || 'User',
+      role: 'attendee' as UserRole,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      isActive: true,
+      metadata: { lastLogin: new Date(), loginCount: 1 },
+    };
+
+    try {
+      // Try to load the Firestore profile
+      const profile = await userService.getUser(firebaseUser.uid);
+
+      if (profile) {
+        // Profile exists — use it
+        setUserProfile(profile);
+      } else {
+        // First login — create the profile in Firestore
+        try {
+          const { uid, ...profileWithoutUid } = fallbackProfile;
+          await userService.createUser(uid, profileWithoutUid);
+          const created = await userService.getUser(firebaseUser.uid);
+          setUserProfile(created ?? fallbackProfile);
+        } catch (createErr) {
+          // Firestore create failed (rules, network, etc.)
+          // Still allow the user in with the in-memory fallback
+          console.warn('[useAuth] Firestore createUser failed — using fallback profile', createErr);
+          setUserProfile(fallbackProfile);
+        }
+      }
+    } catch (profileErr) {
+      // Firestore read failed entirely — still let the user in
+      console.warn('[useAuth] Firestore getUser failed — using fallback profile', profileErr);
+      setUserProfile(fallbackProfile);
     } finally {
       setLoading(false);
     }
