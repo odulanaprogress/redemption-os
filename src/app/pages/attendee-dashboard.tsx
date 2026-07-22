@@ -33,11 +33,11 @@ const GALLERY_SLIDES = [
 // ── Attendee quick actions ────────────────────────────────────────────────────
 const ATTENDEE_ACTIONS = [
   { icon: Brain,         label: "AI Assistant",     description: "Ask anything",      route: "/ai-assistant",     color: "bg-[#0ea5e9]",  shadow: "hover:shadow-[0_4px_20px_rgba(14,165,233,0.45)]" },
-  { icon: QrCode,        label: "Child & Family QR", description: "Safety & badges",   route: "/qr-identity",      color: "bg-[#10b981]",  shadow: "hover:shadow-[0_4px_20px_rgba(16,185,129,0.45)]" },
   { icon: Navigation,    label: "Smart Navigation", description: "Find your way",     route: "/navigation",       color: "bg-[#a78bfa]",  shadow: "hover:shadow-[0_4px_20px_rgba(167,139,250,0.45)]" },
-  { icon: Radio,         label: "Gospel Feed",      description: "Live sermon",       route: "/gospel-feed",      color: "bg-[#06b6d4]",  shadow: "hover:shadow-[0_4px_20px_rgba(6,182,212,0.45)]" },
+  { icon: Radio,         label: "Gospel Feed",      description: "Live sermon",       route: "/gospel-feed",      color: "bg-[#10b981]",  shadow: "hover:shadow-[0_4px_20px_rgba(16,185,129,0.45)]" },
   { icon: ShoppingBag,   label: "Marketplace",      description: "Verified vendors",  route: "/marketplace",      color: "bg-amber-500",  shadow: "hover:shadow-[0_4px_20px_rgba(245,158,11,0.45)]" },
-  { icon: MessageSquare, label: "Communications",   description: "Broadcasts & chat", route: "/communications",   color: "bg-purple-600",  shadow: "hover:shadow-[0_4px_20px_rgba(147,51,234,0.45)]" },
+  { icon: MessageSquare, label: "Communications",   description: "Broadcasts & chat", route: "/communications",   color: "bg-[#06b6d4]",  shadow: "hover:shadow-[0_4px_20px_rgba(6,182,212,0.45)]" },
+  { icon: AlertTriangle, label: "Report Issue",     description: "Community signal",  route: "/community-signal", color: "bg-amber-600",  shadow: "hover:shadow-[0_4px_20px_rgba(217,119,6,0.45)]" },
 ];
 
 // ── Parent quick actions ──────────────────────────────────────────────────────
