@@ -252,8 +252,11 @@ firebase deploy --only firestore:indexes
 
 ## Documentation
 
-- **[FIREBASE_SETUP.md](FIREBASE_SETUP.md)** - Complete Firebase setup guide
-- **[IMPLEMENTATION.md](IMPLEMENTATION.md)** - Technical implementation details
+- **[PITCH_AND_DATA_STRATEGY.md](docs/PITCH_AND_DATA_STRATEGY.md)** - 🎯 **New:** Pitch script, data collection methodology, and future monetization strategy.
+- **[HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md)** - High-level overview of the ecosystem.
+- **[INVESTOR_NOTES.md](docs/INVESTOR_NOTES.md)** - Initial startup and investment context.
+- **[FIREBASE_SETUP.md](docs/FIREBASE_SETUP.md)** - Complete Firebase setup guide.
+- **[IMPLEMENTATION.md](docs/IMPLEMENTATION.md)** - Technical implementation details.
 - **[firestore.rules](firestore.rules)** - Security rules
 - **[firestore.indexes.json](firestore.indexes.json)** - Database indexes
 
