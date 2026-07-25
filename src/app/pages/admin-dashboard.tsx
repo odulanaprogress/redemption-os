@@ -369,14 +369,13 @@ function BroadcastTab({ currentUser, currentProfile }: { currentUser: any; curre
 }
 
 // ─── Tab: DATABASE MONITOR ────────────────────────────────────────────────────
-function DatabaseTab({ incidents }: { incidents: Incident[] }) {
+function DatabaseTab({ incidents, totalUsers }: { incidents: Incident[]; totalUsers: number }) {
   const [activeTable, setActiveTable] = useState<"incidents" | "broadcasts" | "users" | "children">("incidents");
   const [search, setSearch] = useState("");
   const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [children, setChildren] = useState<FamilyMember[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
-  const [totalUsers, setTotalUsers] = useState(0);
 
   useEffect(() => { const unsub = messageService.subscribeToBroadcasts((data) => setBroadcasts(data)); return unsub; }, []);
 
@@ -384,10 +383,6 @@ function DatabaseTab({ incidents }: { incidents: Incident[] }) {
     if (activeTable === "users" && users.length === 0) { setLoadingUsers(true); userService.getPaginatedUsers(50).then((r) => { setUsers(r.data); setLoadingUsers(false); }); }
     if (activeTable === "children" && children.length === 0) { setChildren(familyService.getAllMockMembers()); }
   }, [activeTable]);
-
-  useEffect(() => {
-    userService.getTotalUsersCount().then(setTotalUsers);
-  }, []);
 
   const exportIncidents = () => {
     const headers = ["ID", "Title", "Type", "Priority", "Status", "Zone", "Building", "Reported By", "Created At"];
@@ -779,12 +774,14 @@ export function AdminDashboard() {
   const [incidents, setIncidents] = useState<Incident[]>([]);
   const [loadingIncidents, setLoadingIncidents] = useState(false);
   const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
+  const [totalUsers, setTotalUsers] = useState(0);
 
   const loadIncidents = useCallback(() => { setLoadingIncidents(true); incidentService.getActiveIncidents().then((data) => { setIncidents(data); setLoadingIncidents(false); }); }, []);
 
   useEffect(() => { loadIncidents(); }, [loadIncidents]);
   useEffect(() => { const unsub = messageService.subscribeToBroadcasts((data) => setBroadcasts(data)); return unsub; }, []);
   useEffect(() => { if (tabParam && tabParam !== activeTab) setActiveTab(tabParam); }, [tabParam]);
+  useEffect(() => { userService.getTotalUsersCount().then(setTotalUsers); }, []);
 
   const handleTabChange = (t: typeof TABS[number]["key"]) => { setActiveTab(t); setSearchParams({ tab: t }); };
 
@@ -837,7 +834,7 @@ export function AdminDashboard() {
           <motion.div key={activeTab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.15 }}>
             {activeTab === "overview" && <OverviewTab incidents={incidents} loadingIncidents={loadingIncidents} broadcasts={broadcasts} totalUsers={totalUsers} onRefresh={loadIncidents} navigate={navigate} />}
             {activeTab === "broadcast" && <BroadcastTab currentUser={currentUser} currentProfile={userProfile} />}
-            {activeTab === "database" && <DatabaseTab incidents={incidents} />}
+            {activeTab === "database" && <DatabaseTab incidents={incidents} totalUsers={totalUsers} />}
             {activeTab === "onboarding" && <OnboardingTab />}
             {activeTab === "system" && <SystemHealthTab />}
           </motion.div>
