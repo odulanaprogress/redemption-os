@@ -4,10 +4,10 @@ import type { Destination, LatLng } from "../types";
 export const RCCG_CAMP_CENTER: LatLng = { lat: 6.827482, lng: 3.462833 };
 
 export const RCCG_CAMP_BOUNDS = {
-  north: 6.83,
-  south: 6.79,
-  east: 3.47,
-  west: 3.44,
+  north: 6.95, // Expanded north boundary
+  south: 6.70, // Expanded south boundary
+  east: 3.55,  // Expanded east boundary
+  west: 3.35,  // Expanded west boundary
 };
 
 /** Check if a GPS coordinate is inside the camp perimeter */

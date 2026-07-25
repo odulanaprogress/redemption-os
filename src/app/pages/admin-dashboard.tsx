@@ -26,8 +26,9 @@ import { useNotifications } from "../../hooks/useNotifications";
 import { useAuth } from "../../hooks/useAuth";
 import { useSessionStore } from "../../store/session.store";
 import { NotificationBell } from "../components/NotificationBell";
-import { Incident, UserProfile, FamilyMember } from "../../types";
+import { UserProfile, FamilyMember, Incident } from "../../types";
 import { familyService } from "../../services/family.service";
+import { locationService } from "../../services/location.service";
 import { formatDistanceToNow, format } from "date-fns";
 import { toast } from "sonner";
 
@@ -111,8 +112,14 @@ function StatCard({ icon: Icon, label, value, sub, accentColor, bgColor, pulse }
 function OverviewTab({ incidents, loadingIncidents, onRefresh, navigate, broadcasts }: {
   incidents: Incident[]; loadingIncidents: boolean; broadcasts: Broadcast[]; onRefresh: () => void; navigate: (p: string) => void;
 }) {
-  const [liveCount, setLiveCount] = useState(12847);
-  useEffect(() => { const t = setInterval(() => setLiveCount((c) => c + Math.floor(Math.random() * 5) - 2), 3000); return () => clearInterval(t); }, []);
+  const [liveCount, setLiveCount] = useState(0);
+  
+  useEffect(() => {
+    const unsub = locationService.subscribeToLiveLocations((locs) => {
+      setLiveCount(locs.length);
+    });
+    return unsub;
+  }, []);
 
   const stats = [
     { icon: Users, label: "Total Attendees", value: liveCount.toLocaleString(), sub: "+14.2%", accentColor: "text-[#5B4FE8]", bgColor: "bg-[#EDE9FE]" },
