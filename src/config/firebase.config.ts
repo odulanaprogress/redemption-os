@@ -14,7 +14,7 @@ const firebaseConfig = {
 };
 
 // Demo/mock mode activates when no real Firebase API key is present or when forced
-export const isMockMode =
+export let isMockMode =
   import.meta.env.VITE_USE_MOCK_DATA === 'true' ||
   !firebaseConfig.apiKey ||
   firebaseConfig.apiKey === 'undefined' ||
@@ -34,6 +34,7 @@ if (!isMockMode) {
     console.info('✅ Redemption OS connected to Firebase');
   } catch (error) {
     console.warn('⚠️ Firebase initialization failed, running in demo mode:', error);
+    isMockMode = true;
   }
 } else {
   console.info('🎭 Redemption OS running in Demo Mode');
