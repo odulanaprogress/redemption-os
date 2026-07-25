@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Globe, Lock, Mail, ArrowLeft, ChevronDown, ChevronUp, Zap } from "lucide-react";
+import { Globe, Lock, Mail, ArrowLeft, ChevronDown, ChevronUp, Zap, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "sonner";
 import { isMockMode } from "../../config/firebase.config";
@@ -15,6 +15,7 @@ export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showDemo, setShowDemo] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [resettingPassword, setResettingPassword] = useState(false);
   const [isSeeding, setIsSeeding] = useState(false);
   const { login, resetPassword, isAuthenticated, userProfile, isLoading } = useAuth();
@@ -160,13 +161,20 @@ export function LoginPage() {
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#9CA3AF]" />
                 <Input
                   id="password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="pl-10 h-10 border-[#E5E7EB] bg-white text-[#0D0D0D] placeholder:text-[#9CA3AF] focus:border-[#5B4FE8] focus:ring-[#5B4FE8]/10 rounded-md"
+                  className="pl-10 pr-10 h-10 border-[#E5E7EB] bg-white text-[#0D0D0D] placeholder:text-[#9CA3AF] focus:border-[#5B4FE8] focus:ring-[#5B4FE8]/10 rounded-md"
                   required
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#0D0D0D] transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
               </div>
             </div>
 

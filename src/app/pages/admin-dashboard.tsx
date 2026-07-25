@@ -109,8 +109,8 @@ function StatCard({ icon: Icon, label, value, sub, accentColor, bgColor, pulse }
 }
 
 // ─── Tab: OVERVIEW ────────────────────────────────────────────────────────────
-function OverviewTab({ incidents, loadingIncidents, onRefresh, navigate, broadcasts }: {
-  incidents: Incident[]; loadingIncidents: boolean; broadcasts: Broadcast[]; onRefresh: () => void; navigate: (p: string) => void;
+function OverviewTab({ incidents, loadingIncidents, onRefresh, navigate, broadcasts, totalUsers }: {
+  incidents: Incident[]; loadingIncidents: boolean; broadcasts: Broadcast[]; totalUsers: number; onRefresh: () => void; navigate: (p: string) => void;
 }) {
   const [liveCount, setLiveCount] = useState(0);
   
@@ -122,10 +122,10 @@ function OverviewTab({ incidents, loadingIncidents, onRefresh, navigate, broadca
   }, []);
 
   const stats = [
-    { icon: Users, label: "Total Attendees", value: liveCount.toLocaleString(), sub: "+14.2%", accentColor: "text-[#5B4FE8]", bgColor: "bg-[#EDE9FE]" },
+    { icon: Users, label: "Total Registered", value: totalUsers > 0 ? totalUsers.toLocaleString() : "...", sub: "All Users", accentColor: "text-[#5B4FE8]", bgColor: "bg-[#EDE9FE]" },
+    { icon: MapPin, label: "Live Attendees", value: liveCount.toLocaleString(), sub: "Currently Tracking", accentColor: "text-[#0ea5e9]", bgColor: "bg-[#e0f2fe]" },
     { icon: AlertTriangle, label: "Active Incidents", value: String(incidents.length || "0"), sub: incidents.length > 0 ? "Needs Attention" : "All Clear", accentColor: incidents.length > 0 ? "text-[#DC2626]" : "text-[#059669]", bgColor: incidents.length > 0 ? "bg-red-50" : "bg-emerald-50", pulse: incidents.length > 0 },
     { icon: Radio, label: "Broadcasts Sent", value: String(broadcasts.length), sub: "Today", accentColor: "text-[#059669]", bgColor: "bg-emerald-50" },
-    { icon: TrendingUp, label: "Avg Response Time", value: "1.8 min", sub: "↓ 12%", accentColor: "text-[#5B4FE8]", bgColor: "bg-[#EDE9FE]" },
   ];
 
   const tooltipStyle = { background: "#fff", border: "1px solid #E5E7EB", borderRadius: 8, color: "#0D0D0D", fontSize: 12, boxShadow: "0 4px 12px rgba(0,0,0,0.08)" };
@@ -376,6 +376,7 @@ function DatabaseTab({ incidents }: { incidents: Incident[] }) {
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [children, setChildren] = useState<FamilyMember[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const [totalUsers, setTotalUsers] = useState(0);
 
   useEffect(() => { const unsub = messageService.subscribeToBroadcasts((data) => setBroadcasts(data)); return unsub; }, []);
 
@@ -383,6 +384,10 @@ function DatabaseTab({ incidents }: { incidents: Incident[] }) {
     if (activeTable === "users" && users.length === 0) { setLoadingUsers(true); userService.getPaginatedUsers(50).then((r) => { setUsers(r.data); setLoadingUsers(false); }); }
     if (activeTable === "children" && children.length === 0) { setChildren(familyService.getAllMockMembers()); }
   }, [activeTable]);
+
+  useEffect(() => {
+    userService.getTotalUsersCount().then(setTotalUsers);
+  }, []);
 
   const exportIncidents = () => {
     const headers = ["ID", "Title", "Type", "Priority", "Status", "Zone", "Building", "Reported By", "Created At"];
@@ -417,7 +422,7 @@ function DatabaseTab({ incidents }: { incidents: Incident[] }) {
   const tables = [
     { key: "incidents", label: "Incidents", count: incidents.length, icon: AlertTriangle },
     { key: "broadcasts", label: "Broadcasts", count: broadcasts.length, icon: Radio },
-    { key: "users", label: "Users", count: users.length, icon: Users },
+    { key: "users", label: "Users", count: totalUsers > 0 ? totalUsers : users.length, icon: Users },
     { key: "children", label: "Children", count: children.length, icon: QrCode },
   ] as const;
 
@@ -830,7 +835,7 @@ export function AdminDashboard() {
       <div className="p-4 lg:p-6 max-w-7xl mx-auto">
         <AnimatePresence mode="wait">
           <motion.div key={activeTab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }} transition={{ duration: 0.15 }}>
-            {activeTab === "overview" && <OverviewTab incidents={incidents} loadingIncidents={loadingIncidents} broadcasts={broadcasts} onRefresh={loadIncidents} navigate={navigate} />}
+            {activeTab === "overview" && <OverviewTab incidents={incidents} loadingIncidents={loadingIncidents} broadcasts={broadcasts} totalUsers={totalUsers} onRefresh={loadIncidents} navigate={navigate} />}
             {activeTab === "broadcast" && <BroadcastTab currentUser={currentUser} currentProfile={userProfile} />}
             {activeTab === "database" && <DatabaseTab incidents={incidents} />}
             {activeTab === "onboarding" && <OnboardingTab />}

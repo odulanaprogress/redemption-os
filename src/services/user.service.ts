@@ -11,7 +11,9 @@ import {
   orderBy,
   limit,
   startAfter,
+  startAfter,
   DocumentSnapshot,
+  getCountFromServer,
 } from 'firebase/firestore';
 import { db, isMockMode } from '../config/firebase.config';
 import { MOCK_PROFILES } from '../config/mock-data';
@@ -159,7 +161,7 @@ export class UserService {
       };
     }
     try {
-      let q = query(collection(db!, this.collectionName), orderBy('createdAt', 'desc'), limit(pageSize + 1));
+      let q = query(collection(db!, this.collectionName), limit(pageSize + 1));
       if (lastDoc) q = query(q, startAfter(lastDoc));
       const querySnapshot = await getDocs(q);
       const users = querySnapshot.docs.slice(0, pageSize).map((doc) => ({ uid: doc.id, ...doc.data() } as UserProfile));
@@ -179,6 +181,20 @@ export class UserService {
         data: [],
         pagination: { currentPage: 1, totalPages: 1, totalItems: 0, hasNext: false, hasPrevious: false },
       };
+    }
+  }
+
+  async getTotalUsersCount(): Promise<number> {
+    if (isMockMode) {
+      return Object.keys(MOCK_PROFILES).length;
+    }
+    try {
+      const coll = collection(db!, this.collectionName);
+      const snapshot = await getCountFromServer(coll);
+      return snapshot.data().count;
+    } catch (error) {
+      console.error('Get total users error:', error);
+      return 0;
     }
   }
 }
