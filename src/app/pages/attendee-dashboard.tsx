@@ -163,11 +163,15 @@ export function AttendeeDashboard() {
   }, []);
 
   // Compute live occupancy rates based on real-time location stream
-  const totalLive = liveLocations.length;
-  // If there's live data, distribute it so the bars light up immediately for the demo
-  const mainCount = totalLive;
-  const youthCount = totalLive > 0 ? Math.max(1, Math.floor(totalLive * 0.5)) : 0;
-  const gateCount = totalLive > 0 ? Math.max(1, Math.floor(totalLive * 0.3)) : 0;
+  const mainCount = liveLocations.filter(
+    (l) => l.lat >= 6.799 && l.lat <= 6.805 && l.lng >= 3.445 && l.lng <= 3.451
+  ).length;
+  const youthCount = liveLocations.filter(
+    (l) => l.lat >= 6.824 && l.lat <= 6.828 && l.lng >= 3.464 && l.lng <= 3.468
+  ).length;
+  const gateCount = liveLocations.filter(
+    (l) => l.lat >= 6.825 && l.lat <= 6.829 && l.lng >= 3.460 && l.lng <= 3.464
+  ).length;
 
   const crowdItems = [
     { label: "The 3x3km Arena", percent: liveLocations.length > 0 ? Math.min(95, Math.max(15, mainCount * 12 + 40)) : 0, color: "from-red-500 to-orange-400" },
