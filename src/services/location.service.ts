@@ -148,13 +148,21 @@ export class LocationService {
     onError?: (err: Error) => void
   ): () => void {
     if (isMockMode) {
+      // Store current counts outside the generation loop so they drift organically
+      let currentMainCount = 3;
+      let currentYouthCount = 2;
+      let currentOverflowCount = 4;
+
       const generateMockLocations = () => {
         const locations: UserLocationDoc[] = [];
         const now = new Date();
         
-        // In AttendeeDashboard: mainCount * 12 + 40 (we want mainCount between 1 and 4 for 52% - 88%)
-        const mainCount = Math.floor(Math.random() * 4) + 1;
-        for (let i = 0; i < mainCount; i++) {
+        // Randomly drift counts up or down by 1 (or stay same) to simulate people trickling in/out
+        currentMainCount = Math.max(1, Math.min(5, currentMainCount + (Math.floor(Math.random() * 3) - 1)));
+        currentYouthCount = Math.max(1, Math.min(5, currentYouthCount + (Math.floor(Math.random() * 3) - 1)));
+        currentOverflowCount = Math.max(2, Math.min(8, currentOverflowCount + (Math.floor(Math.random() * 3) - 1)));
+        
+        for (let i = 0; i < currentMainCount; i++) {
           locations.push({
             uid: `mock-main-${i}`,
             lat: 6.799 + Math.random() * 0.006,
@@ -164,9 +172,7 @@ export class LocationService {
           });
         }
         
-        // In AttendeeDashboard: youthCount * 15 + 25 (we want youthCount between 1 and 4 for 40% - 85%)
-        const youthCount = Math.floor(Math.random() * 4) + 1;
-        for (let i = 0; i < youthCount; i++) {
+        for (let i = 0; i < currentYouthCount; i++) {
           locations.push({
             uid: `mock-youth-${i}`,
             lat: 6.824 + Math.random() * 0.004,
@@ -176,9 +182,7 @@ export class LocationService {
           });
         }
 
-        // In AttendeeDashboard: gateCount * 10 + 20 (we want gateCount between 2 and 7 for 40% - 90%)
-        const overflowCount = Math.floor(Math.random() * 6) + 2;
-        for (let i = 0; i < overflowCount; i++) {
+        for (let i = 0; i < currentOverflowCount; i++) {
           locations.push({
             uid: `mock-overflow-${i}`,
             lat: 6.825 + Math.random() * 0.004,
@@ -192,7 +196,8 @@ export class LocationService {
       };
       
       generateMockLocations();
-      const interval = setInterval(generateMockLocations, 3000);
+      // Update every 8 seconds for a more natural, realistic crowd movement speed
+      const interval = setInterval(generateMockLocations, 8000);
       return () => clearInterval(interval);
     }
 
