@@ -148,8 +148,52 @@ export class LocationService {
     onError?: (err: Error) => void
   ): () => void {
     if (isMockMode) {
-      callback([]);
-      return () => {};
+      const generateMockLocations = () => {
+        const locations: UserLocationDoc[] = [];
+        const now = new Date();
+        
+        // In AttendeeDashboard: mainCount * 12 + 40 (we want mainCount between 1 and 4 for 52% - 88%)
+        const mainCount = Math.floor(Math.random() * 4) + 1;
+        for (let i = 0; i < mainCount; i++) {
+          locations.push({
+            uid: `mock-main-${i}`,
+            lat: 6.799 + Math.random() * 0.006,
+            lng: 3.445 + Math.random() * 0.006,
+            updatedAt: now,
+            isActive: true
+          });
+        }
+        
+        // In AttendeeDashboard: youthCount * 15 + 25 (we want youthCount between 1 and 4 for 40% - 85%)
+        const youthCount = Math.floor(Math.random() * 4) + 1;
+        for (let i = 0; i < youthCount; i++) {
+          locations.push({
+            uid: `mock-youth-${i}`,
+            lat: 6.824 + Math.random() * 0.004,
+            lng: 3.464 + Math.random() * 0.004,
+            updatedAt: now,
+            isActive: true
+          });
+        }
+
+        // In AttendeeDashboard: gateCount * 10 + 20 (we want gateCount between 2 and 7 for 40% - 90%)
+        const overflowCount = Math.floor(Math.random() * 6) + 2;
+        for (let i = 0; i < overflowCount; i++) {
+          locations.push({
+            uid: `mock-overflow-${i}`,
+            lat: 6.825 + Math.random() * 0.004,
+            lng: 3.460 + Math.random() * 0.004,
+            updatedAt: now,
+            isActive: true
+          });
+        }
+
+        callback(locations);
+      };
+      
+      generateMockLocations();
+      const interval = setInterval(generateMockLocations, 3000);
+      return () => clearInterval(interval);
     }
 
     const q = query(
