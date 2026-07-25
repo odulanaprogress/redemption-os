@@ -180,6 +180,41 @@ export function AttendeeDashboard() {
     { label: "Prayer Garden",  percent: liveLocations.length > 0 ? Math.min(85, Math.max(5, Math.round(liveLocations.length * 8 + 15))) : 0, color: "from-[#10b981] to-[#0ea5e9]" },
   ];
 
+  const renderCrowdStatus = (className: string) => {
+    if (isParent) return null;
+    return (
+      <Card className={`bg-white border-[#f0edff] p-5 ${className}`}>
+        <div className="flex items-center justify-between mb-4">
+          <h4 className="text-[#0D0D0D] font-semibold">Current Crowd Status</h4>
+          <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 text-[10px]">
+            <Activity className="h-3 w-3 mr-1 animate-pulse" />Live Stream
+          </Badge>
+        </div>
+        {crowdItems.map(({ label, percent, color }) => {
+          const level = percent > 75 ? "High" : percent > 50 ? "Medium" : "Low";
+          return (
+            <div key={label} className="mb-3 last:mb-0">
+              <div className="flex items-center justify-between text-sm mb-1.5">
+                <span className="text-[#6B7280] text-xs font-medium">{label}</span>
+                <span className={`text-xs font-medium ${percent > 75 ? "text-red-500" : percent > 50 ? "text-amber-500" : "text-emerald-600"}`}>
+                  {level} — {percent}%
+                </span>
+              </div>
+              <div className="h-1.5 bg-[#ede9fe] rounded-full overflow-hidden">
+                <motion.div
+                  className={`h-full bg-gradient-to-r ${color}`}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${percent}%` }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </Card>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F8F9FF] to-[#f3f0ff] lg:pl-16 xl:pl-20">
 
@@ -257,7 +292,7 @@ export function AttendeeDashboard() {
                 </div>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-[#6B7280]">
                   <div className="flex items-center gap-2"><Clock className="h-4 w-4" /><span>Started 6:00 AM</span></div>
-                  <div className="flex items-center gap-2"><Users className="h-4 w-4" /><span>94,312 attending</span></div>
+                  <div className="flex items-center gap-2"><Users className="h-4 w-4" /><span>{liveLocations.length.toLocaleString()} attending</span></div>
                 </div>
                 <Button onClick={() => navigate("/gospel-feed")}
                   className="mt-4 bg-[#5B4FE8]/20 hover:bg-[#5B4FE8]/30 text-[#5B4FE8] border border-[#5B4FE8]/30 w-full sm:w-auto">
@@ -306,43 +341,16 @@ export function AttendeeDashboard() {
               </Card>
             </div>
 
+            {/* Render crowd status on mobile only (hidden on lg) */}
+            {renderCrowdStatus("lg:hidden mt-5")}
+
           </div>{/* end left column */}
 
           {/* ── RIGHT / SIDEBAR COLUMN (lg+) ── */}
           <div className="mt-5 lg:mt-0 space-y-5">
 
-            {/* Crowd Status */}
-            {!isParent && (
-              <Card className="bg-white border-[#f0edff] p-5">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-[#0D0D0D] font-semibold">Current Crowd Status</h4>
-                  <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/30 text-[10px]">
-                    <Activity className="h-3 w-3 mr-1 animate-pulse" />Live Stream
-                  </Badge>
-                </div>
-                {crowdItems.map(({ label, percent, color }) => {
-                  const level = percent > 75 ? "High" : percent > 50 ? "Medium" : "Low";
-                  return (
-                    <div key={label} className="mb-3 last:mb-0">
-                      <div className="flex items-center justify-between text-sm mb-1.5">
-                        <span className="text-[#6B7280] text-xs font-medium">{label}</span>
-                        <span className={`text-xs font-medium ${percent > 75 ? "text-red-500" : percent > 50 ? "text-amber-500" : "text-emerald-600"}`}>
-                          {level} — {percent}%
-                        </span>
-                      </div>
-                      <div className="h-1.5 bg-[#ede9fe] rounded-full overflow-hidden">
-                        <motion.div
-                          className={`h-full bg-gradient-to-r ${color}`}
-                          initial={{ width: 0 }}
-                          animate={{ width: `${percent}%` }}
-                          transition={{ duration: 0.8, ease: "easeOut" }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </Card>
-            )}
+            {/* Crowd Status - Desktop only */}
+            {renderCrowdStatus("hidden lg:block")}
 
             {/* Live Notifications Feed */}
             <div>
