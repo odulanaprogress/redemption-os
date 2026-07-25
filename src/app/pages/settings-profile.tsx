@@ -35,6 +35,14 @@ export function SettingsProfile() {
     eventReminders: true,
   });
   const [lowDataMode, setLowDataMode] = useState(false);
+  const [simulateCrowd, setSimulateCrowd] = useState(() => localStorage.getItem("redemption_simulate_crowd") === "true");
+
+  const handleSimulateCrowdChange = (checked: boolean) => {
+    setSimulateCrowd(checked);
+    localStorage.setItem("redemption_simulate_crowd", checked.toString());
+    toast.success(checked ? "Simulation Mode Enabled (Crowd Data is Fake)" : "Live Mode Enabled (Crowd Data is Real)");
+    setTimeout(() => window.location.reload(), 1000);
+  };
 
   const avatarRef = useRef<HTMLInputElement>(null);
 
@@ -234,6 +242,14 @@ export function SettingsProfile() {
                 <Label htmlFor="lowdata" className="text-[#4B5563]">Low Data Mode</Label>
               </div>
               <Switch id="lowdata" checked={lowDataMode} onCheckedChange={setLowDataMode} />
+            </div>
+            <Separator className="bg-[#F3F4F6]" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Globe className="h-4 w-4 text-[#0ea5e9]" />
+                <Label htmlFor="simulation" className="text-[#4B5563]">Simulate Live Crowd Data (Demo)</Label>
+              </div>
+              <Switch id="simulation" checked={simulateCrowd} onCheckedChange={handleSimulateCrowdChange} />
             </div>
           </div>
         </Card>

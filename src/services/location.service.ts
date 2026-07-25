@@ -73,7 +73,9 @@ export class LocationService {
       return () => {};
     }
 
-    if (isMockMode) {
+    const forceSimulation = localStorage.getItem('redemption_simulate_crowd') === 'true';
+
+    if (isMockMode || forceSimulation) {
       onStatus?.('Running in demo mode — location not saved to database');
       return () => {};
     }
@@ -123,7 +125,9 @@ export class LocationService {
       this.refreshInterval = null;
     }
     
-    if (isMockMode) return;
+    const forceSimulation = localStorage.getItem('redemption_simulate_crowd') === 'true';
+    if (isMockMode || forceSimulation) return;
+    
     try {
       await setDoc(
         doc(db!, 'user_locations', uid),
@@ -147,7 +151,9 @@ export class LocationService {
     callback: (locations: UserLocationDoc[]) => void,
     onError?: (err: Error) => void
   ): () => void {
-    if (isMockMode) {
+    const forceSimulation = localStorage.getItem('redemption_simulate_crowd') === 'true';
+
+    if (isMockMode || forceSimulation) {
       // Store current counts outside the generation loop so they drift organically
       let currentMainCount = 3;
       let currentYouthCount = 2;
