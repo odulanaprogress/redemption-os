@@ -443,7 +443,11 @@ VITE_CLOUDINARY_UPLOAD_PRESET=
 # App
 VITE_APP_NAME=Redemption OS
 VITE_APP_VERSION=1.0.0
+VITE_USE_MOCK_DATA=false
 ```
+
+### Mock Mode Fallback
+If the application fails to initialize Firebase (e.g., missing API keys on Vercel deployment) or if `VITE_USE_MOCK_DATA` is true, the application will automatically fallback to a fully functional offline Demo Mode. In this mode, live components (such as the Satellite Crowd Estimator) will simulate data mathematically rather than crashing.
 
 ## Development Workflow
 

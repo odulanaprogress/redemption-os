@@ -149,7 +149,7 @@ A dedicated command view for event security:
 - Ability to assign incidents to staff members
 - Update incident status (Reported → In Progress → Resolved)
 - Create emergency broadcasts to all users
-- View real-time crowd data and zone status
+- **Live Satellite Crowd Estimator** — View real-time crowd data and zone status. (Note: During development/demos before the live event, a Simulation Mode automatically kicks in to simulate the exact movement of 90,000 attendees).
 
 ---
 

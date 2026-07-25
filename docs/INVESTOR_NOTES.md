@@ -536,12 +536,13 @@ This means a demo can be run anywhere — no Firebase account, no credentials, n
 2. **Decentralized messaging** — Nostr protocol eliminates a single point of failure for communications
 3. **BLE Mesh networking** — Offline peer-to-peer coordination without infrastructure
 4. **AI with graceful fallback** — AI features that never break, even without OpenAI access
+5. **Data Monetization Engine** — Built-in telemetry capable of generating analytics for corporate sponsors, capturing marketplace commissions, and enabling hyper-targeted push notifications for vendors.
 
-### Market Fit
-- RCCG Holy Ghost Congress: 500,000+ attendees per year
-- Hillsong, T.D. Jakes, Joyce Meyer conferences: 50,000–100,000 attendees each
-- Stadium events, political rallies, government summits — same infrastructure problem
-- Emerging market focus: USSD fallback is a USP no Western competitor has
+### Market Fit & Business Model
+- **Primary Market:** RCCG Holy Ghost Congress: 500,000+ attendees per year
+- **Secondary Markets:** Hillsong, T.D. Jakes, Joyce Meyer conferences: 50,000–100,000 attendees each
+- **B2B SaaS Licensing:** The core software can be white-labeled for stadium events, political rallies, and government summits globally.
+- **Emerging Market Focus:** USSD fallback is a USP no Western competitor has.
 
 ### Technology Moat
 - The architecture is not replaceable with a simple SaaS product. It took deliberate decisions across 5+ technical layers to achieve this resilience profile.

@@ -648,7 +648,7 @@ Sentry is initialized in `src/config/sentry.config.ts` and called from `src/main
 
 | Issue | Notes |
 |-------|-------|
-| **Mock Mode** | Always set `VITE_USE_MOCK_DATA=false` in production. The app should always connect to the live Firebase project. |
+| **Mock Mode Fallback** | The application attempts to connect to the live Firebase project by default. If initialization fails (e.g., missing environment variables on Vercel), it gracefully and automatically falls back to full Mock Mode to prevent crashes. |
 | **Cloudinary unsigned uploads** | The upload preset must be set to "Unsigned" in the Cloudinary dashboard. Signed uploads require a backend proxy. |
 | **Video size limits** | Cloudinary free tier has a 100MB file size limit. |
 | **Firestore indexes** | Compound queries (e.g., `where + orderBy`) require composite indexes. Create them in the Firebase Console when you see index errors in the console. |
