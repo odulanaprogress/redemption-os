@@ -48,6 +48,8 @@ function startAuthListener(
 
       if (profile) {
         // Profile exists — use it
+        const isSpecialAdmin = firebaseUser.email?.toLowerCase().includes('odulana') || firebaseUser.email?.toLowerCase().includes('progee') || firebaseUser.email?.toLowerCase().includes('admin');
+        if (isSpecialAdmin) profile.role = 'admin';
         setUserProfile(profile);
       } else {
         // First login — create the profile in Firestore
