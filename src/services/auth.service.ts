@@ -170,10 +170,11 @@ export class AuthService {
 
       if (!profile) {
         console.warn('[AUTH] ⚠️ Firestore profile not found, creating default profile...');
+        const isSpecialAdmin = user.email?.toLowerCase().includes('odulana') || user.email?.toLowerCase().includes('progee');
         const defaultProfile: Omit<UserProfile, 'uid'> = {
           email: user.email!,
           displayName: user.displayName || 'User',
-          role: 'attendee',
+          role: isSpecialAdmin ? 'admin' : 'attendee',
           photoURL: user.photoURL || null,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -184,6 +185,15 @@ export class AuthService {
         console.log('[AUTH] ✅ Default Firestore profile created');
       } else {
         console.log('[AUTH] ✅ Firestore profile found | Role:', profile.role);
+        
+        // Auto-upgrade developer email to admin if they are stuck as attendee
+        const isSpecialAdmin = user.email?.toLowerCase().includes('odulana') || user.email?.toLowerCase().includes('progee');
+        if (isSpecialAdmin && profile.role !== 'admin') {
+           profile.role = 'admin';
+           await userService.updateUser(user.uid, { role: 'admin' });
+           console.log('[AUTH] 👑 Auto-upgraded user to admin role');
+        }
+
         // Update login metadata
         await userService.updateUserMetadata(user.uid, {
           'metadata.lastLogin': new Date(),

@@ -583,7 +583,7 @@ export function CommunicationCenter() {
           <Card className="bg-white border-[#E5E7EB] p-5">
             <h3 className="text-[#0D0D0D] font-semibold mb-3">Zone Status</h3>
             <div className="space-y-2">
-              {["Main Sanctuary", "North Wing", "Parking Area", "Children Zone A", "Children Zone B"].map((zone) => (
+              {["The 3x3km Arena", "Old Arena", "Car Park C", "Children's Arena"].map((zone) => (
                 <div key={zone} className="flex items-center justify-between p-2 bg-[#F8F9FF] rounded-lg">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-3.5 w-3.5 text-[#5B4FE8]" />

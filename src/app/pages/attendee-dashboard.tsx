@@ -20,7 +20,7 @@ import { locationService, UserLocationDoc } from "../../services/location.servic
 const GALLERY_SLIDES = [
   {
     url: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80",
-    caption: "Holy Ghost Congress — Main Sanctuary, 2024",
+    caption: "Holy Ghost Congress — The 3x3km Arena, 2024",
   },
   {
     url: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1200&q=80",
@@ -28,7 +28,7 @@ const GALLERY_SLIDES = [
   },
   {
     url: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&q=80",
-    caption: "Prayer Garden — All-Night Intercession, Redemption City",
+    caption: "Children's Arena — Evening Session, Redemption City",
   },
 ];
 
@@ -174,10 +174,10 @@ export function AttendeeDashboard() {
   ).length;
 
   const crowdItems = [
-    { label: "Main Sanctuary", percent: liveLocations.length > 0 ? Math.min(95, Math.max(15, mainCount * 12 + 40)) : 0, color: "from-red-500 to-orange-400" },
-    { label: "Hall B",         percent: liveLocations.length > 0 ? Math.min(90, Math.max(10, youthCount * 15 + 25)) : 0, color: "from-amber-400 to-orange-400" },
-    { label: "Overflow Arena", percent: liveLocations.length > 0 ? Math.min(90, Math.max(10, gateCount * 10 + 20)) : 0, color: "from-[#10b981] to-[#0ea5e9]" },
-    { label: "Prayer Garden",  percent: liveLocations.length > 0 ? Math.min(85, Math.max(5, Math.round(liveLocations.length * 8 + 15))) : 0, color: "from-[#10b981] to-[#0ea5e9]" },
+    { label: "The 3x3km Arena", percent: liveLocations.length > 0 ? Math.min(95, Math.max(15, mainCount * 12 + 40)) : 0, color: "from-red-500 to-orange-400" },
+    { label: "Old Arena",  percent: liveLocations.length > 0 ? Math.min(90, Math.max(10, youthCount * 15 + 25)) : 0, color: "from-amber-400 to-orange-400" },
+    { label: "Car Park C",      percent: liveLocations.length > 0 ? Math.min(90, Math.max(10, gateCount * 10 + 20)) : 0, color: "from-[#10b981] to-[#0ea5e9]" },
+    { label: "Children's Arena",percent: liveLocations.length > 0 ? Math.min(85, Math.max(5, Math.round(liveLocations.length * 8 + 15))) : 0, color: "from-[#10b981] to-[#0ea5e9]" },
   ];
 
   const renderCrowdStatus = (className: string) => {
@@ -285,7 +285,7 @@ export function AttendeeDashboard() {
                     <div className="h-3 w-3 rounded-full bg-[#10b981] animate-pulse" />
                     <div>
                       <h2 className="text-lg md:text-xl text-[#0D0D0D] font-semibold">Holy Ghost Congress — Live</h2>
-                      <p className="text-sm text-[#6B7280]">Main Sanctuary · Redemption City</p>
+                      <p className="text-sm text-[#6B7280]">The 3x3km Arena · Redemption City</p>
                     </div>
                   </div>
                   <Badge className="bg-[#10b981]/20 text-[#059669] border-[#10b981]/30 shrink-0">Live</Badge>
@@ -400,7 +400,7 @@ export function AttendeeDashboard() {
                 ) : (
                   [
                     { icon: Activity, message: "Holy Ghost Congress: Night session begins at 9 PM", time: "Just now" },
-                    { icon: MapPin,   message: "Prayer Garden — Low crowd density, open seating", time: "5 min ago" },
+                    { icon: MapPin,   message: "Children's Arena — Low crowd density, open seating", time: "5 min ago" },
                     { icon: Users,    message: "94,312 attendees currently checked in", time: "10 min ago" },
                   ].map((n, i) => (
                     <motion.div key={i} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.08 }}>

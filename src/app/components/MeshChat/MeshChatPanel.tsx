@@ -10,10 +10,13 @@ import { formatDistanceToNow } from "date-fns";
 // ── RCCG Zones ────────────────────────────────────────────────────────────────
 const ZONES = [
   "All Zones",
-  "Main Sanctuary",
+  "The 3x3km Arena",
   "Hall B",
   "Overflow Arena",
-  "Prayer Garden",
+  "Old Arena",
+  "New Auditorium",
+  "Children's Arena",
+  "Youth Centre",
 ];
 
 // ── Relay status pill ─────────────────────────────────────────────────────────
@@ -219,7 +222,7 @@ export function MeshChatPanel({ displayName }: MeshChatPanelProps) {
                 handleSend();
               }
             }}
-            placeholder={status === "connected" ? "Send to mesh network…" : "Waiting for relay connection…"}
+            placeholder={status === "connected" ? "Send to Children's Arena…" : "Waiting for relay connection…"}
             disabled={status !== "connected"}
             className="flex-1 bg-[#F8F9FF] border-[#f0edff] text-[#0D0D0D] placeholder:text-[#9CA3AF] text-sm min-h-[40px] max-h-[100px] resize-none disabled:opacity-50"
             rows={1}

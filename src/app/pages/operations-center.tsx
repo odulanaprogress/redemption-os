@@ -44,10 +44,10 @@ export function OperationsCenter() {
   ];
 
   const activeZones = [
-    { name: "Main Sanctuary", status: "operational", capacity: 85, attendees: 10850 },
-    { name: "North Wing", status: "operational", capacity: 62, attendees: 4960 },
-    { name: "South Wing", status: "operational", capacity: 48, attendees: 3840 },
-    { name: "Parking Lot A", status: "full", capacity: 98, attendees: 980 },
+    { name: "The 3x3km Arena", status: "operational", capacity: 85, attendees: 10850 },
+    { name: "Old Arena", status: "operational", capacity: 62, attendees: 4960 },
+    { name: "Children's Arena", status: "operational", capacity: 48, attendees: 3840 },
+    { name: "Car Park C", status: "full", capacity: 98, attendees: 980 },
   ];
 
   const aiRecommendations = [

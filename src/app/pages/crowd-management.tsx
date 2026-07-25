@@ -30,10 +30,10 @@ function getDensityBarColor(density: number) {
 }
 
 const FALLBACK_ZONES = [
-  { id: 'zone-main', name: 'Main Sanctuary', capacity: 15000, attendees: 10850, status: 'operational' },
-  { id: 'zone-north', name: 'North Wing', capacity: 8000, attendees: 4960, status: 'operational' },
-  { id: 'zone-south', name: 'South Wing', capacity: 8000, attendees: 3840, status: 'operational' },
-  { id: 'zone-parking', name: 'Parking Lot A', capacity: 1000, attendees: 980, status: 'full' },
+  { id: 'zone-main', name: 'The 3x3km Arena', capacity: 15000, attendees: 10850, status: 'operational' },
+  { id: 'zone-north', name: 'Old Arena', capacity: 8000, attendees: 4960, status: 'operational' },
+  { id: 'zone-south', name: 'Children\'s Arena', capacity: 8000, attendees: 3840, status: 'operational' },
+  { id: 'zone-parking', name: 'Car Park C', capacity: 1000, attendees: 980, status: 'full' },
 ];
 const FALLBACK_DENSITY: Record<string, number> = {
   'zone-main': 0.72,
