@@ -7,7 +7,7 @@ import { Textarea } from "../components/ui/textarea";
 import {
   ArrowLeft, MessageSquare, Bell, Radio, AlertTriangle, Users, MapPin,
   Clock, Send, Image, Video, X, Loader2, CheckCheck, Trash2, Hash,
-  Upload, Play,
+  Upload, Play, Zap,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
@@ -15,6 +15,7 @@ import { messageService, Broadcast, Message } from "../../services/message.servi
 import { cloudinaryService } from "../../services/cloudinary.service";
 import { useAuthStore } from "../../store/auth.store";
 import { formatDistanceToNow } from "date-fns";
+import { MeshChatPanel } from "../components/MeshChat/MeshChatPanel";
 
 const BROADCAST_TYPE_CONFIG = {
   operational: { label: "Operational", color: "text-[#5B4FE8]", bg: "bg-[#EDE9FE]", border: "border-[#5B4FE8]/30" },
@@ -163,7 +164,7 @@ export function CommunicationCenter() {
   const { user, userProfile } = useAuthStore();
   const isAdmin = userProfile?.role === "admin" || userProfile?.role === "security";
 
-  const [tab, setTab] = useState<"broadcasts" | "messages" | "emergency">("broadcasts");
+  const [tab, setTab] = useState<"broadcasts" | "messages" | "emergency" | "mesh">("broadcasts");
   const [activeChannel, setActiveChannel] = useState("general");
   const channels = messageService.getChannels();
 
@@ -321,12 +322,13 @@ export function CommunicationCenter() {
         </div>
 
         {/* Tab bar */}
-        <div className="flex gap-1 mt-3">
+        <div className="flex gap-1 mt-3 overflow-x-auto scrollbar-none">
+          {/* Firebase tabs */}
           {(["broadcasts", "messages", "emergency"] as const).map((t) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-colors capitalize ${
+              className={`flex-shrink-0 flex-1 py-1.5 px-2 rounded-lg text-xs font-medium transition-colors capitalize ${
                 tab === t
                   ? "bg-[#0ea5e9]/20 text-[#5B4FE8] border border-[#5B4FE8]/30"
                   : "text-[#6B7280] hover:text-[#4B5563]"
@@ -335,6 +337,18 @@ export function CommunicationCenter() {
               {t === "emergency" ? `🚨 Emergency${emergencyBroadcasts.length > 0 ? ` (${emergencyBroadcasts.length})` : ""}` : t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
           ))}
+          {/* BitChat / Mesh tab */}
+          <button
+            onClick={() => setTab("mesh")}
+            className={`flex-shrink-0 flex items-center gap-1 py-1.5 px-2.5 rounded-lg text-xs font-medium transition-colors ${
+              tab === "mesh"
+                ? "bg-[#5B4FE8]/20 text-[#5B4FE8] border border-[#5B4FE8]/30"
+                : "text-[#6B7280] hover:text-[#5B4FE8]"
+            }`}
+          >
+            <Zap className="h-3 w-3" />
+            Mesh Chat
+          </button>
         </div>
       </div>
 
@@ -582,6 +596,25 @@ export function CommunicationCenter() {
               ))}
             </div>
           </Card>
+        </div>
+      )}
+      {/* ── MESH CHAT TAB (BitChat / Nostr) ─────────────────────────────────── */}
+      {tab === "mesh" && (
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+          {user ? (
+            <MeshChatPanel
+              displayName={userProfile?.displayName ?? user.email ?? "Attendee"}
+              userId={user.uid}
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center flex-1 gap-4 text-[#9CA3AF] p-6">
+              <Zap className="h-10 w-10 text-[#5B4FE8]/30" />
+              <p className="text-sm font-medium text-[#4B5563]">Login required</p>
+              <p className="text-xs text-center max-w-[240px]">
+                You need to be logged in so other attendees can see your name on the mesh network.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

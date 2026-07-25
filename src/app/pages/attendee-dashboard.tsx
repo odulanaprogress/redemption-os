@@ -174,10 +174,10 @@ export function AttendeeDashboard() {
   ).length;
 
   const crowdItems = [
-    { label: "Main Sanctuary (3km Arena)", percent: liveLocations.length > 0 ? Math.min(95, Math.max(15, mainCount * 12 + 40)) : 72, color: "from-red-500 to-orange-400" },
-    { label: "Youth Centre & Arena",       percent: liveLocations.length > 0 ? Math.min(90, Math.max(10, youthCount * 15 + 25)) : 55, color: "from-amber-400 to-orange-400" },
-    { label: "Express Main Gate",          percent: liveLocations.length > 0 ? Math.min(90, Math.max(10, gateCount * 10 + 20)) : 38, color: "from-[#10b981] to-[#0ea5e9]" },
-    { label: "Prayer & Meditation Garden", percent: liveLocations.length > 0 ? Math.min(85, Math.max(5, Math.round(liveLocations.length * 8 + 15))) : 22, color: "from-[#10b981] to-[#0ea5e9]" },
+    { label: "Main Sanctuary", percent: liveLocations.length > 0 ? Math.min(95, Math.max(15, mainCount * 12 + 40)) : 0, color: "from-red-500 to-orange-400" },
+    { label: "Hall B",         percent: liveLocations.length > 0 ? Math.min(90, Math.max(10, youthCount * 15 + 25)) : 0, color: "from-amber-400 to-orange-400" },
+    { label: "Overflow Arena", percent: liveLocations.length > 0 ? Math.min(90, Math.max(10, gateCount * 10 + 20)) : 0, color: "from-[#10b981] to-[#0ea5e9]" },
+    { label: "Prayer Garden",  percent: liveLocations.length > 0 ? Math.min(85, Math.max(5, Math.round(liveLocations.length * 8 + 15))) : 0, color: "from-[#10b981] to-[#0ea5e9]" },
   ];
 
   return (
