@@ -15,10 +15,6 @@ type RegisterRole = UserRole;
 const ROLES: { value: RegisterRole; label: string; icon: any; description: string; color: string }[] = [
   { value: "attendee", label: "Attendee", icon: Users, description: "General event attendee", color: "from-[#0ea5e9] to-[#0284c7]" },
   { value: "parent", label: "Parent / Guardian", icon: Baby, description: "Parent registering children", color: "from-[#10b981] to-[#059669]" },
-  { value: "vendor", label: "Vendor / Merchant", icon: Store, description: "Market stall or shop owner", color: "from-[#5B4FE8] to-[#8B82F0]" },
-  { value: "volunteer", label: "Volunteer", icon: HeartHandshake, description: "Event volunteer staff", color: "from-amber-500 to-orange-400" },
-  { value: "security", label: "Security Officer", icon: Shield, description: "Camp security & safety team", color: "from-red-500 to-rose-600" },
-  { value: "delivery_personnel", label: "Delivery Rider", icon: Truck, description: "Logistics & order delivery", color: "from-teal-500 to-emerald-600" },
 ];
 
 export function RegisterPage() {

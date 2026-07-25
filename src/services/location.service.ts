@@ -18,7 +18,7 @@ import {
   query,
   where,
 } from 'firebase/firestore';
-import { db } from '../config/firebase.config';
+import { db, isMockMode } from '../config/firebase.config';
 import { RCCG_CAMP_BOUNDS, isWithinCampBounds } from '../config/locations';
 import type { LatLng } from '../types';
 
@@ -73,6 +73,11 @@ export class LocationService {
       return () => {};
     }
 
+    if (isMockMode) {
+      onStatus?.('Running in demo mode — location not saved to database');
+      return () => {};
+    }
+
     const writeLocation = (pos: GeolocationPosition) => {
       const loc: LatLng = { lat: pos.coords.latitude, lng: pos.coords.longitude };
 
@@ -117,6 +122,8 @@ export class LocationService {
       clearInterval(this.refreshInterval);
       this.refreshInterval = null;
     }
+    
+    if (isMockMode) return;
     try {
       await setDoc(
         doc(db!, 'user_locations', uid),
@@ -140,6 +147,11 @@ export class LocationService {
     callback: (locations: UserLocationDoc[]) => void,
     onError?: (err: Error) => void
   ): () => void {
+    if (isMockMode) {
+      callback([]);
+      return () => {};
+    }
+
     const q = query(
       collection(db!, 'user_locations'),
       where('isActive', '==', true)
