@@ -5,6 +5,8 @@ import 'qr_identity_screen.dart';
 import 'marketplace_screen.dart';
 import 'emergency_screen.dart';
 import 'ai_assistant_screen.dart';
+import 'sermon_feed_screen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -85,6 +87,13 @@ class HomeDashboardTab extends StatelessWidget {
         elevation: 1,
         actions: [
           IconButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const SermonFeedScreen()));
+            },
+            icon: const Icon(Icons.radio_button_checked, color: Color(0xFFEF4444)),
+            tooltip: 'Live Sermon Feed',
+          ),
+          IconButton(
             onPressed: onOpenAI,
             icon: const Icon(Icons.psychology_outlined, color: Color(0xFF5B4FE8)),
             tooltip: 'Redemption AI Assistant',
@@ -95,6 +104,7 @@ class HomeDashboardTab extends StatelessWidget {
             tooltip: 'Emergency SOS Dispatch',
           ),
         ],
+
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

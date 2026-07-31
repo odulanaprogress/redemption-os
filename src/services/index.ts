@@ -8,3 +8,5 @@ export { orderService } from './order.service';
 export { notificationService } from './notification.service';
 export { cloudinaryService } from './cloudinary.service';
 export { messageService } from './message.service';
+export { liveSermonService } from './live-sermon.service';
+

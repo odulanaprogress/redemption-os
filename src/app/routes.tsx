@@ -23,7 +23,9 @@ import { VendorDashboardPage } from "./pages/vendor-dashboard-page";
 import { AdminMarketplacePage } from "./pages/admin-marketplace-page";
 import { DeliveryTrackingPage } from "./pages/delivery-tracking-page";
 import { QRIdentityPage } from "./pages/qr-identity-page";
+import { MediaSermonConsole } from "./pages/media-sermon-console";
 import { ProtectedRoute } from "../components/ProtectedRoute";
+
 
 export const router = createBrowserRouter([
   {
@@ -194,4 +196,13 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  {
+    path: "/media-sermon-console",
+    element: (
+      <ProtectedRoute>
+        <MediaSermonConsole />
+      </ProtectedRoute>
+    ),
+  },
 ]);
+

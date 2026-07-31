@@ -29,8 +29,10 @@ import { NotificationBell } from "../components/NotificationBell";
 import { UserProfile, FamilyMember, Incident } from "../../types";
 import { familyService } from "../../services/family.service";
 import { locationService } from "../../services/location.service";
+import { liveSermonService, SermonSession } from "../../services/live-sermon.service";
 import { formatDistanceToNow, format } from "date-fns";
 import { toast } from "sonner";
+
 
 const crowdData = [
   { time: "6AM", count: 450 }, { time: "7AM", count: 1200 },
@@ -551,6 +553,78 @@ function DatabaseTab({ incidents, totalUsers }: { incidents: Incident[]; totalUs
 }
 
 // ─── Tab: SYSTEM HEALTH ───────────────────────────────────────────────────────
+function LiveSermonAdminMonitor() {
+  const navigate = useNavigate();
+  const [session, setSession] = useState<SermonSession | null>(liveSermonService.getActiveSession());
+
+  useEffect(() => {
+    const unsub = liveSermonService.subscribeToSession((s) => setSession(s));
+    return () => unsub();
+  }, []);
+
+  const latestChunk = session?.chunks[session.chunks.length - 1];
+
+  return (
+    <Card className="bg-gradient-to-r from-[#1A1D2E] to-[#0F172A] border border-slate-800 text-white p-6 rounded-lg shadow-xl">
+      <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center">
+            <Radio className="w-5 h-5 animate-pulse" />
+          </div>
+          <div>
+            <h3 className="font-bold text-white text-base">Live Sermon STT & Translation Stream</h3>
+            <p className="text-xs text-slate-400">Admin Live Broadcast Monitor • Sound Desk Feed</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge className={session?.status === "active" ? "bg-red-500/20 text-red-400 border-red-500/40" : "bg-slate-800 text-slate-400"}>
+            {session?.status === "active" ? "● BROADCASTING LIVE" : "INACTIVE"}
+          </Badge>
+          <Button size="sm" onClick={() => navigate("/media-sermon-console")} className="bg-[#5B4FE8] hover:bg-[#4840C8] text-white text-xs font-semibold">
+            Open Media Console
+          </Button>
+        </div>
+      </div>
+
+      {session ? (
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-slate-950 p-4 rounded-xl border border-slate-800 gap-2">
+            <div>
+              <div className="text-xs font-semibold text-amber-400 uppercase tracking-wider">Active Ministration</div>
+              <div className="text-lg font-bold text-white">{session.title}</div>
+              <div className="text-xs text-slate-400">Preacher: <span className="text-slate-200 font-semibold">{session.preacher}</span></div>
+            </div>
+            <div className="text-right text-xs text-slate-400 font-mono">
+              <div>Total Chunks: <strong className="text-emerald-400">{session.chunks.length}</strong></div>
+              <div>Words Transcribed: <strong className="text-cyan-400">{session.totalWords}</strong></div>
+            </div>
+          </div>
+
+          {latestChunk ? (
+            <div className="bg-slate-950/80 p-4 rounded-xl border border-emerald-500/30 space-y-1">
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span className="text-emerald-400 font-semibold">Latest Transcribed Chunk</span>
+                <span className="font-mono">{latestChunk.timestamp}</span>
+              </div>
+              <p className="text-white text-sm font-medium">"{latestChunk.originalText}"</p>
+              <p className="text-xs text-amber-300">Yorùbá: "{latestChunk.translations.yo}"</p>
+            </div>
+          ) : (
+            <div className="text-xs text-slate-500 text-center py-2">Waiting for live speech chunks from sound desk...</div>
+          )}
+        </div>
+      ) : (
+        <div className="flex items-center justify-between bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs text-slate-400">
+          <span>No live sermon ministration active right now.</span>
+          <Button size="sm" variant="ghost" onClick={() => navigate("/media-sermon-console")} className="text-amber-400 hover:text-amber-300">
+            Start Live Sermon Session →
+          </Button>
+        </div>
+      )}
+    </Card>
+  );
+}
+
 function SystemHealthTab() {
   const hasSentry = !!(import.meta.env.VITE_SENTRY_DSN);
   const services = [
@@ -558,12 +632,16 @@ function SystemHealthTab() {
     { name: "Firebase Auth", status: "operational", latency: "32ms", icon: Shield },
     { name: "Cloudinary Media CDN", status: "operational", latency: "78ms", icon: Activity },
     { name: "Sentry Error Monitoring", status: hasSentry ? "operational" : "not configured", latency: hasSentry ? "12ms" : "—", icon: Eye },
+    { name: "Live Sermon STT & Translation", status: "operational", latency: "18ms", icon: Radio },
     { name: "Message Service", status: "operational", latency: "21ms", icon: MessageSquare },
   ];
 
   return (
     <div className="space-y-6">
+      <LiveSermonAdminMonitor />
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+
         {[
           { label: "System Uptime", value: "99.97%", icon: TrendingUp, accentColor: "text-[#059669]", bgColor: "bg-emerald-50" },
           { label: "Active Services", value: `${services.filter(s => s.status === "operational").length}/${services.length}`, icon: Zap, accentColor: "text-[#5B4FE8]", bgColor: "bg-[#EDE9FE]" },
