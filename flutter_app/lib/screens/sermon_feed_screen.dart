@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SermonFeedScreen extends StatefulWidget {
-  const SermonFeedScreen({Key? key}) : super(key: key);
+  const SermonFeedScreen({super.key});
 
   @override
   State<SermonFeedScreen> createState() => _SermonFeedScreenState();
@@ -121,7 +121,7 @@ class _SermonFeedScreenState extends State<SermonFeedScreen> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                     side: BorderSide(
-                      color: isVerse ? Colors.emerald.withOpacity(0.4) : Colors.grey.withOpacity(0.2),
+                      color: isVerse ? const Color(0xFF10B981).withValues(alpha: 0.4) : Colors.grey.withValues(alpha: 0.2),
                     ),
                   ),
                   child: Padding(
@@ -130,7 +130,7 @@ class _SermonFeedScreenState extends State<SermonFeedScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.between,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Row(
                               children: [

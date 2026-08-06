@@ -13,19 +13,19 @@ import { useOfflineSync } from '../../hooks/useOfflineSync';
 import { locationService, UserLocationDoc } from '../../services/location.service';
 
 function getDensityColor(density: number) {
-  if (density >= 0.9) return 'text-red-400 bg-red-500/10 border-red-500/30';
-  if (density >= 0.7) return 'text-amber-400 bg-amber-500/10 border-amber-500/30';
+  if (density >= 0.85) return 'text-red-400 bg-red-500/10 border-red-500/30';
+  if (density >= 0.70) return 'text-amber-400 bg-amber-500/10 border-amber-500/30';
   return 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30';
 }
 function getDensityLabel(density: number) {
-  if (density >= 0.9) return 'Critical';
-  if (density >= 0.7) return 'High';
-  if (density >= 0.5) return 'Moderate';
-  return 'Normal';
+  if (density >= 0.85) return 'Critical Congestion';
+  if (density >= 0.70) return 'High Congestion';
+  if (density >= 0.50) return 'Moderate Traffic';
+  return 'Normal Flow';
 }
 function getDensityBarColor(density: number) {
-  if (density >= 0.9) return 'bg-red-500';
-  if (density >= 0.7) return 'bg-amber-500';
+  if (density >= 0.85) return 'bg-red-500';
+  if (density >= 0.70) return 'bg-amber-500';
   return 'bg-emerald-500';
 }
 
@@ -68,7 +68,17 @@ export function CrowdManagementDashboard() {
     const unsub = locationService.subscribeToLiveLocations((locs) => {
       setLiveLocations(locs);
     });
-    return () => unsub();
+
+    const stopSharing = locationService.startSharing(
+      'admin-crowd-monitor',
+      'Crowd Safety Monitor',
+      'security'
+    );
+
+    return () => {
+      unsub();
+      stopSharing();
+    };
   }, []);
 
   async function handleIncidentSubmit(e: React.FormEvent) {
@@ -199,8 +209,8 @@ export function CrowdManagementDashboard() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {zones.map((zone, i) => {
-              const density = densityMap[zone.id] ?? (zone.attendees / zone.capacity);
-              const pct = Math.round(density * 100);
+              const density = Math.max(0.001, densityMap[zone.id] ?? (zone.attendees / zone.capacity));
+              const pct = Math.max(1, Math.round(density * 100));
               return (
                 <motion.div key={zone.id} initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.06 }}>
                   <Card className="bg-[#0f1520]/80 backdrop-blur border-[#E5E7EB] p-5 hover:border-[#E5E7EB] transition-all">

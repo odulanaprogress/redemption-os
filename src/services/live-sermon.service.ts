@@ -302,8 +302,14 @@ class LiveSermonService {
   /**
    * Broadcast a transcript chunk manually or from STT
    */
+  /**
+   * Broadcast a transcript chunk manually or from STT
+   */
   public addChunk(text: string, speaker?: string, reference?: string, isVerse?: boolean): TranscriptChunk | null {
-    if (!this.activeSession || this.activeSession.status !== "active") return null;
+    if (!this.activeSession || this.activeSession.status !== "active") {
+      // Auto-start active session so speech input is never silently dropped
+      this.startSession("Live Sermon Ministration", "Main Speaker", "Divine Revelation & Grace");
+    }
 
     const now = new Date();
     const timestamp = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}`;
@@ -335,8 +341,22 @@ class LiveSermonService {
   /**
    * Web Speech API On-Device STT initialization & Microphone listening
    */
-  public startListening(onSpeechDetected?: (text: string) => void) {
+  public async startListening(onSpeechDetected?: (text: string) => void) {
     if (this.isListening) return;
+
+    // Ensure session is active so chunks are captured
+    if (!this.activeSession || this.activeSession.status !== "active") {
+      this.startSession("Live Sermon Ministration", "Main Speaker", "Divine Revelation & Grace");
+    }
+
+    // Request microphone access explicitly to ensure permission & stream initialization
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      try {
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+      } catch (err) {
+        console.warn("Microphone permission notice:", err);
+      }
+    }
 
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
@@ -344,21 +364,52 @@ class LiveSermonService {
       try {
         this.recognition = new SpeechRecognition();
         this.recognition.continuous = true;
-        this.recognition.interimResults = false;
+        this.recognition.interimResults = true;
         this.recognition.lang = "en-US";
 
-        this.recognition.onresult = (event: any) => {
-          const lastIndex = event.results.length - 1;
-          const transcript = event.results[lastIndex][0].transcript.trim();
+        let lastProcessedText = "";
 
-          if (transcript) {
-            this.addChunk(transcript);
-            if (onSpeechDetected) onSpeechDetected(transcript);
+        this.recognition.onresult = (event: any) => {
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript.trim();
+            const isFinal = event.results[i].isFinal;
+
+            if (transcript && (isFinal || transcript.length > 25) && transcript !== lastProcessedText) {
+              lastProcessedText = transcript;
+              this.addChunk(transcript);
+              if (onSpeechDetected) onSpeechDetected(transcript);
+            }
+          }
+        };
+
+        this.recognition.onend = () => {
+          // Auto-restart recognition continuously while user is listening
+          if (this.isListening) {
+            setTimeout(() => {
+              try {
+                if (this.isListening && this.recognition) {
+                  this.recognition.start();
+                }
+              } catch (e) {
+                // Recognition already started or busy
+              }
+            }, 300);
           }
         };
 
         this.recognition.onerror = (err: any) => {
-          console.warn("Speech Recognition notice:", err.error);
+          console.warn("Speech Recognition notice/error:", err.error);
+          if (err.error === 'no-speech' || err.error === 'network' || err.error === 'audio-capture') {
+            if (this.isListening) {
+              setTimeout(() => {
+                try {
+                  if (this.isListening && this.recognition) {
+                    this.recognition.start();
+                  }
+                } catch {}
+              }, 600);
+            }
+          }
         };
 
         this.recognition.start();
@@ -374,6 +425,7 @@ class LiveSermonService {
   }
 
   public stopListening() {
+    this.isListening = false;
     if (this.recognition) {
       try { this.recognition.stop(); } catch {}
       this.recognition = null;
@@ -382,7 +434,6 @@ class LiveSermonService {
       clearInterval(this.demoInterval);
       this.demoInterval = null;
     }
-    this.isListening = false;
   }
 
   public isSpeechRecognitionActive(): boolean {
@@ -395,6 +446,10 @@ class LiveSermonService {
   public startSimulatedFeed() {
     if (this.demoInterval) return;
     this.isListening = true;
+
+    if (!this.activeSession || this.activeSession.status !== "active") {
+      this.startSession("Live Sermon Ministration", "Main Speaker", "Divine Revelation & Grace");
+    }
 
     const DEMO_SERMON_CHUNKS = [
       { text: "Welcome everyone to today's powerful ministration on Grace and Faith.", reference: undefined },

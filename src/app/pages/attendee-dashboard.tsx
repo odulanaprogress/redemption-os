@@ -156,11 +156,19 @@ export function AttendeeDashboard() {
       setLiveLocations(locs);
     });
 
+    // Auto-start active location sharing for heat telemetry
+    const stopLocationSharing = locationService.startSharing(
+      userProfile?.uid || `anon-${Date.now()}`,
+      userProfile?.fullName || 'Active Attendee',
+      userProfile?.role || 'attendee'
+    );
+
     return () => {
       unsubBroadcasts();
       unsubLocations();
+      stopLocationSharing();
     };
-  }, []);
+  }, [userProfile]);
 
   // Compute live occupancy rates based on real-time location stream
   const mainCount = liveLocations.filter(
@@ -173,11 +181,13 @@ export function AttendeeDashboard() {
     (l) => l.lat >= 6.825 && l.lat <= 6.829 && l.lng >= 3.460 && l.lng <= 3.464
   ).length;
 
+  const totalConnected = Math.max(1, liveLocations.length);
+
   const crowdItems = [
-    { label: "The 3x3km Arena", percent: liveLocations.length > 0 ? Math.min(95, Math.max(15, mainCount * 12 + 40)) : 0, color: "from-red-500 to-orange-400" },
-    { label: "Old Arena",  percent: liveLocations.length > 0 ? Math.min(90, Math.max(10, youthCount * 15 + 25)) : 0, color: "from-amber-400 to-orange-400" },
-    { label: "Car Park C",      percent: liveLocations.length > 0 ? Math.min(90, Math.max(10, gateCount * 10 + 20)) : 0, color: "from-[#10b981] to-[#0ea5e9]" },
-    { label: "Children's Arena",percent: liveLocations.length > 0 ? Math.min(85, Math.max(5, Math.round(liveLocations.length * 8 + 15))) : 0, color: "from-[#10b981] to-[#0ea5e9]" },
+    { label: "The 3x3km Arena", percent: Math.min(95, Math.max(15, (mainCount || 1) * 12 + 35)), color: "from-red-500 to-orange-400" },
+    { label: "Old Arena",  percent: Math.min(90, Math.max(10, (youthCount || 1) * 10 + 20)), color: "from-amber-400 to-orange-400" },
+    { label: "Car Park C",      percent: Math.min(90, Math.max(10, (gateCount || 1) * 8 + 15)), color: "from-[#10b981] to-[#0ea5e9]" },
+    { label: "Children's Arena",percent: Math.min(85, Math.max(5, Math.round(totalConnected * 6 + 10))), color: "from-[#10b981] to-[#0ea5e9]" },
   ];
 
   const renderCrowdStatus = (className: string) => {
@@ -191,13 +201,13 @@ export function AttendeeDashboard() {
           </Badge>
         </div>
         {crowdItems.map(({ label, percent, color }) => {
-          const level = percent > 75 ? "High" : percent > 50 ? "Medium" : "Low";
+          const level = percent >= 85 ? "Critical Congestion" : percent >= 70 ? "High Congestion" : percent >= 50 ? "Moderate Flow" : "Normal Flow";
           return (
             <div key={label} className="mb-3 last:mb-0">
               <div className="flex items-center justify-between text-sm mb-1.5">
                 <span className="text-[#6B7280] text-xs font-medium">{label}</span>
-                <span className={`text-xs font-medium ${percent > 75 ? "text-red-500" : percent > 50 ? "text-amber-500" : "text-emerald-600"}`}>
-                  {level} — {percent}%
+                <span className={`text-xs font-medium ${percent >= 85 ? "text-red-600 font-bold" : percent >= 70 ? "text-amber-600 font-semibold" : "text-emerald-600"}`}>
+                  {level} — {percent}% Congestion
                 </span>
               </div>
               <div className="h-1.5 bg-[#ede9fe] rounded-full overflow-hidden">

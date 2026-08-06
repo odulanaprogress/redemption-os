@@ -29,7 +29,7 @@ import {
   Radio,
   Eye,
 } from "lucide-react";
-import { locationService } from "../../services/location.service";
+import { locationService, UserLocationDoc } from "../../services/location.service";
 import { useAuthStore } from "../../store/auth.store";
 import {
   RCCG_CAMP_CENTER,
@@ -83,6 +83,19 @@ function makeSelectedIcon(size = 38) {
   });
 }
 
+function makeHeatIcon() {
+  return L.divIcon({
+    html: `<div style="position:relative;width:24px;height:24px;">
+             <div style="position:absolute;inset:0;background:#ef4444;border-radius:50%;opacity:0.6;animation:ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;"></div>
+             <div style="position:absolute;top:4px;left:4px;width:16px;height:16px;background:#f97316;border:2px solid white;border-radius:50%;box-shadow:0 0 8px #ef4444;"></div>
+           </div>`,
+    className: "",
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -12],
+  });
+}
+
 // ─── Sub-component: moves the map view when selection changes ─────────────────
 function MapFlyTo({ coords, zoom = 16 }: { coords: LatLng; zoom?: number }) {
   const map = useMap();
@@ -117,18 +130,38 @@ export function SmartNavigation() {
   const [routeLoading, setRouteLoading] = useState(false);
   const [routeError, setRouteError] = useState(false);
   const [userLocation, setUserLocation] = useState<LatLng | null>(null);
+  const [isSharingLocation, setIsSharingLocation] = useState(true);
+  const [shareStatus, setShareStatus] = useState<string | null>(null);
+  const [liveLocations, setLiveLocations] = useState<UserLocationDoc[]>([]);
   const [flyTarget, setFlyTarget] = useState<LatLng | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [isNavigating, setIsNavigating] = useState(false);   // real-time mode
   const [gpsError, setGpsError] = useState<string | null>(null);
   const [mapMode, setMapMode] = useState<"street" | "satellite">("street");
-  const [isSharingLocation, setIsSharingLocation] = useState(false);
-  const [shareStatus, setShareStatus] = useState<string | null>(null);
   const { user, userProfile } = useAuthStore();
   const watchIdRef = useRef<number | null>(null);
   const routeRefreshRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const locationShareCleanupRef = useRef<(() => void) | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+
+  // Subscribe to live attendee locations across camp
+  useEffect(() => {
+    const unsub = locationService.subscribeToLiveLocations((locs) => {
+      setLiveLocations(locs);
+    });
+
+    const uid = user?.uid || "nav-guest-" + Date.now();
+    const name = userProfile?.displayName || user?.email || "Active Attendee";
+    const role = userProfile?.role || "attendee";
+
+    const cleanup = locationService.startSharing(uid, name, role, (msg) => setShareStatus(msg));
+    locationShareCleanupRef.current = cleanup;
+
+    return () => {
+      unsub();
+      if (locationShareCleanupRef.current) locationShareCleanupRef.current();
+    };
+  }, [user, userProfile]);
 
   // Toggle real-time location sharing with camp safety team
   const toggleLocationSharing = useCallback(() => {
@@ -381,6 +414,22 @@ export function SmartNavigation() {
                 <div className="min-w-[160px]">
                   <p className="font-semibold text-sm text-[#0D0D0D]">{dest.name}</p>
                   <p className="text-xs text-[#6B7280] mt-0.5">{CATEGORY_LABELS[dest.category]}</p>
+                </div>
+              </Popup>
+            </Marker>
+          ))}
+
+          {/* Live Crowd Heat Markers */}
+          {liveLocations.map((loc) => (
+            <Marker
+              key={loc.uid}
+              position={[loc.lat, loc.lng]}
+              icon={makeHeatIcon()}
+            >
+              <Popup>
+                <div className="text-xs font-sans min-w-[140px]">
+                  <p className="font-bold text-[#0D0D0D]">{loc.displayName || "Active Attendee"}</p>
+                  <p className="text-emerald-600 font-medium mt-0.5">📍 Live Crowd Heat Active</p>
                 </div>
               </Popup>
             </Marker>

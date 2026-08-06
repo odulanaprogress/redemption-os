@@ -120,7 +120,13 @@ function OverviewTab({ incidents, loadingIncidents, onRefresh, navigate, broadca
     const unsub = locationService.subscribeToLiveLocations((locs) => {
       setLiveCount(locs.length);
     });
-    return unsub;
+
+    const stopSharing = locationService.startSharing('admin-supervisor', 'Admin Supervisor', 'admin');
+
+    return () => {
+      unsub();
+      stopSharing();
+    };
   }, []);
 
   const stats = [

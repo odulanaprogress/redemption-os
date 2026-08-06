@@ -7,11 +7,12 @@ import { Textarea } from "../components/ui/textarea";
 import {
   ArrowLeft, Radio, Bookmark, BookOpen, Volume2, Languages,
   Wifi, WifiOff, FileText, Save, Trash2, Clock, Signal, Layers,
-  Tv, Download, Share2
+  Tv, Download, Share2, Mic, MicOff
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { toast } from "sonner";
 import { liveSermonService, SermonSession, TranscriptChunk, LanguageCode, SUPPORTED_LANGUAGES } from "../../services/live-sermon.service";
+import { locationService } from "../../services/location.service";
 
 interface BookmarkItem {
   id: string;
@@ -28,6 +29,22 @@ export function LiveGospelFeed() {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [selectedLang, setSelectedLang] = useState<LanguageCode>("en");
   const [session, setSession] = useState<SermonSession | null>(liveSermonService.getActiveSession());
+  const [isMicListening, setIsMicListening] = useState(liveSermonService.isSpeechRecognitionActive());
+
+  const toggleMic = async () => {
+    if (isMicListening) {
+      liveSermonService.stopListening();
+      setIsMicListening(false);
+      toast.info("Microphone Speech Recognition Stopped");
+    } else {
+      toast.info("Initializing Microphone & Speech-to-Text...");
+      await liveSermonService.startListening((text) => {
+        toast.success(`Speech Transcribed: "${text.substring(0, 30)}..."`);
+      });
+      setIsMicListening(true);
+      toast.success("Microphone Active — Speak to Transcribe Sermon Live!");
+    }
+  };
   const [pastSessions, setPastSessions] = useState<SermonSession[]>([]);
   const [viewingPastSession, setViewingPastSession] = useState<SermonSession | null>(null);
 
@@ -62,12 +79,20 @@ export function LiveGospelFeed() {
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
+    // Auto-start active location sharing for crowd heat telemetry
+    const stopLocationSharing = locationService.startSharing(
+      `feed-user-${Date.now()}`,
+      'Gospel Feed Attendee',
+      'attendee'
+    );
+
     return () => {
       unsubSession();
       unsubChunks();
       clearInterval(clockTimer);
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
+      stopLocationSharing();
     };
   }, []);
 
@@ -158,6 +183,20 @@ export function LiveGospelFeed() {
                 ))}
               </select>
             </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={toggleMic}
+              className={`border ${
+                isMicListening
+                  ? "bg-red-500/10 text-red-600 border-red-500/40 animate-pulse"
+                  : "border-[#5B4FE8]/30 text-[#5B4FE8] hover:bg-[#5B4FE8]/10"
+              } text-xs font-semibold flex items-center gap-1.5`}
+            >
+              {isMicListening ? <Mic className="h-3.5 w-3.5 text-red-500 animate-bounce" /> : <MicOff className="h-3.5 w-3.5" />}
+              {isMicListening ? "Mic Active" : "Enable Mic"}
+            </Button>
 
             <Button
               variant="outline"
@@ -294,12 +333,21 @@ export function LiveGospelFeed() {
                   );
                 })
               ) : (
-                <div className="text-center py-16 space-y-3 text-[#9CA3AF]">
+                <div className="text-center py-16 space-y-4 text-[#9CA3AF]">
                   <Radio className="h-10 w-10 mx-auto text-[#5B4FE8]/40 animate-pulse" />
                   <p className="text-sm font-semibold text-[#374151]">Waiting for Live Sermon Broadcast...</p>
                   <p className="text-xs max-w-sm mx-auto text-[#6B7280]">
-                    The Media Operations Team will broadcast clean speech-to-text here during the ministration.
+                    The Media Operations Team will broadcast clean speech-to-text here during ministration. You can also turn on your local mic to transcribe.
                   </p>
+                  <div className="flex items-center justify-center gap-3 pt-2">
+                    <Button
+                      onClick={toggleMic}
+                      className={`${isMicListening ? "bg-red-600 hover:bg-red-700" : "bg-[#5B4FE8] hover:bg-[#4a3ec8]"} text-white text-xs font-semibold shadow-md flex items-center gap-2`}
+                    >
+                      {isMicListening ? <Mic className="h-4 w-4 animate-bounce" /> : <Mic className="h-4 w-4" />}
+                      {isMicListening ? "Listening... (Click to Stop)" : "Start Microphone Speech-to-Text"}
+                    </Button>
+                  </div>
                 </div>
               )}
 
