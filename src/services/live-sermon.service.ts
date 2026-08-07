@@ -378,7 +378,7 @@ class LiveSermonService {
               if (isFinal) {
                 this.addChunk(transcript);
                 if (onSpeechDetected) onSpeechDetected(transcript);
-                currentPhrase = \"\";
+                currentPhrase = "";
               } else if (transcript !== currentPhrase && transcript.length > 15) {
                 // Interim live words
                 currentPhrase = transcript;
@@ -405,7 +405,7 @@ class LiveSermonService {
         };
 
         this.recognition.onerror = (err: any) => {
-          console.warn(\"[STT] Live Microphone Speech Notice:\", err.error);
+          console.warn("[STT] Live Microphone Speech Notice:", err.error);
           if (['no-speech', 'network', 'audio-capture', 'aborted'].includes(err.error)) {
             if (this.isListening) {
               setTimeout(() => {
@@ -423,10 +423,10 @@ class LiveSermonService {
         this.isListening = true;
         return;
       } catch (e) {
-        console.error(\"Error starting real Web Speech API microphone recognition:\", e);
+        console.error("Error starting real Web Speech API microphone recognition:", e);
       }
     } else {
-      console.warn(\"Web Speech API not supported on this browser context.\");
+      console.warn("Web Speech API not supported on this browser context.");
     }
   }
 

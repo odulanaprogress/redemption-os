@@ -26,8 +26,8 @@ export function MediaSermonConsole() {
   const [manualText, setManualText] = useState("");
   const [manualVerse, setManualVerse] = useState("");
 
-"  const [editingChunkId, setEditingChunkId] = useState<string | null>(null);
-  const [editText, setEditText] = useState(\"\");
+  const [editingChunkId, setEditingChunkId] = useState<string | null>(null);
+  const [editText, setEditText] = useState("");
   const [isMicActive, setIsMicActive] = useState(liveSermonService.isSpeechRecognitionActive());
 
   useEffect(() => {
@@ -39,48 +39,48 @@ export function MediaSermonConsole() {
     if (isMicActive) {
       liveSermonService.stopListening();
       setIsMicActive(false);
-      toast.info(\"Microphone Speech-to-Text Paused\");
+      toast.info("Microphone Speech-to-Text Paused");
     } else {
-      toast.info(\"Starting Microphone Live Speech-to-Text...\");
+      toast.info("Starting Microphone Live Speech-to-Text...");
       await liveSermonService.startListening((text) => {
-        toast.success(`Speech Transcribed: \"${text.substring(0, 25)}...\"`);
+        toast.success(`Speech Transcribed: "${text.substring(0, 25)}..."`);
       });
       setIsMicActive(true);
-      toast.success(\"Microphone Active — Transcribing Live Sermon!\");
+      toast.success("Microphone Active — Transcribing Live Sermon!");
     }
   };
 
   const handleStartSession = async () => {
     if (!title.trim()) {
-      toast.error(\"Please enter a sermon title\");
+      toast.error("Please enter a sermon title");
       return;
     }
     const newSession = liveSermonService.startSession(title, preacher, topic);
     await liveSermonService.startListening();
     setIsMicActive(true);
-    toast.success(\"Live Sermon Session Started!\", {
-      description: \"Speech recognition is active & broadcasting live mic feed.\",
+    toast.success("Live Sermon Session Started!", {
+      description: "Speech recognition is active & broadcasting live mic feed.",
     });
   };
 
   const handlePauseSession = () => {
     liveSermonService.pauseSession();
     setIsMicActive(false);
-    toast.info(\"Session Paused\");
+    toast.info("Session Paused");
   };
 
   const handleResumeSession = async () => {
     liveSermonService.resumeSession();
     await liveSermonService.startListening();
     setIsMicActive(true);
-    toast.success(\"Session Resumed\");
+    toast.success("Session Resumed");
   };
 
   const handleEndSession = () => {
     const ended = liveSermonService.endSession();
     setIsMicActive(false);
     if (ended) {
-      toast.success(\"Sermon Session Ended & Archived!\", {
+      toast.success("Sermon Session Ended & Archived!", {
         description: `Total chunks broadcast: ${ended.chunks.length}`,
       });
     }
@@ -89,9 +89,9 @@ export function MediaSermonConsole() {
   const handleSendManualText = () => {
     if (!manualText.trim()) return;
     liveSermonService.addChunk(manualText.trim(), preacher, manualVerse.trim() || undefined, !!manualVerse.trim());
-    setManualText(\"\");
-    setManualVerse(\"\");
-    toast.success(\"Broadcasted custom text line!\");
+    setManualText("");
+    setManualVerse("");
+    toast.success("Broadcasted custom text line!");
   };
 
   const handleSaveEdit = (chunkId: string) => {
@@ -100,7 +100,7 @@ export function MediaSermonConsole() {
     if (chunk) {
       chunk.originalText = editText.trim();
       chunk.translations = liveSermonService.translateText(editText.trim());
-      toast.success(\"Updated transcript chunk\");
+      toast.success("Updated transcript chunk");
     }
     setEditingChunkId(null);
   };
@@ -111,58 +111,57 @@ export function MediaSermonConsole() {
   };
 
   return (
-    <div className=\"min-h-screen bg-slate-950 text-slate-100 p-4 sm:p-6 md:p-8 font-sans\">
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-4 sm:p-6 md:p-8 font-sans">
       {showStageView && <StageProjectorView onClose={() => setShowStageView(false)} />}
 
       {/* Top Bar Navigation */}
-      <div className=\"max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-800\">
-        <div className=\"flex items-center gap-3\">
+      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-800">
+        <div className="flex items-center gap-3">
           <Button
-            variant=\"outline\"
-            size=\"icon\"
-            onClick={() => navigate(\"/dashboard\")}
-            className=\"border-slate-800 bg-slate-900 text-slate-300 hover:text-white hover:bg-slate-800\"
-            title=\"Return to Attendee Portal\"
+            variant="outline"
+            size="icon"
+            onClick={() => navigate("/dashboard")}
+            className="border-slate-800 bg-slate-900 text-slate-300 hover:text-white hover:bg-slate-800"
+            title="Return to Attendee Portal"
           >
-            <ArrowLeft className=\"w-5 h-5\" />
+            <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <div className=\"flex items-center gap-2\">
-              <h1 className=\"text-2xl font-bold text-white tracking-tight\">Media Operation Console</h1>
-              <Badge className=\"bg-purple-500/20 text-purple-300 border-purple-500/30\">
+            <div className="flex items-center gap-2">
+              <h1 className="text-2xl font-bold text-white tracking-tight">Media Operation Console</h1>
+              <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
                 Live STT & Translation
               </Badge>
             </div>
-            <p className=\"text-slate-400 text-sm\">
+            <p className="text-slate-400 text-sm">
               Capturing clean audio from sound mixer • Real-time broadcasting to attendees & stage screens
             </p>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className=\"flex items-center gap-3 w-full sm:w-auto\">
+        <div className="flex items-center gap-3 w-full sm:w-auto">
           <Button
             onClick={handleToggleMic}
             className={`font-semibold flex items-center gap-2 border ${
               isMicActive
-                ? \"bg-red-600 hover:bg-red-500 text-white border-red-500 animate-pulse\"
-                : \"bg-slate-900 border-slate-700 text-purple-400 hover:bg-slate-800\"
+                ? "bg-red-600 hover:bg-red-500 text-white border-red-500 animate-pulse"
+                : "bg-slate-900 border-slate-700 text-purple-400 hover:bg-slate-800"
             }`}
           >
-            {isMicActive ? <Mic className=\"w-4 h-4 animate-bounce\" /> : <MicOff className=\"w-4 h-4\" />}
-            {isMicActive ? \"Mic STT Active\" : \"Enable Mic STT\"}
+            {isMicActive ? <Mic className="w-4 h-4 animate-bounce" /> : <MicOff className="w-4 h-4" />}
+            {isMicActive ? "Mic STT Active" : "Enable Mic STT"}
           </Button>
 
           <Button
             onClick={() => setShowStageView(true)}
-            className=\"bg-purple-600 hover:bg-purple-500 text-white font-semibold flex items-center gap-2 shadow-lg shadow-purple-950/50\"
+            className="bg-purple-600 hover:bg-purple-500 text-white font-semibold flex items-center gap-2 shadow-lg shadow-purple-950/50"
           >
-            <Tv className=\"w-5 h-5\" />
+            <Tv className="w-5 h-5" />
             Stage Projector Display
           </Button>
 
           <Button
-            onClick={() => navigate(\"/dashboard\")}
             onClick={() => navigate("/dashboard")}
             variant="outline"
             className="border-slate-700 bg-slate-900 text-slate-200 hover:bg-slate-800 text-xs font-semibold flex items-center gap-1.5"
