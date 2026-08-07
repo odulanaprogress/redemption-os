@@ -367,23 +367,30 @@ class LiveSermonService {
         this.recognition.interimResults = true;
         this.recognition.lang = "en-US";
 
-        let lastProcessedText = "";
+        let currentPhrase = "";
 
         this.recognition.onresult = (event: any) => {
           for (let i = event.resultIndex; i < event.results.length; i++) {
             const transcript = event.results[i][0].transcript.trim();
             const isFinal = event.results[i].isFinal;
 
-            if (transcript && (isFinal || transcript.length > 25) && transcript !== lastProcessedText) {
-              lastProcessedText = transcript;
-              this.addChunk(transcript);
-              if (onSpeechDetected) onSpeechDetected(transcript);
+            if (transcript) {
+              if (isFinal) {
+                this.addChunk(transcript);
+                if (onSpeechDetected) onSpeechDetected(transcript);
+                currentPhrase = \"\";
+              } else if (transcript !== currentPhrase && transcript.length > 15) {
+                // Interim live words
+                currentPhrase = transcript;
+                this.addChunk(transcript);
+                if (onSpeechDetected) onSpeechDetected(transcript);
+              }
             }
           }
         };
 
         this.recognition.onend = () => {
-          // Auto-restart recognition continuously while user is listening
+          // Auto-restart recognition continuously while live listening is active
           if (this.isListening) {
             setTimeout(() => {
               try {
@@ -391,15 +398,15 @@ class LiveSermonService {
                   this.recognition.start();
                 }
               } catch (e) {
-                // Recognition already started or busy
+                // Recognition busy or already active
               }
-            }, 300);
+            }, 200);
           }
         };
 
         this.recognition.onerror = (err: any) => {
-          console.warn("Speech Recognition notice/error:", err.error);
-          if (err.error === 'no-speech' || err.error === 'network' || err.error === 'audio-capture') {
+          console.warn(\"[STT] Live Microphone Speech Notice:\", err.error);
+          if (['no-speech', 'network', 'audio-capture', 'aborted'].includes(err.error)) {
             if (this.isListening) {
               setTimeout(() => {
                 try {
@@ -407,7 +414,7 @@ class LiveSermonService {
                     this.recognition.start();
                   }
                 } catch {}
-              }, 600);
+              }, 400);
             }
           }
         };
@@ -416,12 +423,11 @@ class LiveSermonService {
         this.isListening = true;
         return;
       } catch (e) {
-        console.warn("Could not start Web Speech API, falling back to simulated microphone input:", e);
+        console.error(\"Error starting real Web Speech API microphone recognition:\", e);
       }
+    } else {
+      console.warn(\"Web Speech API not supported on this browser context.\");
     }
-
-    // Fallback live audio simulator for environments without mic access
-    this.startSimulatedFeed();
   }
 
   public stopListening() {
@@ -438,37 +444,6 @@ class LiveSermonService {
 
   public isSpeechRecognitionActive(): boolean {
     return this.isListening;
-  }
-
-  /**
-   * Simulated sermon audio feed generator for testing & demo purposes
-   */
-  public startSimulatedFeed() {
-    if (this.demoInterval) return;
-    this.isListening = true;
-
-    if (!this.activeSession || this.activeSession.status !== "active") {
-      this.startSession("Live Sermon Ministration", "Main Speaker", "Divine Revelation & Grace");
-    }
-
-    const DEMO_SERMON_CHUNKS = [
-      { text: "Welcome everyone to today's powerful ministration on Grace and Faith.", reference: undefined },
-      { text: "Let us open our Bibles to John chapter 3 verse 16.", reference: "John 3:16", isVerse: true },
-      { text: '"For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life."', reference: "John 3:16", isVerse: true },
-      { text: "God's love is not passive; it is an active force operating in your life right now.", reference: undefined },
-      { text: '"Trust in the Lord with all your heart and lean not on your own understanding."', reference: "Proverbs 3:5", isVerse: true },
-      { text: "When you step into this place of surrender, divine positioning takes place in your family, health, and career.", reference: undefined },
-      { text: "The grace of our Lord Jesus Christ be with you all.", reference: undefined },
-      { text: "Amen and Amen. Praise the Lord!", reference: undefined },
-    ];
-
-    let idx = 0;
-    this.demoInterval = setInterval(() => {
-      if (!this.activeSession || this.activeSession.status !== "active") return;
-      const sample = DEMO_SERMON_CHUNKS[idx % DEMO_SERMON_CHUNKS.length];
-      this.addChunk(sample.text, this.activeSession.preacher, sample.reference, sample.isVerse);
-      idx++;
-    }, 6000);
   }
 }
 

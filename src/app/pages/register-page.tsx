@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Card } from "../components/ui/card";
-import { Globe, Lock, Mail, User, Phone, ArrowLeft, Users, Baby, Store, HeartHandshake, Shield, Truck, Eye, EyeOff } from "lucide-react";
+import { Globe, Lock, Mail, User, Phone, ArrowLeft, Users, Baby, Store, HeartHandshake, Shield, Truck, Eye, EyeOff, Tv, Settings } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { toast } from "sonner";
 import { UserRole } from "../../types";
@@ -15,6 +15,11 @@ type RegisterRole = UserRole;
 const ROLES: { value: RegisterRole; label: string; icon: any; description: string; color: string }[] = [
   { value: "attendee", label: "Attendee", icon: Users, description: "General event attendee", color: "from-[#0ea5e9] to-[#0284c7]" },
   { value: "parent", label: "Parent / Guardian", icon: Baby, description: "Parent registering children", color: "from-[#10b981] to-[#059669]" },
+  { value: "media", label: "Media Operations Team", icon: Tv, description: "Live STT, sermon console & projector", color: "from-purple-600 to-indigo-600" },
+  { value: "volunteer", label: "Camp Worker / Volunteer", icon: HeartHandshake, description: "Camp operations & assistance worker", color: "from-blue-600 to-cyan-600" },
+  { value: "security", label: "Security & Safety Staff", icon: Shield, description: "Camp security & crowd control staff", color: "from-amber-600 to-orange-600" },
+  { value: "vendor", label: "Market Vendor", icon: Store, description: "Food, books, & goods merchant", color: "from-emerald-600 to-teal-600" },
+  { value: "delivery_personnel", label: "Delivery Rider", icon: Truck, description: "Smart logistics & delivery rider", color: "from-rose-600 to-pink-600" },
 ];
 
 export function RegisterPage() {
@@ -101,6 +106,7 @@ export function RegisterPage() {
       // Dynamic route based on role
       switch (selectedRole) {
         case "admin": navigate("/admin"); break;
+        case "media": navigate("/media-sermon-console"); break;
         case "vendor": navigate("/marketplace/vendor"); break;
         case "security": navigate("/operations"); break;
         case "delivery_personnel": navigate("/logistics"); break;

@@ -11,7 +11,7 @@ import {
   Settings, Send, Download, Database, Search, RefreshCw, X,
   CheckCircle, Clock, MapPin, Bell, Eye, Zap, Loader2,
   FileSpreadsheet, Filter, ChevronDown, Megaphone, Globe,
-  UserPlus, Link, Key
+  UserPlus, Link, Key, ArrowLeft
 } from "lucide-react";
 import {
   AreaChart, Area, BarChart, Bar, LineChart, Line,
@@ -769,7 +769,12 @@ function OnboardingTab() {
               <div>
                 <label className={labelCls}>Role</label>
                 <select value={loginForm.role} onChange={e => setLoginForm({...loginForm, role: e.target.value})} className={selectCls}>
-                  <option value="volunteer">Volunteer</option><option value="vendor">Vendor</option><option value="security">Security</option><option value="delivery_personnel">Delivery Rider</option>
+                  <option value="volunteer">Volunteer</option>
+                  <option value="media">Media Operations Team</option>
+                  <option value="vendor">Vendor</option>
+                  <option value="security">Security</option>
+                  <option value="delivery_personnel">Delivery Rider</option>
+                  <option value="admin">System Admin</option>
                 </select>
               </div>
             </div>
@@ -783,12 +788,13 @@ function OnboardingTab() {
             <Link className="h-5 w-5 text-[#5B4FE8]" />
             <div>
               <h2 className="font-semibold text-[#0D0D0D]">Registration Invite Links</h2>
-              <p className="text-[#6B7280] text-xs">Share custom registration links to onboard vendors, volunteers, security, & attendees live.</p>
+              <p className="text-[#6B7280] text-xs">Share custom registration links to onboard vendors, media operators, security, & attendees live.</p>
             </div>
           </div>
 
           <div className="space-y-2.5">
             {[
+              { label: "📺 Media Operations Invite", role: "media", path: "/register?role=media" },
               { label: "🏪 Market Vendor Invite", role: "vendor", path: "/register?role=vendor" },
               { label: "🤝 Volunteer Invite", role: "volunteer", path: "/register?role=volunteer" },
               { label: "🛡️ Security Staff Invite", role: "security", path: "/register?role=security" },
@@ -898,6 +904,15 @@ export function AdminDashboard() {
                 <span className="text-xs text-[#059669] font-medium">Live · 12,847 attendees</span>
               </div>
               <NotificationBell />
+              <Button
+                onClick={() => navigate("/dashboard")}
+                variant="outline"
+                size="sm"
+                className="border-[#5B4FE8]/30 text-[#5B4FE8] hover:bg-[#EDE9FE] text-xs font-semibold flex items-center gap-1.5 shadow-sm"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>Attendee Portal</span>
+              </Button>
               <Button onClick={() => navigate("/settings")} variant="ghost" size="icon" className="text-[#6B7280] hover:text-[#0D0D0D] hover:bg-[#F8F9FF]"><Settings className="h-5 w-5" /></Button>
               <Button onClick={logout} variant="ghost" size="icon" className="text-[#6B7280] hover:text-[#DC2626] hover:bg-red-50"><LogOut className="h-5 w-5" /></Button>
             </div>

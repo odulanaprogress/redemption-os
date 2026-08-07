@@ -125,6 +125,15 @@ export function CrowdManagementDashboard() {
               {isOnline ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3 animate-pulse" />}
               {isOnline ? 'Online' : 'Offline'}
             </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate('/dashboard')}
+              className="border-[#5B4FE8]/30 text-[#5B4FE8] hover:bg-[#EDE9FE] text-xs font-semibold flex items-center gap-1.5"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span>Attendee Portal</span>
+            </Button>
             <Button size="sm" variant="ghost" onClick={triggerSync} disabled={isSyncing || !isOnline} className="text-[#6B7280] hover:text-[#0D0D0D] h-8 w-8 p-0">
               <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
             </Button>

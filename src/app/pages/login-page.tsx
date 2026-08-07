@@ -30,6 +30,7 @@ export function LoginPage() {
     if (!userProfile) return;
     switch (userProfile.role) {
       case "admin": navigate("/admin", { replace: true }); break;
+      case "media": navigate("/media-sermon-console", { replace: true }); break;
       case "vendor": navigate("/marketplace/vendor", { replace: true }); break;
       case "delivery_personnel": navigate("/logistics", { replace: true }); break;
       case "security": navigate("/operations", { replace: true }); break;

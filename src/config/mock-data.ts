@@ -74,6 +74,13 @@ export const MOCK_USERS: MockUser[] = [
     emailVerified: true,
   },
   {
+    uid: 'media-001',
+    email: 'media@redemptionos.com',
+    password: 'demo1234',
+    displayName: 'Media Operations Team',
+    emailVerified: true,
+  },
+  {
     uid: 'attendee-001',
     email: 'attendee@redemptionos.com',
     password: 'demo1234',
@@ -92,6 +99,17 @@ export const MOCK_PROFILES: Record<string, UserProfile> = {
     updatedAt: new Date(),
     isActive: true,
     metadata: { lastLogin: new Date(), loginCount: 42 },
+    preferences: { notifications: true, emailAlerts: true, smsAlerts: false, language: 'en', theme: 'dark' },
+  },
+  'media-001': {
+    uid: 'media-001',
+    email: 'media@redemptionos.com',
+    displayName: 'Media Operations Team',
+    role: 'media' as UserRole,
+    createdAt: new Date('2024-01-05'),
+    updatedAt: new Date(),
+    isActive: true,
+    metadata: { lastLogin: new Date(), loginCount: 35 },
     preferences: { notifications: true, emailAlerts: true, smsAlerts: false, language: 'en', theme: 'dark' },
   },
   'parent-001': {
@@ -201,6 +219,7 @@ export const MOCK_PROFILES: Record<string, UserProfile> = {
 
 export const DEMO_ACCOUNTS = [
   { role: 'Admin', email: 'redemptionosadmin01@gmail.com', password: 'Redemptionos12@', description: 'Full access' },
+  { role: 'Media Team', email: 'media@redemptionos.com', password: 'demo1234', description: 'Live STT & sermon console' },
   { role: 'Parent', email: 'parent1@redemptionos.com', password: 'demo1234', description: 'Family tracking' },
   { role: 'Security', email: 'security1@redemptionos.com', password: 'demo1234', description: 'Operations center' },
   { role: 'Vendor', email: 'vendor1@redemptionos.com', password: 'demo1234', description: 'Marketplace seller' },

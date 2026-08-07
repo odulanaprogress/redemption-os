@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Card } from "../components/ui/card";
-import { Globe, Users, Heart, Shield, Video, Truck, Settings } from "lucide-react";
+import { Globe, Users, Heart, Shield, Video, Truck, Settings, Tv, Activity } from "lucide-react";
 import { motion } from "motion/react";
 import { useAuth } from "../../hooks/useAuth";
 import { userService } from "../../services/user.service";
@@ -18,19 +18,55 @@ export function RoleSelection() {
       id: "attendee" as UserRole,
       icon: Users,
       title: "Attendee",
-      description: "Access worship services, navigation, and assistance",
+      description: "Access worship services, live gospel feeds, navigation, and camp heat",
       color: "text-[#5B4FE8]",
       bgColor: "bg-[#EDE9FE]",
       route: "/dashboard",
     },
     {
+      id: "media" as UserRole,
+      icon: Tv,
+      title: "Media Operations Team",
+      description: "Live STT transcription, stage projector display, & sermon operator",
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
+      route: "/media-sermon-console",
+    },
+    {
       id: "parent" as UserRole,
       icon: Heart,
-      title: "Parent",
-      description: "Manage family tags, safety, and QR identities",
+      title: "Parent / Guardian",
+      description: "Manage family tags, child safety, and QR identities",
       color: "text-[#059669]",
       bgColor: "bg-emerald-50",
       route: "/dashboard",
+    },
+    {
+      id: "admin" as UserRole,
+      icon: Settings,
+      title: "System Administrator",
+      description: "Full admin command center, broadcasts, & system controls",
+      color: "text-red-600",
+      bgColor: "bg-red-100",
+      route: "/admin",
+    },
+    {
+      id: "security" as UserRole,
+      icon: Shield,
+      title: "Security & Crowd Safety",
+      description: "Operations center, incidents, and crowd management",
+      color: "text-amber-600",
+      bgColor: "bg-amber-100",
+      route: "/crowd-management",
+    },
+    {
+      id: "volunteer" as UserRole,
+      icon: Activity,
+      title: "Camp Worker / Volunteer",
+      description: "Camp operations, logistics, & emergency response assistance",
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
+      route: "/operations",
     },
   ];
 

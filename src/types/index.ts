@@ -29,7 +29,8 @@ export type UserRole =
   | 'volunteer'
   | 'security'
   | 'vendor'
-  | 'delivery_personnel';
+  | 'delivery_personnel'
+  | 'media';
 
 export interface User {
   uid: string;

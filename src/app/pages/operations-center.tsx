@@ -101,6 +101,15 @@ export function OperationsCenter() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => navigate('/dashboard')}
+              className="border-[#5B4FE8]/30 text-[#5B4FE8] hover:bg-[#EDE9FE] text-xs font-semibold flex items-center gap-1.5"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span>Attendee Portal</span>
+            </Button>
             <Badge className="bg-[#0ea5e9]/20 text-[#5B4FE8] border-[#5B4FE8]/30">
               12:47 PM
             </Badge>
